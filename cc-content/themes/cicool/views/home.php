@@ -486,7 +486,7 @@ function tgl_indo($tanggal)
 						</div>
 						<hr>
 						<div class="table-responsive">
-							<table class="table table-striped align-middle mb-0" id="dataTables">
+							<table class="table table-striped align-middle mb-0" id="dataTables_apbd">
 								<thead class="table-light">
 									<tr>
 										<th>NO</th>
@@ -515,7 +515,7 @@ function tgl_indo($tanggal)
 						</div>
 						<hr>
 						<div class="table-responsive">
-							<table class="table table-striped align-middle mb-0" id="dataTables">
+							<table class="table table-striped align-middle mb-0" id="dataTables_pendapatan">
 								<thead class="table-light">
 									<tr>
 										<th>NO</th>
@@ -835,7 +835,7 @@ function tgl_indo($tanggal)
 	<script>
 		$(function() {
 			$(".knob").knob();
-
+			//table apbd
 			$.ajax({
 				url: "<?= base_url('web/clistApbd_OPD') ?>",
 				type: "GET",
@@ -862,7 +862,7 @@ function tgl_indo($tanggal)
 						target.append(html);
 						no++;
 					});
-					$('#dataTables').DataTable();
+					$('#dataTables_apbd').DataTable();
 				}
 			});
 		});
@@ -872,7 +872,6 @@ function tgl_indo($tanggal)
 		<script>
 		$(function() {
 			$(".knob").knob();
-
 			$.ajax({
 				url: "<?= base_url('web/pendapatan') ?>",
 				type: "GET",
@@ -899,12 +898,13 @@ function tgl_indo($tanggal)
 						target.append(html);
 						no++;
 					});
-					$('#dataTables').DataTable();
+					$('#dataTables_pendapatan').DataTable();
 				}
 			});
+
+
 		});
 	</script>
-
 	<script src="https://unpkg.com/@develoka/angka-rupiah-js/index.min.js"></script>
 
 	<script script src="<?php echo $web; ?>assets/js/index.js">
@@ -919,10 +919,10 @@ function tgl_indo($tanggal)
 	</script>
 	
 	<script>
-		let tot_angg = toRupiah(<?= $total_pendapatan->total_pendapatan; ?>, {
+		let tot_pend = toRupiah(<?= $total_pendapatan->total_pendapatan; ?>, {
 			useUnit: true
 		});
-		$(".total_pendapatan").text(tot_angg);
+		$(".total_pendapatan").text(tot_pend);
 	</script>
 </body>
 
