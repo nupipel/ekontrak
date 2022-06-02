@@ -41,18 +41,9 @@ class Web extends Front
         if (defined('IS_DEMO')) {
             $this->template->build('home-demo');
         } else {
-            $this->data['get_berita'] = $this->model_home_front->get_berita();
-            $this->data['get_link'] = $this->model_home_front->get_link();
-            $this->data['sliders'] = $this->model_home_front->get_sliders();
+           
             $this->data['get_infoumum'] = $this->model_home_front->get_infoumum();
-            $this->data['get_sambutan'] = $this->model_home_front->get_sambutan();
-            $this->data['get_berita'] = $this->model_home_front->get_berita();
-            $this->data['get_layanan'] = $this->model_home_front->get_layanan();
-            $this->data['get_galeri'] = $this->model_home_front->get_galeri();
-            $this->data['get_galeri_foto'] = $this->model_home_front->get_galeri_foto();
-            $this->data['get_galeri_video'] = $this->model_home_front->get_galeri_video();
-            $this->data['running_text'] = $this->model_home_front->running_text();
-            $this->data['kisah_sukses'] = $this->model_home_front->kisah_sukses();
+            
             $this->data['total_anggaran'] = $this->model_home_front->total_anggaran();
             $this->data['total_pendapatan'] = $this->model_home_front->total_pendapatan();
 
@@ -60,6 +51,19 @@ class Web extends Front
 
             //$this->template->build('home');
         }
+    }
+    
+    public function pengadaan()
+    {
+       
+           
+            $this->data['get_infoumum'] = $this->model_home_front->get_infoumum();
+            
+            $this->data['list_e_purchasing'] = $this->model_home_front->list_e_purchasing();
+           
+            $this->template->build('epurchasing', $this->data);
+
+           
     }
 
     public function set_full_group_sql()
