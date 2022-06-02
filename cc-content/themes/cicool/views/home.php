@@ -102,11 +102,7 @@ function tgl_indo($tanggal)
 								<img src="<?php echo $web; ?>assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
 							</div>
 							<div class="">
-<<<<<<< HEAD
-								<h4 class="logo-text">[WEB NAME]</h4>
-=======
 								<h4 class="logo-text">E-Kontrak Kota Semarang</h4>
->>>>>>> d180779829e92016435b7ff6a27b528781e250e2
 							</div>
 						</div>
 						<div class="mobile-toggle-menu"><i class='bx bx-menu'></i></div>
@@ -117,9 +113,9 @@ function tgl_indo($tanggal)
 							<!--</div>-->
 						</div>
 						<div class="top-menu ms-auto">
-						
+
 						</div>
-					
+
 					</nav>
 				</div>
 			</header>
@@ -138,8 +134,8 @@ function tgl_indo($tanggal)
 				</div>
 				<nav class="navbar navbar-expand-xl w-100">
 					<ul class="navbar-nav justify-content-start flex-grow-1 gap-1">
-					
-					
+
+
 						<li class="nav-item">
 							<a class="nav-link" href="/">
 								<div class="parent-icon"><i class='bx bx-cookie'></i>
@@ -147,8 +143,8 @@ function tgl_indo($tanggal)
 								<div class="menu-title">Beranda</div>
 							</a>
 						</li>
-						
-							<li class="nav-item">
+
+						<li class="nav-item">
 							<a class="nav-link" href="#">
 								<div class="parent-icon"><i class='bx bx-cookie'></i>
 								</div>
@@ -162,14 +158,14 @@ function tgl_indo($tanggal)
 								<div class="menu-title">Pelelangan</div>
 							</a>
 						</li>
-							<li class="nav-item">
+						<li class="nav-item">
 							<a class="nav-link" href="#">
 								<div class="parent-icon"><i class='bx bx-cookie'></i>
 								</div>
 								<div class="menu-title">Realisasi</div>
 							</a>
 						</li>
-							<li class="nav-item">
+						<li class="nav-item">
 							<a class="nav-link" href="#">
 								<div class="parent-icon"><i class='bx bx-cookie'></i>
 								</div>
@@ -440,8 +436,8 @@ function tgl_indo($tanggal)
 							</div>
 						</div>
 					</div>
-					
-						<div class="col-12 col-xl-6 d-flex">
+
+					<div class="col-12 col-xl-6 d-flex">
 						<div class="card radius-10 overflow-hidden w-100">
 							<div class="card-body">
 								<div class="d-flex align-items-center">
@@ -451,7 +447,7 @@ function tgl_indo($tanggal)
 									<div class="font-22 ms-auto text-white"><i class="bx bx-dots-horizontal-rounded"></i>
 									</div>
 								</div>
-								
+
 								<div class="chart-container-2 my-3">
 									<canvas id="chart3pendapatan"></canvas>
 								</div>
@@ -467,7 +463,7 @@ function tgl_indo($tanggal)
 					</div>
 
 
-				
+
 				</div>
 				<!--End Row-->
 
@@ -500,7 +496,7 @@ function tgl_indo($tanggal)
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="card radius-10">
 					<div class="card-body">
 						<div class="d-flex align-items-center">
@@ -864,9 +860,9 @@ function tgl_indo($tanggal)
 			});
 		});
 	</script>
-	
-	
-		<script>
+
+
+	<script>
 		$(function() {
 			$(".knob").knob();
 
@@ -914,7 +910,7 @@ function tgl_indo($tanggal)
 		});
 		$(".total_anggaran").text(tot_angg);
 	</script>
-	
+
 	<script>
 		let tot_angg = toRupiah(<?= $total_pendapatan->total_pendapatan; ?>, {
 			useUnit: true
