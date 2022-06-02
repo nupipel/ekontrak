@@ -375,6 +375,30 @@ class Model_home_front extends CI_Model
         $q =  $this->db_bappeda->get();
         return $q->row();
     }
+    
+        public function total_pendapatan()
+    {
+        $this->db_bappeda->select('sum(aa.anggaran) as total_pendapatan')
+            ->from('a_apbd_pendapatan aa');
+        $q =  $this->db_bappeda->get();
+        return $q->row();
+    }
+    
+    
+    
+     public function listpendapatan($limit = null)
+    {
+        $this->db_bappeda->select('du.nama_skpd as nama, sum(aa.anggaran) as anggaran, sum(aa.anggaran_pergeseran) as anggaran_pergeseran, sum(aa.anggaran_perubahan) as anggaran_perubahan')
+            ->from('a_apbd_pendapatan aa')
+            ->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT')
+            ->group_by('aa.id_skpd')
+            ->order_by('anggaran', 'desc');
+        if ($limit) {
+            $this->db_bappeda->limit($limit);
+        };
+        $q =  $this->db_bappeda->get();
+        return $q->result();
+    }
 
     public function listApbd_OPD($limit = null)
     {
