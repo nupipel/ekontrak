@@ -102,7 +102,7 @@ function tgl_indo($tanggal)
 								<img src="<?php echo $web; ?>assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
 							</div>
 							<div class="">
-								<h4 class="logo-text">Rukada</h4>
+								<h4 class="logo-text">[WEB NAME]</h4>
 							</div>
 						</div>
 						<div class="mobile-toggle-menu"><i class='bx bx-menu'></i></div>
