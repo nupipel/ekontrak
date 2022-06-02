@@ -54,6 +54,7 @@ class Web extends Front
             $this->data['running_text'] = $this->model_home_front->running_text();
             $this->data['kisah_sukses'] = $this->model_home_front->kisah_sukses();
             $this->data['total_anggaran'] = $this->model_home_front->total_anggaran();
+            $this->data['total_pendapatan'] = $this->model_home_front->total_pendapatan();
 
             $this->template->build('home', $this->data);
 
@@ -223,10 +224,37 @@ class Web extends Front
         // die;
         echo json_encode($result);
     }
+    
+    public function donut_chart3()
+    {
+        $apbp_opd = $this->model_home_front->listpendapatan(10);
+        foreach ($apbp_opd as $x) :
+            $label[]    = $x->nama;
+            $val[]      = $x->anggaran;
+        endforeach;
+
+        $result = [
+            'label'     => $label,
+            'val'       => $val,
+            'bgcolor'   => [
+                '#ff7f50', '#87cefa', '#da70d6', '#32cd32', '#6495ed',
+                '#ff69b4', '#ba55d3', '#cd5c5c', '#ffa500', '#40e0d0'
+            ]
+        ];
+        // var_dump($apbp_opd);
+        // die;
+        echo json_encode($result);
+    }
 
     public function clistApbd_OPD()
     {
         $apbp_opd = $this->model_home_front->listApbd_OPD();
+        echo json_encode($apbp_opd);
+    }
+    
+    public function pendapatan()
+    {
+        $apbp_opd = $this->model_home_front->listpendapatan();
         echo json_encode($apbp_opd);
     }
 }
