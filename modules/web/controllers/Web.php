@@ -41,9 +41,10 @@ class Web extends Front
         if (defined('IS_DEMO')) {
             $this->template->build('home-demo');
         } else {
-           
+
+            $this->data['container'] = 'beranda';
             $this->data['get_infoumum'] = $this->model_home_front->get_infoumum();
-            
+
             $this->data['total_anggaran'] = $this->model_home_front->total_anggaran();
             $this->data['total_pendapatan'] = $this->model_home_front->total_pendapatan();
 
@@ -52,18 +53,17 @@ class Web extends Front
             //$this->template->build('home');
         }
     }
-    
+
     public function pengadaan()
     {
-       
-           
-            $this->data['get_infoumum'] = $this->model_home_front->get_infoumum();
-            
-            $this->data['list_e_purchasing'] = $this->model_home_front->list_e_purchasing();
-           
-            $this->template->build('epurchasing', $this->data);
 
-           
+        $this->data['container'] = 'epurchasing';
+
+        $this->data['get_infoumum'] = $this->model_home_front->get_infoumum();
+
+        $this->data['list_e_purchasing'] = $this->model_home_front->list_e_purchasing();
+
+        $this->template->build('home', $this->data);
     }
 
     public function set_full_group_sql()
@@ -228,7 +228,7 @@ class Web extends Front
         // die;
         echo json_encode($result);
     }
-    
+
     public function donut_chart3()
     {
         $apbp_opd = $this->model_home_front->listpendapatan(10);
@@ -255,7 +255,7 @@ class Web extends Front
         $apbp_opd = $this->model_home_front->listApbd_OPD();
         echo json_encode($apbp_opd);
     }
-    
+
     public function pendapatan()
     {
         $apbp_opd = $this->model_home_front->listpendapatan();
