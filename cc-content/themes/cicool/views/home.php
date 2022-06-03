@@ -81,6 +81,17 @@ function tgl_indo($tanggal)
 	<link rel="stylesheet" href="<?php echo $web; ?>assets/css/dark-theme.css" />
 	<link rel="stylesheet" href="<?php echo $web; ?>assets/css/semi-dark.css" />
 	<link rel="stylesheet" href="<?php echo $web; ?>assets/css/header-colors.css" />
+	<!-- jQuery  -->
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+	<script src="<?php echo $web; ?>assets/js/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+	<!-- DATATABLES -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css">
+	<script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
+	<!-- converter to rupiah  -->
+	<script src="https://unpkg.com/@develoka/angka-rupiah-js/index.min.js"></script>
+
+
 	<title>Ekontrak</title>
 
 	<style>
@@ -88,8 +99,6 @@ function tgl_indo($tanggal)
 			color: white !important;
 		}
 	</style>
-	<!-- DATATABLES -->
-	<link rel="stylesheet" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css">
 </head>
 
 <body>
@@ -148,7 +157,7 @@ function tgl_indo($tanggal)
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link <?= $container == 'epurchasing' ? 'active' : ''; ?>" href="<?= base_url(); ?>web/pengadaan">
+							<a class="nav-link <?= $container == 'pengadaan' ? 'active' : ''; ?>" href="<?= base_url(); ?>web/pengadaan">
 								<div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
 								</div>
 								<div class="menu-title">Pengadaan</div>
@@ -424,7 +433,6 @@ function tgl_indo($tanggal)
 	<!-- Bootstrap JS -->
 	<script src="<?php echo $web; ?>assets/js/bootstrap.bundle.min.js"></script>
 	<!--plugins-->
-	<script src="<?php echo $web; ?>assets/js/jquery.min.js"></script>
 	<script src="<?php echo $web; ?>assets/plugins/simplebar/js/simplebar.min.js"></script>
 	<!--<script src="<?php echo $web; ?>assets/plugins/metismenu/js/metisMenu.min.js"></script>-->
 	<script src="<?php echo $web; ?>assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
@@ -436,11 +444,10 @@ function tgl_indo($tanggal)
 	<script src="<?php echo $web; ?>assets/plugins/jquery-knob/excanvas.js"></script>
 	<script src="<?php echo $web; ?>assets/plugins/jquery-knob/jquery.knob.js"></script>
 
-	<!-- datatables -->
-	<script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
+
 	<script>
 		$(function() {
-			$(".knob").knob();
+			// $(".knob").knob();
 			//table apbd
 			$.ajax({
 				url: "<?= base_url('web/clistApbd_OPD') ?>",
@@ -471,13 +478,7 @@ function tgl_indo($tanggal)
 					$('#dataTables_apbd').DataTable();
 				}
 			});
-		});
-	</script>
 
-
-	<script>
-		$(function() {
-			$(".knob").knob();
 			$.ajax({
 				url: "<?= base_url('web/pendapatan') ?>",
 				type: "GET",
@@ -508,28 +509,17 @@ function tgl_indo($tanggal)
 				}
 			});
 
-
 		});
 	</script>
-	<script src="https://unpkg.com/@develoka/angka-rupiah-js/index.min.js"></script>
+
+
 
 	<script script src="<?php echo $web; ?>assets/js/index.js">
 	</script>
 	<!--app JS-->
 	<script src="<?php echo $web; ?>assets/js/app.js"></script>
-	<script>
-		let tot_angg = toRupiah(<?= $total_anggaran->total_anggaran; ?>, {
-			useUnit: true
-		});
-		$(".total_anggaran").text(tot_angg);
-	</script>
 
-	<script>
-		let tot_pend = toRupiah(<?= $total_pendapatan->total_pendapatan; ?>, {
-			useUnit: true
-		});
-		$(".total_pendapatan").text(tot_pend);
-	</script>
+
 </body>
 
 </html>

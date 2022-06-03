@@ -193,3 +193,15 @@
 		</div>
 	</div>
 </div>
+
+
+<script>
+	let tot_angg = toRupiah(<?= $total_anggaran->total_anggaran; ?>, {
+		useUnit: true
+	});
+	$(".total_anggaran").text(tot_angg);
+	let tot_pend = toRupiah(<?= $total_pendapatan->total_pendapatan; ?>, {
+		useUnit: true
+	});
+	$(".total_pendapatan").text(tot_pend);
+</script>

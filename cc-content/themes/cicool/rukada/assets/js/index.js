@@ -107,4 +107,72 @@ $(function () {
       }
     },
   });
+
+  $.ajax({
+    url: "web/chartStatusEpur",
+    type: "get",
+    dataType: "json",
+    success: function (res) {
+      var temp;
+      var labels = [];
+      var values = [];
+      // console.log(res);
+      $.each(res, function (key, val) {
+        if (key == "paket_selesai") {
+          temp = "Paket Selesai";
+        } else {
+          temp = "Paket Proses";
+        }
+        labels.push(temp);
+        values.push(parseInt(val));
+      });
+
+      console.log(labels, values);
+
+      var ctx = document.getElementById("chartStatusEpur").getContext("2d");
+      var myChart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              backgroundColor: ["#ff7f50", "#87cefa"],
+              data: values,
+              // borderWidth: [0, 0, 0, 0],
+            },
+          ],
+        },
+        options: {
+          maintainAspectRatio: false,
+          cutoutPercentage: 60,
+          legend: {
+            position: "bottom",
+            display: false,
+            labels: {
+              fontColor: "#ddd",
+              boxWidth: 15,
+            },
+          },
+          tooltips: {
+            displayColors: false,
+          },
+        },
+      });
+
+      // DONUT TABLE
+      var html = $("#tableStatusEpur");
+      var colors = ["#ff7f50", "#87cefa"];
+      for (let i = 0; i < labels.length; i++) {
+        var text =
+          '<tr><td><i class="bx bxs-circle me-2" style="color: ' +
+          colors[i] +
+          '"></i>' +
+          labels[i] +
+          "</td><td>" +
+          values[i] +
+          " Paket</td></tr>";
+        html.append(text);
+      }
+    },
+  });
 });

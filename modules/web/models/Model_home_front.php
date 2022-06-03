@@ -376,26 +376,26 @@ class Model_home_front extends CI_Model
         $q =  $this->db_bappeda->get();
         return $q->row();
     }
-    
-        public function total_pendapatan()
+
+    public function total_pendapatan()
     {
         $this->db_bappeda->select('sum(aa.anggaran) as total_pendapatan')
             ->from('a_apbd_pendapatan aa');
         $q =  $this->db_bappeda->get();
         return $q->row();
     }
-    
-     public function list_e_purchasing()
+
+    public function list_e_purchasing()
     {
         $this->db_pusat->select('*')
             ->from('paket_e_purchasings');
         $q =  $this->db_pusat->get();
         return $q->row();
     }
-    
-    
-    
-     public function listpendapatan($limit = null)
+
+
+
+    public function listpendapatan($limit = null)
     {
         $this->db_bappeda->select('du.nama_skpd as nama, sum(aa.anggaran) as anggaran, sum(aa.anggaran_pergeseran) as anggaran_pergeseran, sum(aa.anggaran_perubahan) as anggaran_perubahan')
             ->from('a_apbd_pendapatan aa')
@@ -421,5 +421,35 @@ class Model_home_front extends CI_Model
         };
         $q =  $this->db_bappeda->get();
         return $q->result();
+    }
+
+    function total_params($table, $col)
+    {
+        $this->db_pusat->select("sum($col) as nilai");
+        return $this->db_pusat->get($table)->row();
+    }
+
+    function paket_params($table, $col)
+    {
+        $this->db_pusat->select("count(distinct ($col)) as paket");
+        return $this->db_pusat->get($table)->row();
+    }
+
+    function status_epur()
+    {
+        $paketSelesai = $this->db_pusat->query("select count(p.kd_paket) as jml from (select kd_paket, paket_status_str from paket_e_purchasings group by kd_paket) as p where p.paket_status_str = 'Paket Selesai'")->row();
+        $paketProses = $this->db_pusat->query("select count(p.kd_paket) as jml from (select kd_paket, paket_status_str from paket_e_purchasings group by kd_paket) as p where p.paket_status_str = 'Paket Proses'")->row();
+
+
+        return [
+            'paket_proses'  => $paketProses->jml,
+            'paket_selesai' => $paketSelesai->jml,
+            // 'total'         => $paketSelesai->jml + $paketProses->jml,
+        ];
+    }
+
+    function dataTableEpur()
+    {
+        return $this->db_pusat->get('paket_e_purchasings')->result();
     }
 }
