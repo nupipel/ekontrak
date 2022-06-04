@@ -440,16 +440,68 @@ class Model_home_front extends CI_Model
         $paketSelesai = $this->db_pusat->query("select count(p.kd_paket) as jml from (select kd_paket, paket_status_str from paket_e_purchasings group by kd_paket) as p where p.paket_status_str = 'Paket Selesai'")->row();
         $paketProses = $this->db_pusat->query("select count(p.kd_paket) as jml from (select kd_paket, paket_status_str from paket_e_purchasings group by kd_paket) as p where p.paket_status_str = 'Paket Proses'")->row();
 
+        $total = $paketSelesai->jml + $paketProses->jml;
+
+
 
         return [
-            'paket_proses'  => $paketProses->jml,
-            'paket_selesai' => $paketSelesai->jml,
+            'paket_proses'  => $paketProses->jml / $total * 100,
+            'paket_selesai' => $paketSelesai->jml / $total * 100,
             // 'total'         => $paketSelesai->jml + $paketProses->jml,
         ];
     }
 
     function dataTableEpur()
     {
-        return $this->db_pusat->get('paket_e_purchasings')->result();
+
+        // $thn        = 2021;
+        $draw       = $this->input->post('draw');
+        $length     = (int)$this->input->post('length');
+        $search     = $this->input->post('search[value]');
+        $recTotal   = $this->db_pusat->get('paket_e_purchasings')->num_rows();
+
+
+        $this->db_pusat->select('
+                tahun_anggaran,
+                nama_satker,
+                kd_rup,
+                nama_paket,
+                kd_paket,
+                no_paket,
+                tanggal_buat_paket,
+                total,
+                kuantitas,
+                harga_satuan,
+                paket_status_str,
+                kd_penyedia,
+                kd_penyedia_distributor
+                ');
+        // $this->db_pusat->where("tahun_anggaran = '$thn'");
+
+        if ($search) {
+            $this->db_pusat->where("nama_satker like '%$search%'");
+        };
+        $this->db_pusat->limit($length);
+
+        $query = $this->db_pusat->get('paket_e_purchasings');
+        $res = $query->result();
+        $recFiltered = $query->num_rows();
+
+
+
+        foreach ($res as $val) {
+            $data[] = array_values((array)$val);
+        }
+
+        // var_dump(date("Y"));
+        // die;
+        $result = [
+            "draw" => $draw,
+            "recordsTotal" => $recTotal,
+            "recordsFiltered" => $recFiltered,
+            "data" => $data
+        ];
+
+        return $result;
     }
 }

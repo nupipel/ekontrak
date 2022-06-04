@@ -200,28 +200,27 @@
 			<div>
 				<h5 class="mb-0">Table E-Purchasing</h5>
 			</div>
-			<div class="font-22 ms-auto"><i class="bx bx-dots-horizontal-rounded"></i>
-			</div>
+
 		</div>
 		<hr>
 		<div class="table-responsive">
 			<table class="table table-striped align-middle mb-0" id="dataTableEpur">
 				<thead class="table-light">
 					<tr>
-						<th>No</th>
+						<!-- <th>No</th> -->
 						<th>tahun_anggaran</th>
 						<th>nama_satker</th>
 						<th>kd_rup</th>
 						<th>nama_paket</th>
 						<th>kd_paket</th>
-						<!-- <th>no_paket</th>
+						<th>no_paket</th>
 						<th>tanggal_buat_paket</th>
 						<th>total</th>
 						<th>kuantitas</th>
 						<th>harga_satuan</th>
 						<th>paket_status_str</th>
 						<th>kd_penyedia</th>
-						<th>kd_penyedia_distributor</th> -->
+						<th>kd_penyedia_distributor</th>
 					</tr>
 				</thead>
 			</table>
@@ -239,10 +238,25 @@
 	$(".nilai_epur").text(nilai_epur);
 
 	$(function() {
+		// CSRF TOKEN
+		var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
+			csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
+		var dataJson = {
+			[csrfName]: csrfHash,
+			// thn: "2022"
+		};
+
 		$('#dataTableEpur').DataTable({
 			processing: true,
 			serverSide: true,
-			ajax: 'web/dataTableEpur',
+			// searchable: true,
+			ajax: {
+				url: 'web/dataTableEpur',
+				// "dataType": "json",
+				type: 'POST',
+				data: dataJson,
+			},
+
 		});
 
 		// $.ajax({

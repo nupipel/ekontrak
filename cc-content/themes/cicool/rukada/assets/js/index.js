@@ -168,9 +168,9 @@ $(function () {
           colors[i] +
           '"></i>' +
           labels[i] +
-          "</td><td>" +
+          "</td><td><strong>" +
           values[i] +
-          " Paket</td></tr>";
+          " %</strong></td></tr>";
         html.append(text);
       }
     },
