@@ -16,6 +16,9 @@ class Web extends Front
     {
         parent::__construct();
         $this->load->model('model_home_front');
+        $this->load->model('model_epurchasing');
+        $this->load->model('model_nontender');
+        $this->load->model('model_tender');
     }
 
     public function index()
@@ -59,6 +62,10 @@ class Web extends Front
         $data = [
             'container'         => 'pengadaan',
             'get_infoumum'      => $this->model_home_front->get_infoumum(),
+            'nilai_tender'      => $this->model_home_front->total_params('v_tender', 'nilai_kontrak'),
+            'paket_tender'      => $this->model_home_front->paket_params('v_tender', 'kd_paket'),
+            'nilai_nontender'   => $this->model_home_front->total_params('v_non_tender', 'nilai_kontrak'),
+            'paket_nontender'   => $this->model_home_front->paket_params('v_non_tender', 'kd_nontender'),
             'nilai_epur'        => $this->model_home_front->total_params('paket_e_purchasings', 'total'),
             'paket_epur'        => $this->model_home_front->paket_params('paket_e_purchasings', 'kd_paket'),
 
@@ -266,13 +273,118 @@ class Web extends Front
 
     function chartStatusEpur()
     {
-        echo json_encode($this->model_home_front->status_epur());
+        echo json_encode($this->model_epurchasing->status_epur());
     }
 
     function dataTableEpur()
     {
-        // echo json_encode($result);
-        echo json_encode($this->model_home_front->dataTableEpur());
+        header('Content-Type: application/json');
+        $list = $this->model_epurchasing->dataTableEpur();
+        $data = array();
+        $no = $this->input->post('start');
+
+        foreach ($list as $datas) {
+            $no++;
+            $row = array();
+
+            $row[] =  '<strong>' . $no . '</strong>';
+            $row[] = $datas->tahun_anggaran;
+            $row[] = $datas->nama_satker;
+            $row[] = $datas->kd_rup;
+            $row[] = $datas->nama_paket;
+            $row[] = $datas->kd_paket;
+            $row[] = $datas->no_paket;
+            $row[] = $datas->tanggal_buat_paket;
+            $row[] = $datas->total;
+            $row[] = $datas->kuantitas;
+            $row[] = $datas->harga_satuan;
+            $row[] = $datas->paket_status_str;
+            $row[] = $datas->kd_penyedia;
+            $row[] = $datas->kd_penyedia_distributor;
+            $data[] = $row;
+        }
+        $output = array(
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->model_epurchasing->count_all(),
+            "recordsFiltered" => $this->model_epurchasing->count_filtered(),
+            "data" => $data,
+        );
+        //output to json format
+        $this->output->set_output(json_encode($output));
+    }
+
+    function dataTableNonTender()
+    {
+        header('Content-Type: application/json');
+        $list = $this->model_nontender->dataTableNonTender();
+        $data = array();
+        $no = $this->input->post('start');
+
+        foreach ($list as $datas) {
+            $no++;
+            $row = array();
+
+            $row[] =  '<strong>' . $no . '</strong>';
+            $row[] = $datas->nama_satker;
+            $row[] = $datas->nama_paket;
+            $row[] = $datas->kd_rup_paket;
+            $row[] = $datas->kd_nontender;
+            $row[] = $datas->no_kontrak;
+            $row[] = $datas->tgl_kontrak;
+            $row[] = $datas->pagu;
+            $row[] = $datas->nilai_kontrak;
+            $row[] = $datas->nama_penyedia;
+            $row[] = $datas->tgl_mulai_kerja_spmk;
+            $row[] = $datas->tgl_selesai_kerja_spmk;
+            $row[] = $datas->no_bast;
+            $row[] = $datas->tgl_bast;
+            $data[] = $row;
+        }
+        $output = array(
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->model_nontender->count_all(),
+            "recordsFiltered" => $this->model_nontender->count_filtered(),
+            "data" => $data,
+        );
+        //output to json format
+        $this->output->set_output(json_encode($output));
+    }
+
+    function dataTableTender()
+    {
+        header('Content-Type: application/json');
+        $list = $this->model_tender->dataTableTender();
+        $data = array();
+        $no = $this->input->post('start');
+
+        foreach ($list as $datas) {
+            $no++;
+            $row = array();
+
+            $row[] =  '<strong>' . $no . '</strong>';
+            $row[] = $datas->nama_satker;
+            $row[] = $datas->nama_paket;
+            $row[] = $datas->kd_rup_paket;
+            $row[] = $datas->kd_tender;
+            $row[] = $datas->no_kontrak;
+            $row[] = $datas->tgl_kontrak;
+            $row[] = $datas->pagu;
+            $row[] = $datas->nilai_kontrak;
+            $row[] = $datas->nama_penyedia;
+            $row[] = $datas->tgl_mulai_kerja_spmk;
+            $row[] = $datas->tgl_selesai_kerja_spmk;
+            $row[] = $datas->no_bast;
+            $row[] = $datas->tgl_bast;
+            $data[] = $row;
+        }
+        $output = array(
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->model_tender->count_all(),
+            "recordsFiltered" => $this->model_tender->count_filtered(),
+            "data" => $data,
+        );
+        //output to json format
+        $this->output->set_output(json_encode($output));
     }
 }
 
