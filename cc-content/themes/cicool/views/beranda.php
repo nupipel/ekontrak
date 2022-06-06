@@ -204,4 +204,70 @@
 		useUnit: true
 	});
 	$(".total_pendapatan").text(tot_pend);
+
+
+	$(function() {
+		// $(".knob").knob();
+		//table apbd
+		$.ajax({
+			url: "<?= base_url('web/clistApbd_OPD') ?>",
+			type: "GET",
+			dataType: "JSON",
+			success: function(res) {
+				var target = $('#dataTables_apbd_opd');
+				var html;
+				var no = 1;
+
+				$.each(res, function(i, val) {
+					html = "<tr>" +
+						"<th>" + no + "</th>" +
+						"<td>" + val.nama + "</td>" +
+						"<td>" + toRupiah(val.anggaran, {
+							floatingPoint: 0
+						}) + "</td>" +
+						"<td>" + toRupiah(val.anggaran_pergeseran, {
+							floatingPoint: 0
+						}) + "</td>" +
+						"<td>" + toRupiah(val.anggaran_perubahan, {
+							floatingPoint: 0
+						}) + "</td>" +
+						"</tr>";
+					target.append(html);
+					no++;
+				});
+				$('#dataTables_apbd').DataTable();
+			}
+		});
+
+		$.ajax({
+			url: "<?= base_url('web/pendapatan') ?>",
+			type: "GET",
+			dataType: "JSON",
+			success: function(res) {
+				var target = $('#dataTables_apbd_opd_pendapatan');
+				var html;
+				var no = 1;
+
+				$.each(res, function(i, val) {
+					html = "<tr>" +
+						"<th>" + no + "</th>" +
+						"<td>" + val.nama + "</td>" +
+						"<td>" + toRupiah(val.anggaran, {
+							floatingPoint: 0
+						}) + "</td>" +
+						"<td>" + toRupiah(val.anggaran_pergeseran, {
+							floatingPoint: 0
+						}) + "</td>" +
+						"<td>" + toRupiah(val.anggaran_perubahan, {
+							floatingPoint: 0
+						}) + "</td>" +
+						"</tr>";
+					target.append(html);
+					no++;
+				});
+				$('#dataTables_pendapatan').DataTable();
+			}
+		});
+
+	});
 </script>

@@ -20,7 +20,6 @@
 	})
 </script>
 
-
 <div class="card shadow-none bg-transparent border-bottom border-2">
 	<div class="card-body">
 		<div class="row align-items-center">
@@ -43,12 +42,12 @@
 
 <div class="row row-cols-1 row-cols-xl-3">
 	<div class="col">
-		<div id="tender" class="card radius-10 cursor-pointer" onclick="gotoTable(this.id)">
+		<div id="tender" class="card radius-10 cursor-pointer  bg-info" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
-				<h3 class="mb-0 text-capitalize text-secondary">kontrak tender</h3>
+				<h3 class="mb-0 text-capitalize">kontrak tender</h3>
 			</div>
 			<hr class="mx-auto">
-			<div class="card-footer border-0 bg-transparent">
+			<div class="card-footer border-0 bg-white">
 				<div class="row align-items-center text-center">
 					<div class="col border-end">
 						<h3 class="mb-0 text-danger nilai_tender"></h3>
@@ -65,13 +64,13 @@
 
 	</div>
 	<div class="col">
-		<div id="nontender" class="card radius-10 cursor-pointer" onclick="gotoTable(this.id)">
+		<div id="nontender" class="card radius-10 cursor-pointer  bg-success" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
-				<h3 class="mb-0 text-capitalize text-secondary">kontrak non tender</h3>
+				<h3 class="mb-0 text-capitalize">kontrak non tender</h3>
 
 			</div>
 			<hr class="mx-auto">
-			<div class="card-footer border-0 bg-transparent">
+			<div class="card-footer border-0 bg-white">
 				<div class="row align-items-center text-center">
 					<div class="col border-end">
 						<h3 class="mb-0 text-danger nilai_nontender"></h3>
@@ -88,13 +87,13 @@
 
 	</div>
 	<div class="col">
-		<div id="epurchasing" class="card radius-10 cursor-pointer" onclick="gotoTable(this.id)">
+		<div id="epurchasing" class="card radius-10 cursor-pointer  bg-warning" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
-				<h3 class="mb-0 text-capitalize text-secondary">E-purchasing</h3>
+				<h3 class="mb-0 text-capitalize">E-purchasing</h3>
 
 			</div>
 			<hr class="mx-auto">
-			<div class="card-footer border-0 bg-transparent">
+			<div class="card-footer border-0 bg-white">
 				<div class="row align-items-center text-center">
 					<div class="col border-end">
 						<h3 class="mb-0 text-danger nilai_epur"></h3>
@@ -119,7 +118,7 @@
 			<div class="card-body">
 				<div class="d-flex align-items-center">
 					<div>
-						<h6 class="mb-0">Kontrak Tender</h6>
+						<h6 class="mb-0">Status Tender</h6>
 					</div>
 					<div class="font-22 ms-auto text-white"><i class="bx bx-dots-horizontal-rounded"></i>
 					</div>
@@ -143,7 +142,7 @@
 			<div class="card-body">
 				<div class="d-flex align-items-center">
 					<div>
-						<h6 class="mb-0">Kontrak Non Tender</h6>
+						<h6 class="mb-0">Status Non Tender</h6>
 					</div>
 					<div class="font-22 ms-auto text-white"><i class="bx bx-dots-horizontal-rounded"></i>
 					</div>
@@ -190,15 +189,17 @@
 
 
 
-<div class="card radius-10">
+<div class="card radius-10 bg-info">
 	<div class="card-body">
 		<div class="d-flex align-items-center">
 			<div>
-				<h5 class="mb-0">Table Kontrak Tender</h5>
+				<h5>Table Kontrak Tender</h5>
 			</div>
-
 		</div>
-		<hr>
+	</div>
+	<div class="card-footer bg-white">
+		<div class="spinner-grow text-primary spinnerDataTableTender" role="status"> <span class="visually-hidden">Loading...</span>
+		</div>
 		<div class="table-responsive">
 			<table class="table table-striped align-middle mb-0" id="dataTableTender">
 				<thead class="table-light">
@@ -224,15 +225,17 @@
 	</div>
 </div>
 
-<div class="card radius-10">
+<div class="card radius-10 bg-success">
 	<div class="card-body">
 		<div class="d-flex align-items-center">
 			<div>
-				<h5 class="mb-0">Table Kontrak Non Tender</h5>
+				<h5>Table Kontrak Non Tender</h5>
 			</div>
-
 		</div>
-		<hr>
+	</div>
+	<div class="card-footer bg-white">
+		<div class="spinner-grow text-primary spinnerDataTableNonTender" role="status"> <span class="visually-hidden">Loading...</span>
+		</div>
 		<div class="table-responsive">
 			<table class="table table-striped align-middle mb-0" id="dataTableNonTender">
 				<thead class="table-light">
@@ -260,15 +263,17 @@
 
 
 
-<div class="card radius-10">
+<div class="card radius-10 bg-warning">
 	<div class="card-body">
 		<div class="d-flex align-items-center">
 			<div>
-				<h5 class="mb-0">Table E-Purchasing</h5>
+				<h5>Table E-Purchasing</h5>
 			</div>
-
 		</div>
-		<hr>
+	</div>
+	<div class="card-footer bg-white">
+		<div class="spinner-grow text-primary spinnerEpurchasing" role="status"> <span class="visually-hidden">Loading...</span>
+		</div>
 		<div class="table-responsive">
 			<table class="table table-striped align-middle mb-0" id="dataTableEpur">
 				<thead class="table-light">
@@ -327,7 +332,7 @@
 			goto = $("#dataTableEpur");
 		}
 		$([document.documentElement, document.body]).animate({
-			scrollTop: goto.offset().top - 190
+			scrollTop: goto.offset().top - 220
 		}, 1200);
 
 	}
@@ -341,6 +346,9 @@
 			// thn: "2022"
 		};
 
+
+
+
 		$('#dataTableTender').DataTable({
 			processing: true,
 			serverSide: true,
@@ -349,6 +357,14 @@
 				url: 'web/dataTableTender',
 				type: 'POST',
 				data: dataJson,
+				"dataSrc": function(json) {
+					$('.spinnerDataTableTender').hide();
+					return json.data;
+				},
+				beforeSend: function() {
+					$('.spinnerDataTableTender').show();
+				},
+
 			},
 		});
 
@@ -360,6 +376,13 @@
 				url: 'web/dataTableNonTender',
 				type: 'POST',
 				data: dataJson,
+				"dataSrc": function(json) {
+					$('.spinnerDataTableNonTender').hide();
+					return json.data;
+				},
+				beforeSend: function() {
+					$('.spinnerDataTableNonTender').show();
+				},
 			},
 		});
 
@@ -371,6 +394,13 @@
 				url: 'web/dataTableEpur',
 				type: 'POST',
 				data: dataJson,
+				"dataSrc": function(json) {
+					$('.spinnerEpurchasing').hide();
+					return json.data;
+				},
+				beforeSend: function() {
+					$('.spinnerEpurchasing').show();
+				},
 			},
 		});
 	})

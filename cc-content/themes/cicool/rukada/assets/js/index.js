@@ -127,7 +127,7 @@ $(function () {
         values.push(parseInt(val));
       });
 
-      console.log(labels, values);
+      // console.log(labels, values);
 
       var ctx = document.getElementById("chartStatusEpur").getContext("2d");
       var myChart = new Chart(ctx, {
