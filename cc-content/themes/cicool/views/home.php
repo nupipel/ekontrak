@@ -160,32 +160,20 @@ function tgl_indo($tanggal)
 							<a class="nav-link <?= $container == 'pengadaan' ? 'active' : ''; ?>" href="<?= base_url(); ?>web/pengadaan">
 								<div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
 								</div>
-								<div class="menu-title">Pengadaan</div>
+								<div class="menu-title">Pelelangan</div>
 							</a>
 						</li>
 
 					
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<div class="parent-icon"><i class='bx bx-basket'></i>
-								</div>
-								<div class="menu-title">Pelelangan</div>
-							</a>
-						</li>
+					
 						<li class="nav-item">
 							<a class="nav-link" <?= $container == 'realisasi' ? 'active' : ''; ?>" href="<?= base_url(); ?>web/realisasi/2022">
 								<div class="parent-icon"><i class='bx bx-copy-alt'></i>
 								</div>
-								<div class="menu-title">Realisasi</div>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<div class="parent-icon"><i class='bx bx-bar-chart-square'></i>
-								</div>
 								<div class="menu-title">Monev</div>
 							</a>
 						</li>
+					
 					</ul>
 				</nav>
 			</div>
