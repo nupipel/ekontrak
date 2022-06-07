@@ -31,7 +31,14 @@
 					<div class="row row-cols-md-auto">
 						<label for="inputToDate" class="col-form-label">Tahun</label>
 						<div class="col-md-4">
-							<input type="text" class="form-control" id="inputToDate">
+							<!--<input type="text" class="form-control" id="inputToDate">-->
+							<select class="form-control" name="tahun">
+							    <option value="">== Pilih Tahun ==</option>
+							     <option value="2019">Tahun 2019</option>
+							      <option value="2020">Tahun 2020</option>
+							       <option value="2021">Tahun 2021</option>
+							        <option value="2022">Tahun 2022</option>
+							</select>
 						</div>
 					</div>
 				</form>
@@ -44,7 +51,7 @@
 	<div class="col">
 		<div id="tender" class="card cursor-pointer  bg-info" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
-				<h3 class="mb-0 text-capitalize">kontrak tender</h3>
+				<h3 class="mb-0 text-capitalize" style="color:white;">kontrak tender</h3>
 			</div>
 			<hr class="mx-auto">
 			<div class="card-footer border-0 bg-white">
@@ -66,7 +73,7 @@
 	<div class="col">
 		<div id="nontender" class="card cursor-pointer  bg-success" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
-				<h3 class="mb-0 text-capitalize">kontrak non tender</h3>
+				<h3 class="mb-0 text-capitalize" style="color:white;">kontrak non tender</h3>
 
 			</div>
 			<hr class="mx-auto">
@@ -89,7 +96,7 @@
 	<div class="col">
 		<div id="epurchasing" class="card cursor-pointer  bg-warning" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
-				<h3 class="mb-0 text-capitalize">E-purchasing</h3>
+				<h3 class="mb-0 text-capitalize" style="color:white;">E-purchasing</h3>
 
 			</div>
 			<hr class="mx-auto">
@@ -193,7 +200,7 @@
 	<div class="card-body">
 		<div class="d-flex align-items-center">
 			<div>
-				<h5>Table Kontrak Tender</h5>
+				<h5 style="color:white;">Table Kontrak Tender</h5>
 			</div>
 		</div>
 	</div>
@@ -229,7 +236,7 @@
 	<div class="card-body">
 		<div class="d-flex align-items-center">
 			<div>
-				<h5>Table Kontrak Non Tender</h5>
+				<h5 style="color:white;">Table Kontrak Non Tender</h5>
 			</div>
 		</div>
 	</div>
@@ -267,7 +274,7 @@
 	<div class="card-body">
 		<div class="d-flex align-items-center">
 			<div>
-				<h5>Table E-Purchasing</h5>
+				<h5 style="color:white;">Table E-Purchasing</h5>
 			</div>
 		</div>
 	</div>
