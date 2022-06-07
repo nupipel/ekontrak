@@ -19,6 +19,7 @@ class Web extends Front
         $this->load->model('model_epurchasing');
         $this->load->model('model_nontender');
         $this->load->model('model_tender');
+        $this->load->model('model_monev');
     }
 
     public function index()
@@ -76,20 +77,22 @@ class Web extends Front
     }
 
 
- public function realisasi($tahun)
+    public function monev()
     {
         $data = [
-            'container'         => 'realisasi',
+            'container'         => 'monev',
             'get_infoumum'      => $this->model_home_front->get_infoumum(),
-           
 
-            'listrealisasi' => $this->model_home_front->listrealisasi($tahun)
         ];
         $this->template->build('home', $data);
     }
 
-
-
+    function listrealisasisss()
+    {
+        // var_dump($this->input->post('year'));
+        // die;
+        echo json_encode($this->model_home_front->listrealisasi($this->input->post('year')));
+    }
 
     public function set_full_group_sql()
     {
@@ -280,9 +283,9 @@ class Web extends Front
         $apbp_opd = $this->model_home_front->listApbd_OPD();
         echo json_encode($apbp_opd);
     }
-    
-    
-     public function clistrealisasi_OPD($tahun)
+
+
+    public function clistrealisasi_OPD($tahun)
     {
         $apbp_opd = $this->model_home_front->listrealisasi($tahun);
         echo json_encode($apbp_opd);
@@ -414,6 +417,47 @@ class Web extends Front
             "draw" => $this->input->post('draw'),
             "recordsTotal" => $this->model_tender->count_all(),
             "recordsFiltered" => $this->model_tender->count_filtered(),
+            "data" => $data,
+        );
+        //output to json format
+        $this->output->set_output(json_encode($output));
+    }
+
+    function dataTableRealisasi()
+    {
+        header('Content-Type: application/json');
+        $list = $this->model_monev->dataTableRealisasi();
+        $data = array();
+        $no = $this->input->post('start');
+        // var_dump($this->model_monev->count_filtered());
+        // die;
+        foreach ($list as $datas) {
+            $no++;
+            $row = array();
+            $row[] =  '<strong>' . $no . '</strong>';
+            $row[] = $datas->tahun;
+            $row[] = $datas->nama_skpd;
+            $row[] = $datas->anggaran;
+            $row[] = $datas->perubahan;
+            $row[] = $datas->jml_realisasi;
+            $row[] = $datas->januari;
+            $row[] = $datas->februari;
+            $row[] = $datas->maret;
+            $row[] = $datas->april;
+            $row[] = $datas->mei;
+            $row[] = $datas->juni;
+            $row[] = $datas->juli;
+            $row[] = $datas->agustus;
+            $row[] = $datas->september;
+            $row[] = $datas->oktober;
+            $row[] = $datas->nopember;
+            $row[] = $datas->desember;
+            $data[] = $row;
+        }
+        $output = array(
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->model_monev->count_all(),
+            "recordsFiltered" => $this->model_monev->count_filtered(),
             "data" => $data,
         );
         //output to json format

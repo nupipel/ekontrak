@@ -88,24 +88,18 @@ class Model_home_front extends CI_Model
         $this->db_pusat->select("count(distinct ($col)) as paket");
         return $this->db_pusat->get($table)->row();
     }
-    
-    
-     public function listrealisasi($tahun)
-    {
-        $this->db_bappeda->select('aa.*, du.nama_skpd')
-            ->from('a_realisasi_keuangan aa')
-            ->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT')
-           ->where('aa.tahun',$tahun)
-            ->order_by('aa.anggaran', 'desc');
-       
-        $q =  $this->db_bappeda->get();
-        return $q->result();
-    }
-    
-    
-    
-    
-    
-    
-    
+
+
+    // public function listrealisasi($tahun)
+    // {
+
+    //     $this->db_bappeda->select('aa.*, du.nama_skpd')
+    //         ->from('a_realisasi_keuangan aa')
+    //         ->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT')
+    //         ->where('aa.tahun', $tahun)
+    //         ->order_by('aa.anggaran', 'desc');
+
+    //     $q =  $this->db_bappeda->get();
+    //     return $q->result();
+    // }
 }

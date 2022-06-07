@@ -207,7 +207,112 @@
 
 
 	$(function() {
-		// $(".knob").knob();
+		"use strict";
+		$.ajax({
+			url: "web/donut_chart3",
+			type: "get",
+			dataType: "json",
+			success: function(res) {
+				// console.log(res.label);
+				var ctx = document.getElementById("chart3pendapatan").getContext("2d");
+				var myChart = new Chart(ctx, {
+					type: "doughnut",
+					data: {
+						labels: res.label,
+						datasets: [{
+							backgroundColor: res.bgcolor,
+							data: res.val,
+							// borderWidth: [0, 0, 0, 0],
+						}, ],
+					},
+					options: {
+						maintainAspectRatio: false,
+						cutoutPercentage: 60,
+						legend: {
+							position: "bottom",
+							display: false,
+							labels: {
+								fontColor: "#ddd",
+								boxWidth: 15,
+							},
+						},
+						tooltips: {
+							displayColors: false,
+						},
+					},
+				});
+
+				// DONUT TABLE
+				let data = res.label.length;
+				var html = $("#donut_table3");
+				for (let i = 0; i < data; i++) {
+					var text =
+						'<tr><td><i class="bx bxs-circle me-2" style="color: ' +
+						res.bgcolor[i] +
+						'"></i>' +
+						res.label[i] +
+						"</td><td>" +
+						toRupiah(res.val[i], {
+							useUnit: true
+						}) +
+						"</td></tr>";
+					html.append(text);
+				}
+			},
+		});
+
+		$.ajax({
+			url: "web/donut_chart",
+			type: "get",
+			dataType: "json",
+			success: function(res) {
+				// console.log(res.label);
+				var ctx = document.getElementById("chart2").getContext("2d");
+				var myChart = new Chart(ctx, {
+					type: "doughnut",
+					data: {
+						labels: res.label,
+						datasets: [{
+							backgroundColor: res.bgcolor,
+							data: res.val,
+							// borderWidth: [0, 0, 0, 0],
+						}, ],
+					},
+					options: {
+						maintainAspectRatio: false,
+						cutoutPercentage: 60,
+						legend: {
+							position: "bottom",
+							display: false,
+							labels: {
+								fontColor: "#ddd",
+								boxWidth: 15,
+							},
+						},
+						tooltips: {
+							displayColors: false,
+						},
+					},
+				});
+
+				// DONUT TABLE
+				let data = res.label.length;
+				var html = $("#donut_table");
+				for (let i = 0; i < data; i++) {
+					var text =
+						'<tr><td><i class="bx bxs-circle me-2" style="color: ' +
+						res.bgcolor[i] +
+						'"></i>' +
+						res.label[i] +
+						"</td><td>" +
+						toRupiah(res.val[i], {
+							useUnit: true
+						}) +
+						"</td></tr>";
+					html.append(text);
+				}
+			},
+		});
 		//table apbd
 		$.ajax({
 			url: "<?= base_url('web/clistApbd_OPD') ?>",

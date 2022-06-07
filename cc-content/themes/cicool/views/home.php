@@ -164,16 +164,16 @@ function tgl_indo($tanggal)
 							</a>
 						</li>
 
-					
-					
+
+
 						<li class="nav-item">
-							<a class="nav-link" <?= $container == 'realisasi' ? 'active' : ''; ?>" href="<?= base_url(); ?>web/realisasi/2022">
+							<a class="nav-link <?= $container == 'monev' ? 'active' : ''; ?>" href="<?= base_url(); ?>web/monev">
 								<div class="parent-icon"><i class='bx bx-copy-alt'></i>
 								</div>
 								<div class="menu-title">Monev</div>
 							</a>
 						</li>
-					
+
 					</ul>
 				</nav>
 			</div>
