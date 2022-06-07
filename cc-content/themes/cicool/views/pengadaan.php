@@ -42,7 +42,7 @@
 
 <div class="row row-cols-1 row-cols-xl-3">
 	<div class="col">
-		<div id="tender" class="card radius-10 cursor-pointer  bg-info" onclick="gotoTable(this.id)">
+		<div id="tender" class="card cursor-pointer  bg-info" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
 				<h3 class="mb-0 text-capitalize">kontrak tender</h3>
 			</div>
@@ -64,7 +64,7 @@
 
 	</div>
 	<div class="col">
-		<div id="nontender" class="card radius-10 cursor-pointer  bg-success" onclick="gotoTable(this.id)">
+		<div id="nontender" class="card cursor-pointer  bg-success" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
 				<h3 class="mb-0 text-capitalize">kontrak non tender</h3>
 
@@ -87,7 +87,7 @@
 
 	</div>
 	<div class="col">
-		<div id="epurchasing" class="card radius-10 cursor-pointer  bg-warning" onclick="gotoTable(this.id)">
+		<div id="epurchasing" class="card cursor-pointer  bg-warning" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
 				<h3 class="mb-0 text-capitalize">E-purchasing</h3>
 
