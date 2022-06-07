@@ -74,6 +74,22 @@ class Web extends Front
         $this->template->build('home', $data);
     }
 
+
+ public function realisasi($tahun)
+    {
+        $data = [
+            'container'         => 'realisasi',
+            'get_infoumum'      => $this->model_home_front->get_infoumum(),
+           
+
+            'listrealisasi' => $this->model_home_front->listrealisasi($tahun)
+        ];
+        $this->template->build('home', $data);
+    }
+
+
+
+
     public function set_full_group_sql()
     {
         $this->db->query(" 
@@ -261,6 +277,13 @@ class Web extends Front
     public function clistApbd_OPD()
     {
         $apbp_opd = $this->model_home_front->listApbd_OPD();
+        echo json_encode($apbp_opd);
+    }
+    
+    
+     public function clistrealisasi_OPD($tahun)
+    {
+        $apbp_opd = $this->model_home_front->listrealisasi($tahun);
         echo json_encode($apbp_opd);
     }
 

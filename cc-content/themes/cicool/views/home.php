@@ -164,13 +164,7 @@ function tgl_indo($tanggal)
 							</a>
 						</li>
 
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<div class="parent-icon"><i class='bx bx-pie-chart-alt-2'></i>
-								</div>
-								<div class="menu-title">APBD</div>
-							</a>
-						</li>
+					
 						<li class="nav-item">
 							<a class="nav-link" href="#">
 								<div class="parent-icon"><i class='bx bx-basket'></i>
@@ -179,7 +173,7 @@ function tgl_indo($tanggal)
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#">
+							<a class="nav-link" <?= $container == 'realisasi' ? 'active' : ''; ?>" href="<?= base_url(); ?>web/realisasi/2022">
 								<div class="parent-icon"><i class='bx bx-copy-alt'></i>
 								</div>
 								<div class="menu-title">Realisasi</div>
