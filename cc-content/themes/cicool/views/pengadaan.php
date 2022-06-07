@@ -14,12 +14,6 @@
 	}
 </style>
 
-<script>
-	$(function() {
-		$('#inputToDate').datepicker();
-	})
-</script>
-
 <div class="card shadow-none bg-transparent border-bottom border-2">
 	<div class="card-body">
 		<div class="row align-items-center">
@@ -28,19 +22,36 @@
 			</div>
 			<div class="col-lg-10">
 				<form>
-					<div class="row row-cols-md-auto">
-						<label for="inputToDate" class="col-form-label">Tahun</label>
-						<div class="col-md-4">
+					<div class="row row-cols-sm-auto">
+						<label for="fileterInstansi" class="col-form-label">Instansi</label>
+						<div class="col-sm-4">
 							<!--<input type="text" class="form-control" id="inputToDate">-->
-							<select class="form-control" name="tahun">
-							    <option value="">== Pilih Tahun ==</option>
-							     <option value="2019">Tahun 2019</option>
-							      <option value="2020">Tahun 2020</option>
-							       <option value="2021">Tahun 2021</option>
-							        <option value="2022">Tahun 2022</option>
+							<select class="form-control" name="fileterInstansi">
+								<option value="">== Pilih Instansi ==</option>
+								<?php foreach ($list_instansi as $instansi) : ?>
+									<option value="<?= $instansi->kd_satker_str; ?>"><?= $instansi->nama_satker; ?></option>
+								<?php endforeach; ?>
 							</select>
 						</div>
+
+						<label for="filterTahun" class="col-form-label">Tahun</label>
+						<div class="col-sm-3">
+							<!--<input type="text" class="form-control" id="inputToDate">-->
+							<select class="form-control" name="filterTahun">
+								<option value="">== Pilih Tahun ==</option>
+								<option value="2022">Tahun 2022</option>
+								<option value="2021">Tahun 2021</option>
+								<option value="2020">Tahun 2020</option>
+								<option value="2019">Tahun 2019</option>
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<a class="btn btn-info rounded btn-refresh text-white mx-3"><i class='bx bx-refresh'></i>Refresh
+							</a>
+						</div>
 					</div>
+
+
 				</form>
 			</div>
 		</div>
@@ -131,12 +142,12 @@
 					</div>
 				</div>
 				<div class="chart-container-2 my-3">
-					<canvas id="chart2"></canvas>
+					<canvas id="tenderChart"></canvas>
 				</div>
 			</div>
 			<div class="table-responsive">
 				<table class="table align-items-center mb-0">
-					<tbody id="donut_table">
+					<tbody id="tenderTable">
 
 					</tbody>
 				</table>
@@ -155,12 +166,12 @@
 					</div>
 				</div>
 				<div class="chart-container-2 my-3">
-					<canvas id="chart3pendapatan"></canvas>
+					<canvas id="nontenderChart"></canvas>
 				</div>
 			</div>
 			<div class="table-responsive">
 				<table class="table align-items-center mb-0">
-					<tbody id="donut_table3">
+					<tbody id="nontenderTable">
 
 					</tbody>
 				</table>
@@ -353,9 +364,6 @@
 			// thn: "2022"
 		};
 
-
-
-
 		$('#dataTableTender').DataTable({
 			processing: true,
 			serverSide: true,
@@ -408,6 +416,234 @@
 				beforeSend: function() {
 					$('.spinnerEpurchasing').show();
 				},
+			},
+		});
+
+
+		// STATUS TENDER 
+		$.ajax({
+			url: "<?= base_url(); ?>web/tenderChart",
+			type: "get",
+			dataType: "json",
+			success: function(res) {
+				var temp;
+				var labels = [];
+				var values = [];
+				var persent = [];
+				$.each(res, function(key, val) {
+					if (key == "persen_selesai") {
+						temp = "Paket Selesai";
+						labels.push(temp);
+						persent.push(parseFloat(val.toFixed(2)));
+					} else if (key == "persen_proses") {
+						temp = "Paket Proses";
+						labels.push(temp);
+						persent.push(parseFloat(val.toFixed(2)));
+					}
+
+					if (key == "selesai") {
+						values.push(parseInt(val));
+					} else if (key == "proses") {
+						values.push(parseInt(val));
+					}
+				});
+				// console.log(labels, values);
+				// exit();
+
+
+				var ctx = document.getElementById("tenderChart").getContext("2d");
+				var myChart = new Chart(ctx, {
+					type: "pie",
+					data: {
+						labels: labels,
+						datasets: [{
+							backgroundColor: ["#ffcd56", "#4bc0c0"],
+							data: values,
+							// borderWidth: [0, 0, 0, 0],
+						}, ],
+					},
+					options: {
+						maintainAspectRatio: false,
+						cutoutPercentage: 60,
+						legend: {
+							position: "bottom",
+							display: false,
+							labels: {
+								fontColor: "#ddd",
+								boxWidth: 15,
+							},
+						},
+						tooltips: {
+							displayColors: false,
+						},
+					},
+				});
+
+				// DONUT TABLE
+				var html = $("#tenderTable");
+				var colors = ["#ffcd56", "#4bc0c0"];
+				for (let i = 0; i < labels.length; i++) {
+					var text =
+						'<tr><td><i class="bx bxs-circle me-2" style="color: ' +
+						colors[i] +
+						'"></i>' +
+						labels[i] +
+						"</td><td><strong>" + values[i] + " (" +
+						persent[i] +
+						"%)</strong></td></tr>";
+					html.append(text);
+				}
+			},
+		});
+
+		// STATUS NONTENDER 
+		$.ajax({
+			url: "<?= base_url(); ?>web/nontenderChart",
+			type: "get",
+			dataType: "json",
+			success: function(res) {
+				var temp;
+				var labels = [];
+				var values = [];
+				var persent = [];
+				$.each(res, function(key, val) {
+					if (key == "persen_selesai") {
+						temp = "Paket Selesai";
+						labels.push(temp);
+						persent.push(parseFloat(val.toFixed(2)));
+					} else if (key == "persen_proses") {
+						temp = "Paket Proses";
+						labels.push(temp);
+						persent.push(parseFloat(val.toFixed(2)));
+					}
+
+					if (key == "selesai") {
+						values.push(parseInt(val));
+					} else if (key == "proses") {
+						values.push(parseInt(val));
+					}
+				});
+				// console.log(labels, values);
+				// exit();
+
+
+				var ctx = document.getElementById("nontenderChart").getContext("2d");
+				var myChart = new Chart(ctx, {
+					type: "pie",
+					data: {
+						labels: labels,
+						datasets: [{
+							backgroundColor: ["#ffcd56", "#4bc0c0"],
+							data: values,
+							// borderWidth: [0, 0, 0, 0],
+						}, ],
+					},
+					options: {
+						maintainAspectRatio: false,
+						cutoutPercentage: 60,
+						legend: {
+							position: "bottom",
+							display: false,
+							labels: {
+								fontColor: "#ddd",
+								boxWidth: 15,
+							},
+						},
+						tooltips: {
+							displayColors: false,
+						},
+					},
+				});
+
+				// DONUT TABLE
+				var html = $("#nontenderTable");
+				var colors = ["#ffcd56", "#4bc0c0"];
+				for (let i = 0; i < labels.length; i++) {
+					var text =
+						'<tr><td><i class="bx bxs-circle me-2" style="color: ' +
+						colors[i] +
+						'"></i>' +
+						labels[i] +
+						"</td><td><strong>" + values[i] + " (" +
+						persent[i] +
+						"%)</strong></td></tr>";
+					html.append(text);
+				}
+			},
+		});
+
+		// STATUS EPURCHASINGS 
+		$.ajax({
+			url: "web/chartStatusEpur",
+			type: "get",
+			dataType: "json",
+			success: function(res) {
+				var temp;
+				var labels = [];
+				var values = [];
+				var persent = [];
+				$.each(res, function(key, val) {
+					if (key == "persen_selesai") {
+						temp = "Paket Selesai";
+						labels.push(temp);
+						persent.push(parseFloat(val.toFixed(2)));
+					} else if (key == "persen_proses") {
+						temp = "Paket Proses";
+						labels.push(temp);
+						persent.push(parseFloat(val.toFixed(2)));
+					}
+
+					if (key == "selesai") {
+						values.push(parseInt(val));
+					} else if (key == "proses") {
+						values.push(parseInt(val));
+					}
+				});
+
+				// console.log(labels, values);
+
+				var ctx = document.getElementById("chartStatusEpur").getContext("2d");
+				var myChart = new Chart(ctx, {
+					type: "pie",
+					data: {
+						labels: labels,
+						datasets: [{
+							backgroundColor: ["#ffcd56", "#4bc0c0"],
+							data: values,
+							// borderWidth: [0, 0, 0, 0],
+						}, ],
+					},
+					options: {
+						maintainAspectRatio: false,
+						cutoutPercentage: 60,
+						legend: {
+							position: "bottom",
+							display: false,
+							labels: {
+								fontColor: "#ddd",
+								boxWidth: 15,
+							},
+						},
+						tooltips: {
+							displayColors: false,
+						},
+					},
+				});
+
+				// DONUT TABLE
+				var html = $("#tableStatusEpur");
+				var colors = ["#ffcd56", "#4bc0c0"];
+				for (let i = 0; i < labels.length; i++) {
+					var text =
+						'<tr><td><i class="bx bxs-circle me-2" style="color: ' +
+						colors[i] +
+						'"></i>' +
+						labels[i] +
+						"</td><td><strong>" + values[i] + " (" +
+						persent[i] +
+						"%)</strong></td></tr>";
+					html.append(text);
+				}
 			},
 		});
 	})

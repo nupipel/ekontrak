@@ -5,7 +5,7 @@ class Model_nontender extends CI_Model
 {
     //set nama tabel yang akan kita tampilkan datanya
     var $table = 'v_non_tender';
-    //set kolom order, kolom pertama saya null untuk kolom edit dan hapus
+    //set kolom order, kolom pertama saya null untuk kolom NOMORs
     var $column_order = array(
         null,
         'nama_satker',
@@ -97,5 +97,22 @@ class Model_nontender extends CI_Model
             $order = $this->order;
             $this->db_pusat->order_by(key($order), $order[key($order)]);
         }
+    }
+
+    function get_status()
+    {
+        $paketSelesai   = $this->db_pusat->select('count(distinct (kd_nontender)) as total')->from('non_tender_selesai_detail_spses')->get()->row();
+        $totalPaket     =  $this->db_pusat->select('count(distinct (kd_nontender)) as total')->get('v_non_tender')->row();
+        $paketProses    = $totalPaket->total - $paketSelesai->total;
+        $result = [
+            // tata letak object dibawah harus urut (ini menentukan tampilan di front end)
+            'proses'    => (int)$paketProses,
+            'selesai'   => (int)$paketSelesai->total,
+            'persen_proses'     => $paketProses / $totalPaket->total * 100,
+            'persen_selesai'    => $paketSelesai->total / $totalPaket->total * 100,
+            'total'     => (int)$totalPaket->total,
+
+        ];
+        return $result;
     }
 }

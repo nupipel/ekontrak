@@ -20,15 +20,17 @@ class Model_epurchasing extends CI_Model
 
     function status_epur()
     {
-        $paketSelesai = $this->db_pusat->query("select count(p.kd_paket) as jml from (select kd_paket, paket_status_str from paket_e_purchasings group by kd_paket) as p where p.paket_status_str = 'Paket Selesai'")->row();
-        $paketProses = $this->db_pusat->query("select count(p.kd_paket) as jml from (select kd_paket, paket_status_str from paket_e_purchasings group by kd_paket) as p where p.paket_status_str = 'Paket Proses'")->row();
+        $paketSelesai = $this->db_pusat->query("select count(p.kd_paket) as total from (select kd_paket, paket_status_str from paket_e_purchasings group by kd_paket) as p where p.paket_status_str = 'Paket Selesai'")->row();
+        $paketProses = $this->db_pusat->query("select count(p.kd_paket) as total from (select kd_paket, paket_status_str from paket_e_purchasings group by kd_paket) as p where p.paket_status_str = 'Paket Proses'")->row();
 
-        $total = $paketSelesai->jml + $paketProses->jml;
+        $total = $paketSelesai->total + $paketProses->total;
 
         return [
-            'paket_proses'  => $paketProses->jml / $total * 100,
-            'paket_selesai' => $paketSelesai->jml / $total * 100,
-            // 'total'         => $paketSelesai->jml + $paketProses->jml,
+            'proses'    => $paketProses->total,
+            'selesai'   => $paketSelesai->total,
+            'total'     => $total,
+            'persen_proses'     => $paketProses->total / $total * 100,
+            'persen_selesai'    => $paketSelesai->total / $total * 100,
         ];
     }
 

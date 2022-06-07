@@ -68,8 +68,9 @@ class Web extends Front
             'paket_nontender'   => $this->model_home_front->paket_params('v_non_tender', 'kd_nontender'),
             'nilai_epur'        => $this->model_home_front->total_params('paket_e_purchasings', 'total'),
             'paket_epur'        => $this->model_home_front->paket_params('paket_e_purchasings', 'kd_paket'),
+            'list_instansi'     => $this->model_home_front->list_instansi(),
 
-            'list_e_purchasing' => $this->model_home_front->list_e_purchasing(),
+            // 'list_e_purchasing' => $this->model_home_front->list_e_purchasing(),
         ];
         $this->template->build('home', $data);
     }
@@ -270,6 +271,15 @@ class Web extends Front
         echo json_encode($apbp_opd);
     }
 
+    function tenderChart()
+    {
+        echo json_encode($this->model_tender->get_status());
+    }
+
+    function nontenderChart()
+    {
+        echo json_encode($this->model_nontender->get_status());
+    }
 
     function chartStatusEpur()
     {

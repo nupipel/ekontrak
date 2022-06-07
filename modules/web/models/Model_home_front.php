@@ -20,6 +20,11 @@ class Model_home_front extends CI_Model
         return $query->result_array();
     }
 
+    function list_instansi()
+    {
+        return $this->db_pusat->order_by('nama_satker')->get('master_satker_rups')->result();
+    }
+
     public function total_anggaran()
     {
         $this->db_bappeda->select('sum(aa.anggaran) as total_anggaran')
