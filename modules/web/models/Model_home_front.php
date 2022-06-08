@@ -65,7 +65,7 @@ class Model_home_front extends CI_Model
 
     public function listApbd_OPD($limit = null)
     {
-        $this->db_bappeda->select('du.nama_skpd as nama, sum(aa.anggaran) as anggaran, sum(aa.anggaran_pergeseran) as anggaran_pergeseran, sum(aa.anggaran_perubahan) as anggaran_perubahan')
+        $this->db_bappeda->select('aa.id_skpd as id, du.nama_skpd as nama, sum(aa.anggaran) as anggaran, sum(aa.anggaran_pergeseran) as anggaran_pergeseran, sum(aa.anggaran_perubahan) as anggaran_perubahan')
             ->from('apbd_anggaran aa')
             ->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT')
             ->group_by('aa.id_skpd')
@@ -87,6 +87,20 @@ class Model_home_front extends CI_Model
     {
         $this->db_pusat->select("count(distinct ($col)) as paket");
         return $this->db_pusat->get($table)->row();
+    }
+
+    function getAPBDbyID($id, $year = null)
+    {
+        $this->db_bappeda->select(' aa.id_skpd as id, du.nama_skpd as nama, k.uraian, aa.anggaran, aa.anggaran_pergeseran, aa.anggaran_perubahan')
+            ->from('apbd_anggaran aa')
+            ->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT')
+            ->join('tampung_exel_subkegiatan k', 'k.id_kegiatan = aa.id_subkegiatan', 'LEFT')
+            ->where('aa.id_skpd', $id)
+            ->where('aa.tahun', $year)
+            ->order_by('anggaran', 'desc');
+
+        $q =  $this->db_bappeda->get()->result();
+        return $q;
     }
 
 

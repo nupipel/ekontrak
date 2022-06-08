@@ -1,3 +1,9 @@
+<style>
+	.instansi:hover {
+		cursor: pointer;
+	}
+</style>
+
 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
 	<div class="col">
 		<div class="card radius-10 ">
@@ -79,8 +85,6 @@
 <!--end row-->
 
 <div class="row">
-
-
 	<div class="col-12 col-xl-6 d-flex">
 		<div class="card radius-10 overflow-hidden w-100">
 			<div class="card-body">
@@ -129,9 +133,6 @@
 			</div>
 		</div>
 	</div>
-
-
-
 </div>
 <!--End Row-->
 
@@ -190,10 +191,47 @@
 
 				</tbody>
 			</table>
+
 		</div>
 	</div>
 </div>
 
+
+
+<!-- Modal -->
+<div class="modal fade" id="opdDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="titleDetailOPD"></h5>
+				<button type="button" onclick="closeModal()">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<table class="table table-striped" id="datatabledetailapbd">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Instansi</th>
+							<th scope="col">Kegiatan</th>
+							<th scope="col">Anggaran</th>
+							<th scope="col">Anggaran Pergeseran</th>
+							<th scope="col">Anggaran Perubahan</th>
+						</tr>
+					</thead>
+					<tbody id="tableDetailAPBD">
+
+					</tbody>
+				</table>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <script>
 	let tot_angg = toRupiah(<?= $total_anggaran->total_anggaran; ?>, {
@@ -205,9 +243,64 @@
 	});
 	$(".total_pendapatan").text(tot_pend);
 
+	function closeModal() {
+		$('#datatabledetailapbd').DataTable().destroy();
+		$('#tableDetailAPBD').empty();
+		$("#opdDetailModal").modal('hide');
+	};
+
+	function opdDetail(id) {
+		var opd = id.split("_");
+		var id_opd = opd[1];
+		// console.log(id_opd);
+		// CSRF TOKEN
+		var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
+			csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
+		var dataJson = {
+			[csrfName]: csrfHash,
+			"id": id_opd,
+			"year": 2022
+		};
+
+		$.ajax({
+			url: "<?= base_url(); ?>web/getDetailAPBD",
+			dataType: "JSON",
+			type: "POST",
+			data: dataJson,
+			success: function(res) {
+				var target = $('#tableDetailAPBD');
+				var html;
+				var no = 1;
+
+				$.each(res, function(i, val) {
+					html = "<tr>" +
+						"<th>" + no + "</th>" +
+						"<td>" + val.nama + "</td>" +
+						"<td>" + val.uraian + "</td>" +
+						"<td>" + toRupiah(val.anggaran, {
+							floatingPoint: 0
+						}) + "</td>" +
+						"<td>" + toRupiah(val.anggaran_pergeseran, {
+							floatingPoint: 0
+						}) + "</td>" +
+						"<td>" + toRupiah(val.anggaran_perubahan, {
+							floatingPoint: 0
+						}) + "</td>" +
+						"</tr>";
+					target.append(html);
+					no++;
+				});
+				$('#datatabledetailapbd').DataTable();
+				$("#titleDetailOPD").text("Detail APBD " + res[0].nama);
+			}
+		});
+
+		$("#opdDetailModal").modal('show');
+	}
 
 	$(function() {
 		"use strict";
+
 		$.ajax({
 			url: "web/donut_chart3",
 			type: "get",
@@ -324,7 +417,7 @@
 				var no = 1;
 
 				$.each(res, function(i, val) {
-					html = "<tr>" +
+					html = "<tr class='instansi' id='opd_" + val.id + "'>" +
 						"<th>" + no + "</th>" +
 						"<td>" + val.nama + "</td>" +
 						"<td>" + toRupiah(val.anggaran, {
@@ -339,8 +432,21 @@
 						"</tr>";
 					target.append(html);
 					no++;
+
+					// detailOpd 
+					$("#opd_" + val.id).mouseenter(function() {
+						$(this).addClass("bg-warning");
+					}).mouseleave(function() {
+						$(this).removeClass("bg-warning");
+					});
+
+					$("#opd_" + val.id).click(function() {
+						opdDetail(this.id);
+					});
+					// end detailOPD
 				});
 				$('#dataTables_apbd').DataTable();
+
 			}
 		});
 

@@ -83,7 +83,8 @@ function tgl_indo($tanggal)
 	<link rel="stylesheet" href="<?php echo $web; ?>assets/css/header-colors.css" />
 	<!-- jQuery  -->
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-	<script src="<?php echo $web; ?>assets/js/jquery.min.js"></script>
+	<!-- <script src="<?php echo $web; ?>assets/js/jquery.min.js"></script> -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 	<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 	<!-- DATATABLES -->
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css">

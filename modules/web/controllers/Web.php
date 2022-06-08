@@ -291,6 +291,14 @@ class Web extends Front
         echo json_encode($apbp_opd);
     }
 
+    function getDetailAPBD()
+    {
+        $id = $this->input->post('id');
+        $year = $this->input->post('year');
+        echo json_encode($this->model_home_front->getAPBDbyID($id, $year));
+    }
+
+
     public function pendapatan()
     {
         $apbp_opd = $this->model_home_front->listpendapatan();
