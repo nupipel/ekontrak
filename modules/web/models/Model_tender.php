@@ -101,19 +101,31 @@ class Model_tender extends CI_Model
 
     function get_status()
     {
-        $paketSelesai   = $this->db_pusat->select('count(distinct (kd_paket)) as total')->from('tender_selesai_detail_spses')->get()->row();
+        $paketSelesai   = $this->db_pusat->select('count(kd_paket) as total')->from('v_tender')->where('kd_paket in (select kd_paket from tender_selesai_detail_spses)')->count_all_results();
 
-        $totalPaket     =  $this->db_pusat->select('count(distinct (kd_paket)) as total')->get('v_tender')->row();
-        $paketProses    = $totalPaket->total - $paketSelesai->total;
+        $totalPaket     = $this->db_pusat->select('count(kd_paket) as total')->from('v_tender')->count_all_results();
+
+        $paketProses    = $this->db_pusat->select('count(kd_paket) as total')->from('v_tender')->where('kd_paket not in (select kd_paket from tender_selesai_detail_spses)')->count_all_results();
+
         $result = [
             // tata letak object dibawah harus urut (ini menentukan tampilan di front end)
             'proses'    => (int)$paketProses,
-            'selesai'   => (int)$paketSelesai->total,
-            'total'     => (int)$totalPaket->total,
-            'persen_proses'     => $paketProses / $totalPaket->total * 100,
-            'persen_selesai'    => $paketSelesai->total / $totalPaket->total * 100,
+            'selesai'   => (int)$paketSelesai,
+            'total'     => (int)$totalPaket,
+            'persen_proses'     => $paketProses / $totalPaket * 100,
+            'persen_selesai'    => $paketSelesai / $totalPaket * 100,
 
         ];
+        return $result;
+    }
+
+    function detailStatus($status)
+    {
+        if ($status == "Paket Selesai") {
+            $result = $this->db_pusat->where('kd_paket in (select kd_paket from tender_selesai_detail_spses)')->get('v_tender')->result();
+        } else {
+            $result = $this->db_pusat->where('kd_paket not in (select kd_paket from tender_selesai_detail_spses)')->get('v_tender')->result();
+        }
         return $result;
     }
 }

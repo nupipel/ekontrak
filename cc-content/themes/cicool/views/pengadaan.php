@@ -318,6 +318,52 @@
 </div>
 
 
+<!-- Modal Detail STATUS -->
+<div class="modal fade" id="modalDetailStatus" tabindex="-1" aria-labelledby="titleDetailStatus" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="titleDetailStatus"></h5>
+				<button type="button" class="btn-close" onclick="closeModal()">
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="table-responsive">
+
+					<table class="table table-striped" id="dataTableDetailStatus">
+						<thead>
+							<tr>
+								<th>No</th>
+								<th>nama_satker</th>
+								<th>nama_paket</th>
+								<th>kd_rup_paket</th>
+								<th>kd_tender</th>
+								<th>no_kontrak</th>
+								<th>tgl_kontrak</th>
+								<th>pagu</th>
+								<th>nilai_kontrak</th>
+								<th>nama_penyedia</th>
+								<th>tgl_mulai_kerja_spmk</th>
+								<th>tgl_selesai_kerja_spmk</th>
+								<th>no_bast</th>
+								<th>tgl_bast</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailStatus">
+
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 <script>
 	let nilai_epur = toRupiah(<?= (int)$nilai_epur->nilai; ?>, {
 		useUnit: true,
@@ -354,6 +400,13 @@
 		}, 1200);
 
 	}
+
+	function closeModal() {
+		$('#dataTableDetailStatus').DataTable().destroy();
+		$('#tableDetailStatus').empty();
+		$("#modalDetailStatus").modal('hide');
+	};
+
 	// ready function 
 	$(function() {
 		// CSRF TOKEN
@@ -463,6 +516,7 @@
 						}, ],
 					},
 					options: {
+						onClick: tenderClick,
 						maintainAspectRatio: false,
 						cutoutPercentage: 60,
 						legend: {
@@ -474,10 +528,58 @@
 							},
 						},
 						tooltips: {
+							events: ['click'],
 							displayColors: false,
 						},
 					},
 				});
+
+				function tenderClick(e) {
+					var activePoints = myChart.getElementsAtEvent(e);
+					// console.log(this.data.labels[0]);
+					var selectedIndex = activePoints[0]._index;
+					var status = this.data.labels[selectedIndex];
+					$.ajax({
+						url: "<?= base_url(); ?>web/detailStatus",
+						type: "POST",
+						dataType: "JSON",
+						data: {
+							[csrfName]: csrfHash,
+							status: status
+						},
+						success: function(res) {
+							var target = $('#tableDetailStatus');
+							var html;
+							var no = 1;
+
+							console.log(res);
+
+							$.each(res, function(i, val) {
+								html = "<tr>" +
+									"<th>" + no + "</th>" +
+									"<td>" + val.nama_satker + "</td>" +
+									"<td>" + val.nama_paket + "</td>" +
+									"<td>" + val.kd_rup_paket + "</td>" +
+									"<td>" + val.kd_tender + "</td>" +
+									"<td>" + val.no_kontrak + "</td>" +
+									"<td>" + val.tgl_kontrak + "</td>" +
+									"<td>" + val.pagu + "</td>" +
+									"<td>" + val.nilai_kontrak + "</td>" +
+									"<td>" + val.nama_penyedia + "</td>" +
+									"<td>" + val.tgl_mulai_kerja_spmk + "</td>" +
+									"<td>" + val.tgl_selesai_kerja_spmk + "</td>" +
+									"<td>" + val.no_bast + "</td>" +
+									"<td>" + val.tgl_bast + "</td>" +
+									"</tr>";
+								target.append(html);
+								no++;
+							});
+							$('#dataTableDetailStatus').DataTable();
+						}
+					})
+					$("#titleDetailStatus").text("Detail Status " + status);
+					$("#modalDetailStatus").modal('show');
+				}
 
 				// DONUT TABLE
 				var html = $("#tenderTable");

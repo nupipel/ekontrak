@@ -198,14 +198,13 @@
 
 
 
-<!-- Modal -->
-<div class="modal fade" id="opdDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
+<!-- Modal Detail APBD -->
+<div class="modal fade" id="opdDetailModal" tabindex="-1" aria-labelledby="titleDetailOPD" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-xl" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="titleDetailOPD"></h5>
-				<button type="button" onclick="closeModal()">
-					<span aria-hidden="true">&times;</span>
+				<button type="button" class="btn-close" onclick="closeModal()">
 				</button>
 			</div>
 			<div class="modal-body">
@@ -300,7 +299,6 @@
 
 	$(function() {
 		"use strict";
-
 		$.ajax({
 			url: "web/donut_chart3",
 			type: "get",

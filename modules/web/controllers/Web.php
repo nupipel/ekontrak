@@ -320,6 +320,11 @@ class Web extends Front
         echo json_encode($this->model_epurchasing->status_epur());
     }
 
+    function detailStatus()
+    {
+        echo json_encode($this->model_tender->detailStatus($this->input->post('status')));
+    }
+
     function dataTableEpur()
     {
         header('Content-Type: application/json');
