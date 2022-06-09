@@ -91,29 +91,21 @@ class Model_home_front extends CI_Model
 
     function getAPBDbyID($id, $year = null)
     {
-        $this->db_bappeda->select(' aa.id_skpd as id, du.nama_skpd as nama, k.uraian, aa.anggaran, aa.anggaran_pergeseran, aa.anggaran_perubahan')
+        $this->db_bappeda->select(' aa.id_skpd as id, aa.id_subkegiatan, du.nama_skpd as nama, aa.anggaran, aa.anggaran_pergeseran, aa.anggaran_perubahan')
             ->from('apbd_anggaran aa')
             ->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT')
-            ->join('tampung_exel_subkegiatan k', 'k.id_kegiatan = aa.id_subkegiatan', 'LEFT')
+            // ->join('tampung_exel_subkegiatan k', 'k.id_kegiatan = aa.id_kegiatan', 'LEFT')
             ->where('aa.id_skpd', $id)
             ->where('aa.tahun', $year)
+            // ->group_by('aa.id_subkegiatan')
             ->order_by('anggaran', 'desc');
 
         $q =  $this->db_bappeda->get()->result();
         return $q;
     }
 
-
-    // public function listrealisasi($tahun)
-    // {
-
-    //     $this->db_bappeda->select('aa.*, du.nama_skpd')
-    //         ->from('a_realisasi_keuangan aa')
-    //         ->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT')
-    //         ->where('aa.tahun', $tahun)
-    //         ->order_by('aa.anggaran', 'desc');
-
-    //     $q =  $this->db_bappeda->get();
-    //     return $q->result();
-    // }
+    function getKegiatanByID($id)
+    {
+        return $this->db_bappeda->get_where('tampung_exel_subkegiatan', ['id_kegiatan' => $id])->result();
+    }
 }

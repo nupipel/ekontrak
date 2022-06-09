@@ -293,9 +293,23 @@ class Web extends Front
 
     function getDetailAPBD()
     {
-        $id = $this->input->post('id');
-        $year = $this->input->post('year');
-        echo json_encode($this->model_home_front->getAPBDbyID($id, $year));
+        $id         = $this->input->post('id');
+        $year       = $this->input->post('year');
+        $listData   = $this->model_home_front->getAPBDbyID($id, $year);
+
+        // $result = [];
+        foreach ($listData as $datas) {
+            $nm_kegiatan =  $this->model_home_front->getKegiatanByID($datas->id_subkegiatan);
+            $result[] = [
+                'kegiatan'  => $nm_kegiatan,
+                'nama'      => $datas->nama,
+                'anggaran'  => $datas->anggaran,
+                'anggaran_pergeseran'   => $datas->anggaran_pergeseran,
+                'anggaran_perubahan'    => $datas->anggaran_perubahan,
+            ];
+        }
+
+        echo json_encode($result);
     }
 
 

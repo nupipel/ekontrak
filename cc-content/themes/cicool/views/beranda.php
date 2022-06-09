@@ -208,7 +208,7 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<table class="table table-striped" id="datatabledetailapbd">
+				<table class="table table-striped table-bordered" id="datatabledetailapbd">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -270,12 +270,17 @@
 				var target = $('#tableDetailAPBD');
 				var html;
 				var no = 1;
-
 				$.each(res, function(i, val) {
+					var list = "<ol class='list-group list-group-numbered'>";
+					$.each(val.kegiatan, function(i, val) {
+						list += "<li class='list-group-item'>" + val.uraian + "</li>"
+					});
+					list += "</ol>";
+
 					html = "<tr>" +
 						"<th>" + no + "</th>" +
 						"<td>" + val.nama + "</td>" +
-						"<td>" + val.uraian + "</td>" +
+						"<td>" + list + "</td>" +
 						"<td>" + toRupiah(val.anggaran, {
 							floatingPoint: 0
 						}) + "</td>" +

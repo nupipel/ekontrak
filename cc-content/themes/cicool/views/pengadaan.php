@@ -338,15 +338,15 @@
 								<th>nama_paket</th>
 								<th>kd_rup_paket</th>
 								<th>kd_tender</th>
-								<th>no_kontrak</th>
-								<th>tgl_kontrak</th>
+								<!-- <th>no_kontrak</th>
+								<th>tgl_kontrak</th> -->
 								<th>pagu</th>
 								<th>nilai_kontrak</th>
 								<th>nama_penyedia</th>
-								<th>tgl_mulai_kerja_spmk</th>
+								<!-- <th>tgl_mulai_kerja_spmk</th>
 								<th>tgl_selesai_kerja_spmk</th>
 								<th>no_bast</th>
-								<th>tgl_bast</th>
+								<th>tgl_bast</th> -->
 							</tr>
 						</thead>
 						<tbody id="tableDetailStatus">
@@ -561,15 +561,15 @@
 									"<td>" + val.nama_paket + "</td>" +
 									"<td>" + val.kd_rup_paket + "</td>" +
 									"<td>" + val.kd_tender + "</td>" +
-									"<td>" + val.no_kontrak + "</td>" +
-									"<td>" + val.tgl_kontrak + "</td>" +
+									// "<td>" + val.no_kontrak + "</td>" +
+									// "<td>" + val.tgl_kontrak + "</td>" +
 									"<td>" + val.pagu + "</td>" +
 									"<td>" + val.nilai_kontrak + "</td>" +
 									"<td>" + val.nama_penyedia + "</td>" +
-									"<td>" + val.tgl_mulai_kerja_spmk + "</td>" +
-									"<td>" + val.tgl_selesai_kerja_spmk + "</td>" +
-									"<td>" + val.no_bast + "</td>" +
-									"<td>" + val.tgl_bast + "</td>" +
+									// "<td>" + val.tgl_mulai_kerja_spmk + "</td>" +
+									// "<td>" + val.tgl_selesai_kerja_spmk + "</td>" +
+									// "<td>" + val.no_bast + "</td>" +
+									// "<td>" + val.tgl_bast + "</td>" +
 									"</tr>";
 								target.append(html);
 								no++;
