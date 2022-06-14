@@ -25,18 +25,48 @@ class Model_home_front extends CI_Model
         return $this->db_pusat->order_by('nama_satker')->get('master_satker_rups')->result();
     }
 
-    public function total_anggaran()
+    private function getIdUnit($id)
     {
-        $this->db_bappeda->select('sum(aa.anggaran) as total_anggaran')
-            ->from('apbd_anggaran aa');
+        $get = $this->db_bappeda->get_where('data_unit', ['kode_skpd' => $id])->row();
+        return $get->id_skpd;
+    }
+
+    public function total_anggaran($opd, $year)
+    {
+        $where = null;
+        if ($opd) {
+            $getID = $this->getIdUnit($opd);
+            $where = $this->db_bappeda->where('id_skpd', $getID);
+        }
+
+
+        $this->db_bappeda->flush_cache();
+        $this->db_bappeda->select('sum(aa.anggaran) as total')->from('apbd_anggaran aa');
+        $where;
+        if ($year) {
+            $this->db_bappeda->where('tahun', $year);
+        }
+
         $q =  $this->db_bappeda->get();
         return $q->row();
     }
 
-    public function total_pendapatan()
+    public function total_pendapatan($opd, $year)
     {
-        $this->db_bappeda->select('sum(aa.anggaran) as total_pendapatan')
-            ->from('a_apbd_pendapatan aa');
+        $where = null;
+        if ($opd) {
+            $getID = $this->getIdUnit($opd);
+            $where = $this->db_bappeda->where('id_skpd', $getID);
+        }
+
+
+        $this->db_bappeda->flush_cache();
+        $this->db_bappeda->select('sum(aa.anggaran) as total')->from('a_apbd_pendapatan aa');
+        $where;
+        if ($year) {
+            $this->db_bappeda->where('tahun', $year);
+        }
+
         $q =  $this->db_bappeda->get();
         return $q->row();
     }
@@ -49,32 +79,63 @@ class Model_home_front extends CI_Model
         return $q->row();
     }
 
-    public function listpendapatan($limit = null)
+    public function listpendapatan($limit = null, $opd = null, $year = null)
     {
+        $where = null;
+        if ($opd) {
+            $getID = $this->getIdUnit($opd);
+            $where = $this->db_bappeda->where('aa.id_skpd', $getID);
+        }
+        $this->db_bappeda->flush_cache();
         $this->db_bappeda->select('du.nama_skpd as nama, sum(aa.anggaran) as anggaran, sum(aa.anggaran_pergeseran) as anggaran_pergeseran, sum(aa.anggaran_perubahan) as anggaran_perubahan')
             ->from('a_apbd_pendapatan aa')
-            ->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT')
-            ->group_by('aa.id_skpd')
+            ->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT');
+        if ($year) {
+            $this->db_bappeda->where('tahun', $year);
+        }
+        $where;
+        $this->db_bappeda->group_by('aa.id_skpd')
             ->order_by('anggaran', 'desc');
         if ($limit) {
             $this->db_bappeda->limit($limit);
         };
         $q =  $this->db_bappeda->get();
-        return $q->result();
+
+        if ($q->num_rows() > 0) {
+            $result = $q->result();
+        } else {
+            $result = null;
+        }
+        return $result;
     }
 
-    public function listApbd_OPD($limit = null)
+    public function listApbd_OPD($limit = null, $opd = null, $year = null)
     {
+        $where = null;
+        if ($opd) {
+            $getID = $this->getIdUnit($opd);
+            $where = $this->db_bappeda->where('aa.id_skpd', $getID);
+        }
+        $this->db_bappeda->flush_cache();
         $this->db_bappeda->select('aa.id_skpd as id, du.nama_skpd as nama, sum(aa.anggaran) as anggaran, sum(aa.anggaran_pergeseran) as anggaran_pergeseran, sum(aa.anggaran_perubahan) as anggaran_perubahan')
             ->from('apbd_anggaran aa')
-            ->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT')
-            ->group_by('aa.id_skpd')
+            ->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT');
+        $where;
+        if ($year) {
+            $this->db_bappeda->where('tahun', $year);
+        }
+        $this->db_bappeda->group_by('aa.id_skpd')
             ->order_by('anggaran', 'desc');
         if ($limit) {
             $this->db_bappeda->limit($limit);
         };
         $q =  $this->db_bappeda->get();
-        return $q->result();
+        if ($q->num_rows() > 0) {
+            $result = $q->result();
+        } else {
+            $result = null;
+        }
+        return $result;
     }
 
     function total_params($table, $col)
@@ -107,5 +168,41 @@ class Model_home_front extends CI_Model
     function getKegiatanByID($id)
     {
         return $this->db_bappeda->get_where('tampung_exel_subkegiatan', ['id_kegiatan' => $id])->result();
+    }
+
+    function list_satker($id = null)
+    {
+
+        $this->db_pusat->select('kd_satker as id, nama_satker')
+            ->from('master_satker_rups');
+        if ($id) {
+            $this->db_pusat->where('kd_satker_str', $id);
+        }
+        return $this->db_pusat->order_by('nama_satker')->get()->result();
+    }
+
+    function getByMethod($id, $year, $method)
+    {
+        $this->db_pusat->select('idsatker as id, count(idsatker) as jml, sum(jumlahpagu) as total')
+            ->from('paket_penyedia_opt1618s')
+            ->where("statusdeletepaket='0' and statusaktifpaket = '1'")
+            ->where("metodepengadaan", $method)
+            ->where("tahunanggaran", $year)
+            ->where("idsatker", $id)
+            ->group_by("idsatker");
+        $query = $this->db_pusat->get();
+        return $query->row();
+    }
+    function getByMethodSwakelola($id, $year)
+    {
+        $this->db_pusat->select('idsatker as id, count(idsatker) as jml, sum(jumlahpagu) as total')
+            ->from('paket_penyedia_opt1618s')
+            ->where("statusdeletepaket='0' and statusaktifpaket = '1'")
+            // ->where("metodepengadaan")
+            ->where("tahunanggaran", $year)
+            ->where("idsatker", $id)
+            ->group_by("idsatker");
+        $query = $this->db_pusat->get();
+        return $query->row();
     }
 }

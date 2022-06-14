@@ -86,11 +86,17 @@ function tgl_indo($tanggal)
 	<script src="<?php echo $web; ?>assets/js/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 	<!-- DATATABLES -->
-	<link rel="stylesheet" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css">
+	<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css"> -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
 	<script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
 	<!-- converter to rupiah  -->
 	<script src="https://unpkg.com/@develoka/angka-rupiah-js/index.min.js"></script>
 
+
+	<!-- loadingOverlay  -->
+	<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
 	<title>Ekontrak</title>
 

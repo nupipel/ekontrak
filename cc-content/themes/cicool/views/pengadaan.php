@@ -29,7 +29,7 @@
 							<select class="form-control" name="fileterInstansi">
 								<option value="">== Pilih Instansi ==</option>
 								<?php foreach ($list_instansi as $instansi) : ?>
-									<option value="<?= $instansi->kd_satker_str; ?>"><?= $instansi->nama_satker; ?></option>
+									<option value="<?= $instansi->kd_satker; ?>"><?= $instansi->nama_satker; ?></option>
 								<?php endforeach; ?>
 							</select>
 						</div>
@@ -50,8 +50,6 @@
 							</a>
 						</div>
 					</div>
-
-
 				</form>
 			</div>
 		</div>
@@ -551,8 +549,6 @@
 							var target = $('#tableDetailStatus');
 							var html;
 							var no = 1;
-
-							console.log(res);
 
 							$.each(res, function(i, val) {
 								html = "<tr>" +

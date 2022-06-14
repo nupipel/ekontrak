@@ -45,17 +45,29 @@ class Web extends Front
         if (defined('IS_DEMO')) {
             $this->template->build('home-demo');
         } else {
-
             $this->data['container'] = 'beranda';
             $this->data['get_infoumum'] = $this->model_home_front->get_infoumum();
-
-            $this->data['total_anggaran'] = $this->model_home_front->total_anggaran();
-            $this->data['total_pendapatan'] = $this->model_home_front->total_pendapatan();
+            $this->data['list_instansi']     = $this->model_home_front->list_instansi();
 
             $this->template->build('home', $this->data);
 
             //$this->template->build('home');
         }
+    }
+
+    function getAngkaDashboard()
+    {
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+
+        $anggaran = $this->model_home_front->total_anggaran($opd, $year);
+        $pendapatan = $this->model_home_front->total_pendapatan($opd, $year);
+
+        $data = [
+            'anggaran'    => isset($anggaran->total) ? $anggaran->total : 0,
+            'pendapatan'  => isset($pendapatan->total) ? $pendapatan->total : 0,
+        ];
+        echo json_encode($data);
     }
 
     public function pengadaan()
@@ -238,11 +250,17 @@ class Web extends Front
 
     public function donut_chart()
     {
-        $apbp_opd = $this->model_home_front->listApbd_OPD(10);
-        foreach ($apbp_opd as $x) :
-            $label[]    = $x->nama;
-            $val[]      = $x->anggaran;
-        endforeach;
+        $apbp_opd = $this->model_home_front->listApbd_OPD(10, false, $this->input->post('year'));
+        if ($apbp_opd) {
+            foreach ($apbp_opd as $x) :
+                $label[]    = $x->nama;
+                $val[]      = $x->anggaran;
+            endforeach;
+        } else {
+            $label  = 0;
+            $val    = 0;
+        }
+
 
         $result = [
             'label'     => $label,
@@ -259,11 +277,16 @@ class Web extends Front
 
     public function donut_chart3()
     {
-        $apbp_opd = $this->model_home_front->listpendapatan(10);
-        foreach ($apbp_opd as $x) :
-            $label[]    = $x->nama;
-            $val[]      = $x->anggaran;
-        endforeach;
+        $apbp_opd = $this->model_home_front->listpendapatan(10, false, $this->input->post('year'));
+        if ($apbp_opd) {
+            foreach ($apbp_opd as $x) :
+                $label[]    = $x->nama;
+                $val[]      = $x->anggaran;
+            endforeach;
+        } else {
+            $label  = 0;
+            $val    = 0;
+        }
 
         $result = [
             'label'     => $label,
@@ -280,7 +303,9 @@ class Web extends Front
 
     public function clistApbd_OPD()
     {
-        $apbp_opd = $this->model_home_front->listApbd_OPD();
+        $year   = $this->input->post('year');
+        $opd    = $this->input->post('opd');
+        $apbp_opd = $this->model_home_front->listApbd_OPD(false, $opd, $year);
         echo json_encode($apbp_opd);
     }
 
@@ -312,10 +337,11 @@ class Web extends Front
         echo json_encode($result);
     }
 
-
     public function pendapatan()
     {
-        $apbp_opd = $this->model_home_front->listpendapatan();
+        $year   = $this->input->post('year');
+        $opd    = $this->input->post('opd');
+        $apbp_opd = $this->model_home_front->listpendapatan(false, $opd, $year);
         echo json_encode($apbp_opd);
     }
 
@@ -489,6 +515,62 @@ class Web extends Front
         );
         //output to json format
         $this->output->set_output(json_encode($output));
+    }
+
+
+
+    // table paket_penyedia_opt1618s
+    function get_paket_penyedia_opt1618s()
+    {
+        $year       = $this->input->post('year');
+        $kd_satker_str   = $this->input->post('opd');
+        $list_satker = $this->model_home_front->list_satker($kd_satker_str);
+        $data = array();
+
+        $no = 0;
+        foreach ($list_satker as $opd) {
+            $no++;
+            $tender     = $this->model_home_front->getByMethod($opd->id, $year, 'tender');
+            $seleksi    = $this->model_home_front->getByMethod($opd->id, $year, 'seleksi');
+            $epurc      = $this->model_home_front->getByMethod($opd->id, $year, 'e-Purchasing');
+            $pl         = $this->model_home_front->getByMethod($opd->id, $year, 'Pengadaan Langsung');
+            $juksung    = $this->model_home_front->getByMethod($opd->id, $year, 'Penunjukan Langsung');
+            $dk         = $this->model_home_front->getByMethod($opd->id, $year, 'Dikecualikan');
+            $swakelola  = $this->model_home_front->getByMethodSwakelola($opd->id, $year);
+            // $darurat    = $this->model_home_front->getByMethod($opd->id, $year, 'Darurat');
+
+
+            $total              = (isset($tender->jml) ? $tender->jml : 0) + (isset($epurc->jml) ? $epurc->jml : 0) + (isset($pl->jml) ? $pl->jml : 0) + (isset($dk->jml) ? $dk->jml : 0) + (isset($swakelola->jml) ? $swakelola->jml : 0);
+            $totalPaguAnggaran  = (isset($tender->total) ? $tender->total : 0) + (isset($epurc->total) ? $epurc->total : 0) + (isset($pl->total) ? $pl->total : 0) + (isset($dk->total) ? $dk->total : 0) + (isset($swakelola->total) ? $swakelola->total : 0);
+            // $row = [];
+            $row['no']  = $no;
+            $row['nama']        = $opd->nama_satker;
+            $row['tender']      = isset($tender->jml) ? $tender->jml : "";
+            $row['pagutender']  = isset($tender->total) ? $this->rupiah($tender->total) : "";
+            $row['seleksi']     = isset($seleksi->jml) ? $seleksi->jml : "";
+            $row['paguseleksi'] = isset($seleksi->total) ? $this->rupiah($seleksi->total) : "";
+            $row['epur']        = isset($epurc->jml) ? $epurc->jml : "";
+            $row['paguepur']    = isset($epurc->total) ? $this->rupiah($epurc->total) : "";
+            $row['pl']          = isset($pl->jml) ? $pl->jml : "";
+            $row['pagupl']      = isset($pl->total) ? $this->rupiah($pl->total) : "";
+            $row['juksung']     = isset($juksung->jml) ? $juksung->jml : "";
+            $row['pagujuksung'] = isset($juksung->total) ? $this->rupiah($juksung->total) : "";
+            $row['dk']          = isset($dk->jml) ? $dk->jml : "";
+            $row['pagudk']      = isset($dk->total) ? $this->rupiah($dk->total) : "";
+            $row['sw']          = isset($swakelola->jml) ? $swakelola->jml : "";
+            $row['pagusw']      = isset($swakelola->total) ? $this->rupiah($swakelola->total) : "";
+            $row['total']       = $total > 0 ? $total : "";
+            $row['totalpagu']   = $totalPaguAnggaran > 0 ? $this->rupiah($totalPaguAnggaran) : "";
+
+            $data['data'][] = $row;
+        }
+        echo json_encode($data);
+    }
+
+    function rupiah($angka)
+    {
+        $hasil_rupiah = number_format($angka, 0, ',', '.');
+        return $hasil_rupiah;
     }
 }
 
