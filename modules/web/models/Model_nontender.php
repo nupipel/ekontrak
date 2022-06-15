@@ -124,16 +124,59 @@ class Model_nontender extends CI_Model
 
     function get_status()
     {
-        $paketSelesai   = $this->db_pusat->select('count(distinct (kd_nontender)) as total')->from('non_tender_selesai_detail_spses')->get()->row();
-        $totalPaket     =  $this->db_pusat->select('count(distinct (kd_nontender)) as total')->get('v_non_tender')->row();
-        $paketProses    = $totalPaket->total - $paketSelesai->total;
+        // MULTIPLE QUERY ==============================
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+
+        // PAKET PROSES ================================
+        $paketSelesai   = $this->db_pusat->select('count(distinct(kd_nontender)) as total')->from('v_non_tender')->where('kd_nontender in (select kd_nontender from non_tender_selesai_detail_spses)');
+        if ($opd) {
+            $paketSelesai->where('kd_satker', $opd);
+        }
+        if ($year) {
+            $paketSelesai->where('tahun_anggaran', $year);
+        }
+        $paketSelesai = $paketSelesai->get()->row();
+        $selesai = $paketSelesai->total;
+
+        //PAKET PROSES ==================================
+        $paketProses    = $this->db_pusat->select('count(distinct(kd_nontender)) as total')->from('v_non_tender')->where('kd_nontender not in (select kd_nontender from non_tender_selesai_detail_spses)');
+        if ($opd) {
+            $paketProses->where('kd_satker', $opd);
+        }
+        if ($year) {
+            $paketProses->where('tahun_anggaran', $year);
+        }
+        $paketProses = $paketProses->get()->row();
+        $proses = $paketProses->total;
+
+        // TOTAL PAKET ==================================
+        $totalPaket     = $this->db_pusat->select('count(distinct(kd_nontender)) as total')->from('v_non_tender');
+        if ($opd) {
+            $totalPaket->where('kd_satker', $opd);
+        }
+        if ($year) {
+            $totalPaket->where('tahun_anggaran', $year);
+        }
+        $totalPaket = $totalPaket->get()->row();
+        $total = $totalPaket->total;
+
+        if ($total > 0) {
+            $persProses = $proses / $total * 100;
+            $persSelesai = $selesai / $total * 100;
+        } else {
+            $persProses = 0;
+            $persSelesai = 0;
+        }
+        // ==============================================
+
         $result = [
             // tata letak object dibawah harus urut (ini menentukan tampilan di front end)
-            'proses'    => (int)$paketProses,
-            'selesai'   => (int)$paketSelesai->total,
-            'persen_proses'     => $paketProses / $totalPaket->total * 100,
-            'persen_selesai'    => $paketSelesai->total / $totalPaket->total * 100,
-            'total'     => (int)$totalPaket->total,
+            'proses'    => (int)$proses,
+            'selesai'   => (int)$selesai,
+            'total'     => (int)$total,
+            'persen_proses'     => $persProses,
+            'persen_selesai'    => $persSelesai,
 
         ];
         return $result;

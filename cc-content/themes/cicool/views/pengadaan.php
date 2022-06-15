@@ -122,7 +122,7 @@
 
 <div class="row row-cols-1 row-cols-xl-3">
 	<div class="col">
-		<div class="card radius-10 overflow-hidden w-100">
+		<div class="card radius-10 overflow-hidden w-100 cardtender">
 			<div class="card-body tenderChart">
 				<div class="d-flex align-items-center">
 					<div>
@@ -138,7 +138,6 @@
 			<div class="table-responsive">
 				<table class="table align-items-center mb-0">
 					<tbody id="tenderTable">
-
 					</tbody>
 				</table>
 			</div>
@@ -146,7 +145,7 @@
 	</div>
 
 	<div class="col">
-		<div class="card radius-10 overflow-hidden w-100">
+		<div class="card radius-10 overflow-hidden w-100 cardnontender">
 			<div class="card-body nontenderChart">
 				<div class="d-flex align-items-center">
 					<div>
@@ -162,7 +161,6 @@
 			<div class="table-responsive">
 				<table class="table align-items-center mb-0">
 					<tbody id="nontenderTable">
-
 					</tbody>
 				</table>
 			</div>
@@ -170,7 +168,7 @@
 	</div>
 
 	<div class="col">
-		<div class="card radius-10 overflow-hidden w-100">
+		<div class="card radius-10 overflow-hidden w-100 cardepurc">
 			<div class="card-body chartStatusEpur">
 				<div class="d-flex align-items-center">
 					<div>
@@ -379,6 +377,10 @@
 		$("#modalDetailStatus").modal('hide');
 	};
 
+	function redraw(id) {
+
+	}
+
 	function refresh() {
 		const opd = $("#fileterInstansi").val();
 		const year = $("#filterTahun").val();
@@ -509,8 +511,22 @@
 			},
 			beforeSend: function() {
 				$(".tenderChart").LoadingOverlay("show");
+				$(".cardtender").LoadingOverlay("hide", true);
+				$("#tenderTable").empty();
+				if (window.tenderChartDraw) {
+					window.tenderChartDraw.destroy();
+				}
+
 			},
 			success: function(res) {
+				if (!res.total) {
+					$(".cardtender").LoadingOverlay("show", {
+						image: "",
+						text: "data kosong"
+					});
+					return;
+				}
+
 				let temp;
 				let labels = [];
 				let values = [];
@@ -534,7 +550,7 @@
 				});
 
 				const ctx = document.getElementById("tenderChart").getContext("2d");
-				const myChart = new Chart(ctx, {
+				window.tenderChartDraw = new Chart(ctx, {
 					type: "pie",
 					data: {
 						labels: labels,
@@ -641,8 +657,20 @@
 			},
 			beforeSend: function() {
 				$(".nontenderChart").LoadingOverlay("show");
+				$(".cardnontender").LoadingOverlay("hide", true);
+				$("#nontenderTable").empty();
+				if (window.nontenderChartDraw) {
+					window.nontenderChartDraw.destroy();
+				}
 			},
 			success: function(res) {
+				if (!res.total) {
+					$(".cardnontender").LoadingOverlay("show", {
+						image: "",
+						text: "data kosong"
+					});
+					return;
+				}
 				let temp;
 				let labels = [];
 				let values = [];
@@ -664,12 +692,9 @@
 						values.push(parseInt(val));
 					}
 				});
-				// console.log(labels, values);
-				// exit();
-
 
 				const ctx = document.getElementById("nontenderChart").getContext("2d");
-				const myChart = new Chart(ctx, {
+				window.nontenderChartDraw = new Chart(ctx, {
 					type: "pie",
 					data: {
 						labels: labels,
@@ -729,8 +754,20 @@
 			},
 			beforeSend: function() {
 				$(".chartStatusEpur").LoadingOverlay("show");
+				$(".cardepurc").LoadingOverlay("hide", true);
+				$("#tableStatusEpur").empty();
+				if (window.chartStatusEpurDraw) {
+					window.chartStatusEpurDraw.destroy();
+				}
 			},
 			success: function(res) {
+				if (!res.total) {
+					$(".cardepurc").LoadingOverlay("show", {
+						image: "",
+						text: "data kosong"
+					});
+					return;
+				}
 				let temp;
 				let labels = [];
 				let values = [];
@@ -756,7 +793,7 @@
 				// console.log(labels, values);
 
 				const ctx = document.getElementById("chartStatusEpur").getContext("2d");
-				const myChart = new Chart(ctx, {
+				window.chartStatusEpurDraw = new Chart(ctx, {
 					type: "pie",
 					data: {
 						labels: labels,
@@ -806,8 +843,6 @@
 	// ready function 
 	$(function() {
 		refresh();
-
-
 
 	})
 </script>

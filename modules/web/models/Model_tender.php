@@ -158,6 +158,14 @@ class Model_tender extends CI_Model
         }
         $totalPaket = $totalPaket->get()->row();
         $total = $totalPaket->total;
+
+        if ($total > 0) {
+            $persProses = $proses / $total * 100;
+            $persSelesai = $selesai / $total * 100;
+        } else {
+            $persProses = 0;
+            $persSelesai = 0;
+        }
         // ==============================================
 
         $result = [
@@ -165,8 +173,8 @@ class Model_tender extends CI_Model
             'proses'    => (int)$proses,
             'selesai'   => (int)$selesai,
             'total'     => (int)$total,
-            'persen_proses'     => $proses / $total * 100,
-            'persen_selesai'    => $selesai / $total * 100,
+            'persen_proses'     => $persProses,
+            'persen_selesai'    => $persSelesai,
 
         ];
         return $result;

@@ -20,23 +20,59 @@ class Model_epurchasing extends CI_Model
 
     function status_epur()
     {
-        $paketSelesai = $this->db_pusat->query("select count(p.kd_paket) as total from (select kd_paket, paket_status_str from paket_e_purchasings group by kd_paket) as p where p.paket_status_str = 'Paket Selesai'")->row();
-        $paketProses = $this->db_pusat->query("select count(p.kd_paket) as total from (select kd_paket, paket_status_str from paket_e_purchasings group by kd_paket) as p where p.paket_status_str = 'Paket Proses'")->row();
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+        $getID = null;
+        if ($opd) {
+            $getID = $this->getSatkerID($opd);
+            // $filterID = $this->db_pusat->where('satker_id', $getID);
+        }
+
+        $subQuery = $this->db_pusat->from('paket_e_purchasings');
+        if ($getID) {
+            $subQuery->where("satker_id", $getID);
+        }
+        if ($year) {
+            $subQuery->where('tahun_anggaran', $year);
+        }
+        $subQuery->group_by('kd_paket');
+        $subQuery = $subQuery->get_compiled_select();
+
+        $paketSelesai = $this->db_pusat->select('count(p.kd_paket) as total')
+            ->from("($subQuery) as p")
+            ->where("p.paket_status_str", 'Paket Selesai')->get()->row();
+        $selesai = $paketSelesai->total;
+
+
+        $paketProses = $this->db_pusat->select('count(p.kd_paket) as total')
+            ->from("($subQuery) as p")
+            ->where("p.paket_status_str", 'Paket Proses')->get()->row();
+        $proses = $paketProses->total;
+
 
         $total = $paketSelesai->total + $paketProses->total;
 
+        if ($total > 0) {
+            $persProses = $proses / $total * 100;
+            $persSelesai = $selesai / $total * 100;
+        } else {
+            $persProses = 0;
+            $persSelesai = 0;
+        }
+
         return [
-            'proses'    => $paketProses->total,
-            'selesai'   => $paketSelesai->total,
-            'total'     => $total,
-            'persen_proses'     => $paketProses->total / $total * 100,
-            'persen_selesai'    => $paketSelesai->total / $total * 100,
+            'proses'    => (int)$proses,
+            'selesai'   => (int)$selesai,
+            'total'     => (int)$total,
+            'persen_proses'     => $persProses,
+            'persen_selesai'    => $persSelesai,
         ];
     }
 
     private function getSatkerID($id)
     {
         $get = $this->db_pusat->get_where('master_satker_rups', ['kd_satker_str' => $id])->row();
+        $this->db_pusat->flush_cache();
         return $get->kd_satker;
     }
 
@@ -66,7 +102,6 @@ class Model_epurchasing extends CI_Model
             $filterID = $this->db_pusat->where('satker_id', $getID);
         }
 
-        $this->db_pusat->flush_cache();
         $this->db_pusat->from($this->table);
         $filterID;
         if ($year) {
@@ -86,8 +121,6 @@ class Model_epurchasing extends CI_Model
             $getID = $this->getSatkerID($opd);
             $filterID = $this->db_pusat->where('satker_id', $getID);
         }
-
-        $this->db_pusat->flush_cache();
         $this->db_pusat->from($this->table);
         $filterID;
         if ($year) {
