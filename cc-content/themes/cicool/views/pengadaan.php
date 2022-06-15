@@ -26,10 +26,10 @@
 						<label for="fileterInstansi" class="col-form-label">Instansi</label>
 						<div class="col-sm-4">
 							<!--<input type="text" class="form-control" id="inputToDate">-->
-							<select class="form-control" name="fileterInstansi">
+							<select class="form-control" id="fileterInstansi">
 								<option value="">== Pilih Instansi ==</option>
 								<?php foreach ($list_instansi as $instansi) : ?>
-									<option value="<?= $instansi->kd_satker; ?>"><?= $instansi->nama_satker; ?></option>
+									<option value="<?= $instansi->kd_satker_str; ?>"><?= $instansi->nama_satker; ?></option>
 								<?php endforeach; ?>
 							</select>
 						</div>
@@ -37,16 +37,16 @@
 						<label for="filterTahun" class="col-form-label">Tahun</label>
 						<div class="col-sm-3">
 							<!--<input type="text" class="form-control" id="inputToDate">-->
-							<select class="form-control" name="filterTahun">
+							<select class="form-control" id="filterTahun">
 								<option value="">== Pilih Tahun ==</option>
-								<option value="2022">Tahun 2022</option>
-								<option value="2021">Tahun 2021</option>
-								<option value="2020">Tahun 2020</option>
-								<option value="2019">Tahun 2019</option>
+								<option value="2022" selected>2022</option>
+								<option value="2021">2021</option>
+								<option value="2020">2020</option>
+								<option value="2019">2019</option>
 							</select>
 						</div>
 						<div class="col-sm-3">
-							<a class="btn btn-info rounded btn-refresh text-white mx-3"><i class='bx bx-refresh'></i>Refresh
+							<a class="btn btn-info rounded btn-refresh text-white mx-3" onclick="refresh()"><i class='bx bx-refresh'></i>Refresh
 							</a>
 						</div>
 					</div>
@@ -58,7 +58,7 @@
 
 <div class="row row-cols-1 row-cols-xl-3">
 	<div class="col">
-		<div id="tender" class="card cursor-pointer  bg-info" onclick="gotoTable(this.id)">
+		<div id="tender" class="card cursor-pointer bg-info angkaTotal" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
 				<h3 class="mb-0 text-capitalize" style="color:white;">kontrak tender</h3>
 			</div>
@@ -70,20 +70,17 @@
 						<p class="extra-small-font">Nilai</p>
 					</div>
 					<div class="col">
-						<h3 class="mb-0 text-primary"><?= $paket_tender->paket; ?></h3>
+						<h3 class="mb-0 text-primary paket_tender"></h3>
 						<p class="extra-small-font">Paket</p>
 					</div>
 				</div>
 			</div>
 		</div>
-
-
 	</div>
 	<div class="col">
-		<div id="nontender" class="card cursor-pointer  bg-success" onclick="gotoTable(this.id)">
+		<div id="nontender" class="card cursor-pointer bg-success angkaTotal" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
 				<h3 class="mb-0 text-capitalize" style="color:white;">kontrak non tender</h3>
-
 			</div>
 			<hr class="mx-auto">
 			<div class="card-footer border-0 bg-white">
@@ -93,20 +90,17 @@
 						<p class="extra-small-font">Nilai</p>
 					</div>
 					<div class="col">
-						<h3 class="mb-0 text-primary"><?= $paket_nontender->paket; ?></h3>
+						<h3 class="mb-0 text-primary paket_nontender"></h3>
 						<p class="extra-small-font">Paket</p>
 					</div>
 				</div>
 			</div>
 		</div>
-
-
 	</div>
 	<div class="col">
-		<div id="epurchasing" class="card cursor-pointer  bg-warning" onclick="gotoTable(this.id)">
+		<div id="epurchasing" class="card cursor-pointer bg-warning angkaTotal" onclick="gotoTable(this.id)">
 			<div class="card-body text-center">
 				<h3 class="mb-0 text-capitalize" style="color:white;">E-purchasing</h3>
-
 			</div>
 			<hr class="mx-auto">
 			<div class="card-footer border-0 bg-white">
@@ -116,14 +110,12 @@
 						<p class="extra-small-font">Nilai</p>
 					</div>
 					<div class="col">
-						<h3 class="mb-0 text-primary"><?= $paket_epur->paket; ?></h3>
+						<h3 class="mb-0 text-primary paket_epur"></h3>
 						<p class="extra-small-font">Paket</p>
 					</div>
 				</div>
 			</div>
 		</div>
-
-
 	</div>
 </div>
 <!--end row-->
@@ -131,7 +123,7 @@
 <div class="row row-cols-1 row-cols-xl-3">
 	<div class="col">
 		<div class="card radius-10 overflow-hidden w-100">
-			<div class="card-body">
+			<div class="card-body tenderChart">
 				<div class="d-flex align-items-center">
 					<div>
 						<h6 class="mb-0">Status Tender</h6>
@@ -155,7 +147,7 @@
 
 	<div class="col">
 		<div class="card radius-10 overflow-hidden w-100">
-			<div class="card-body">
+			<div class="card-body nontenderChart">
 				<div class="d-flex align-items-center">
 					<div>
 						<h6 class="mb-0">Status Non Tender</h6>
@@ -179,7 +171,7 @@
 
 	<div class="col">
 		<div class="card radius-10 overflow-hidden w-100">
-			<div class="card-body">
+			<div class="card-body chartStatusEpur">
 				<div class="d-flex align-items-center">
 					<div>
 						<h6 class="mb-0">Status E-Purchasing</h6>
@@ -363,29 +355,12 @@
 
 
 <script>
-	let nilai_epur = toRupiah(<?= (int)$nilai_epur->nilai; ?>, {
-		useUnit: true,
-		symbol: null,
-		floatingPoint: 0,
-	});
-	$(".nilai_epur").text(nilai_epur);
-
-	let nilai_tender = toRupiah(<?= (int)$nilai_tender->nilai; ?>, {
-		useUnit: true,
-		symbol: null,
-		floatingPoint: 0,
-	});
-	$(".nilai_tender").text(nilai_tender);
-
-	let nilai_nontender = toRupiah(<?= (int)$nilai_nontender->nilai; ?>, {
-		useUnit: true,
-		symbol: null,
-		floatingPoint: 0,
-	});
-	$(".nilai_nontender").text(nilai_nontender);
+	// CSRF TOKEN {GLOBAL VARIABLES}
+	const csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
+		csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
 
 	function gotoTable(id) {
-		var goto;
+		let goto;
 		if (id == 'tender') {
 			goto = $("#dataTableTender");
 		} else if (id == 'nontender') {
@@ -396,7 +371,6 @@
 		$([document.documentElement, document.body]).animate({
 			scrollTop: goto.offset().top - 220
 		}, 1200);
-
 	}
 
 	function closeModal() {
@@ -405,15 +379,54 @@
 		$("#modalDetailStatus").modal('hide');
 	};
 
-	// ready function 
-	$(function() {
-		// CSRF TOKEN
-		var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
-			csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
-		var dataJson = {
-			[csrfName]: csrfHash,
-			// thn: "2022"
-		};
+	function refresh() {
+		const opd = $("#fileterInstansi").val();
+		const year = $("#filterTahun").val();
+		getAngkaDepan(opd, year);
+		getDataTable(opd, year);
+
+		// Load Chart 
+		chartTender(opd, year);
+		chartNonTender(opd, year);
+		chartEpurc(opd, year);
+
+	}
+
+	function getAngkaDepan(opd, year) {
+		$.ajax({
+			url: "web/getAngkaPelelangan",
+			type: "POST",
+			dataType: "JSON",
+			data: {
+				[csrfName]: csrfHash,
+				opd: opd,
+				year: year
+			},
+			beforeSend: function() {
+				$(".angkaTotal").LoadingOverlay('show');
+			},
+			success: function(res) {
+				$.each(res.nilai, function(i, val) {
+					$("." + i).text(toRupiah(val, {
+						useUnit: true,
+						symbol: null,
+						floatingPoint: 0,
+					}));
+				});
+				$.each(res.paket, function(i, val) {
+					$("." + i).text(val);
+				});
+			}
+		}).always(function() {
+			$(".angkaTotal").LoadingOverlay('hide', true);
+		});
+	}
+
+	function getDataTable(opd, year) {
+		$('#dataTableTender').DataTable().destroy();
+		$('#dataTableNonTender').DataTable().destroy();
+		$('#dataTableEpur').DataTable().destroy();
+
 
 		$('#dataTableTender').DataTable({
 			processing: true,
@@ -422,7 +435,11 @@
 			ajax: {
 				url: 'web/dataTableTender',
 				type: 'POST',
-				data: dataJson,
+				data: {
+					[csrfName]: csrfHash,
+					opd: opd,
+					year: year
+				},
 				"dataSrc": function(json) {
 					$('.spinnerDataTableTender').hide();
 					return json.data;
@@ -441,7 +458,11 @@
 			ajax: {
 				url: 'web/dataTableNonTender',
 				type: 'POST',
-				data: dataJson,
+				data: {
+					[csrfName]: csrfHash,
+					opd: opd,
+					year: year
+				},
 				"dataSrc": function(json) {
 					$('.spinnerDataTableNonTender').hide();
 					return json.data;
@@ -459,7 +480,11 @@
 			ajax: {
 				url: 'web/dataTableEpur',
 				type: 'POST',
-				data: dataJson,
+				data: {
+					[csrfName]: csrfHash,
+					opd: opd,
+					year: year
+				},
 				"dataSrc": function(json) {
 					$('.spinnerEpurchasing').hide();
 					return json.data;
@@ -469,18 +494,27 @@
 				},
 			},
 		});
+	}
 
-
+	function chartTender(opd, year) {
 		// STATUS TENDER 
 		$.ajax({
 			url: "<?= base_url(); ?>web/tenderChart",
-			type: "get",
-			dataType: "json",
+			type: "POST",
+			dataType: "JSON",
+			data: {
+				[csrfName]: csrfHash,
+				opd: opd,
+				year: year
+			},
+			beforeSend: function() {
+				$(".tenderChart").LoadingOverlay("show");
+			},
 			success: function(res) {
-				var temp;
-				var labels = [];
-				var values = [];
-				var persent = [];
+				let temp;
+				let labels = [];
+				let values = [];
+				let persent = [];
 				$.each(res, function(key, val) {
 					if (key == "persen_selesai") {
 						temp = "Paket Selesai";
@@ -498,12 +532,9 @@
 						values.push(parseInt(val));
 					}
 				});
-				// console.log(labels, values);
-				// exit();
 
-
-				var ctx = document.getElementById("tenderChart").getContext("2d");
-				var myChart = new Chart(ctx, {
+				const ctx = document.getElementById("tenderChart").getContext("2d");
+				const myChart = new Chart(ctx, {
 					type: "pie",
 					data: {
 						labels: labels,
@@ -533,10 +564,10 @@
 				});
 
 				function tenderClick(e) {
-					var activePoints = myChart.getElementsAtEvent(e);
+					const activePoints = myChart.getElementsAtEvent(e);
 					// console.log(this.data.labels[0]);
-					var selectedIndex = activePoints[0]._index;
-					var status = this.data.labels[selectedIndex];
+					const selectedIndex = activePoints[0]._index;
+					const status = this.data.labels[selectedIndex];
 					$.ajax({
 						url: "<?= base_url(); ?>web/detailStatus",
 						type: "POST",
@@ -546,9 +577,9 @@
 							status: status
 						},
 						success: function(res) {
-							var target = $('#tableDetailStatus');
-							var html;
-							var no = 1;
+							const target = $('#tableDetailStatus');
+							let html;
+							let no = 1;
 
 							$.each(res, function(i, val) {
 								html = "<tr>" +
@@ -578,10 +609,10 @@
 				}
 
 				// DONUT TABLE
-				var html = $("#tenderTable");
-				var colors = ["#ffcd56", "#4bc0c0"];
+				const html = $("#tenderTable");
+				const colors = ["#ffcd56", "#4bc0c0"];
 				for (let i = 0; i < labels.length; i++) {
-					var text =
+					const text =
 						'<tr><td><i class="bx bxs-circle me-2" style="color: ' +
 						colors[i] +
 						'"></i>' +
@@ -592,18 +623,30 @@
 					html.append(text);
 				}
 			},
+		}).always(function() {
+			$(".tenderChart").LoadingOverlay("hide", true);
 		});
+	}
 
+	function chartNonTender(opd, year) {
 		// STATUS NONTENDER 
 		$.ajax({
 			url: "<?= base_url(); ?>web/nontenderChart",
-			type: "get",
-			dataType: "json",
+			type: "POST",
+			dataType: "JSON",
+			data: {
+				[csrfName]: csrfHash,
+				opd: opd,
+				year: year
+			},
+			beforeSend: function() {
+				$(".nontenderChart").LoadingOverlay("show");
+			},
 			success: function(res) {
-				var temp;
-				var labels = [];
-				var values = [];
-				var persent = [];
+				let temp;
+				let labels = [];
+				let values = [];
+				let persent = [];
 				$.each(res, function(key, val) {
 					if (key == "persen_selesai") {
 						temp = "Paket Selesai";
@@ -625,8 +668,8 @@
 				// exit();
 
 
-				var ctx = document.getElementById("nontenderChart").getContext("2d");
-				var myChart = new Chart(ctx, {
+				const ctx = document.getElementById("nontenderChart").getContext("2d");
+				const myChart = new Chart(ctx, {
 					type: "pie",
 					data: {
 						labels: labels,
@@ -654,10 +697,10 @@
 				});
 
 				// DONUT TABLE
-				var html = $("#nontenderTable");
-				var colors = ["#ffcd56", "#4bc0c0"];
+				const html = $("#nontenderTable");
+				const colors = ["#ffcd56", "#4bc0c0"];
 				for (let i = 0; i < labels.length; i++) {
-					var text =
+					const text =
 						'<tr><td><i class="bx bxs-circle me-2" style="color: ' +
 						colors[i] +
 						'"></i>' +
@@ -668,18 +711,30 @@
 					html.append(text);
 				}
 			},
+		}).always(function() {
+			$(".nontenderChart").LoadingOverlay("hide", true);
 		});
+	}
 
+	function chartEpurc(opd, year) {
 		// STATUS EPURCHASINGS 
 		$.ajax({
 			url: "web/chartStatusEpur",
-			type: "get",
-			dataType: "json",
+			type: "POST",
+			dataType: "JSON",
+			data: {
+				[csrfName]: csrfHash,
+				opd: opd,
+				year: year
+			},
+			beforeSend: function() {
+				$(".chartStatusEpur").LoadingOverlay("show");
+			},
 			success: function(res) {
-				var temp;
-				var labels = [];
-				var values = [];
-				var persent = [];
+				let temp;
+				let labels = [];
+				let values = [];
+				let persent = [];
 				$.each(res, function(key, val) {
 					if (key == "persen_selesai") {
 						temp = "Paket Selesai";
@@ -700,8 +755,8 @@
 
 				// console.log(labels, values);
 
-				var ctx = document.getElementById("chartStatusEpur").getContext("2d");
-				var myChart = new Chart(ctx, {
+				const ctx = document.getElementById("chartStatusEpur").getContext("2d");
+				const myChart = new Chart(ctx, {
 					type: "pie",
 					data: {
 						labels: labels,
@@ -729,10 +784,10 @@
 				});
 
 				// DONUT TABLE
-				var html = $("#tableStatusEpur");
-				var colors = ["#ffcd56", "#4bc0c0"];
+				const html = $("#tableStatusEpur");
+				const colors = ["#ffcd56", "#4bc0c0"];
 				for (let i = 0; i < labels.length; i++) {
-					var text =
+					const text =
 						'<tr><td><i class="bx bxs-circle me-2" style="color: ' +
 						colors[i] +
 						'"></i>' +
@@ -743,6 +798,16 @@
 					html.append(text);
 				}
 			},
+		}).always(function() {
+			$(".chartStatusEpur").LoadingOverlay("hide", true);
 		});
+	}
+
+	// ready function 
+	$(function() {
+		refresh();
+
+
+
 	})
 </script>

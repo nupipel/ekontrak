@@ -65,13 +65,34 @@ class Model_nontender extends CI_Model
 
     public function count_all()
     {
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+
         $this->db_pusat->from($this->table);
+        if ($opd) {
+            $this->db_pusat->where('kd_satker', $opd);
+        }
+        if ($year) {
+            $this->db_pusat->where('tahun_anggaran', $year);
+        }
+        $this->db_pusat->group_by('kd_nontender');
+
         return $this->db_pusat->count_all_results();
     }
 
     private function _get_datatables_query()
     {
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+
         $this->db_pusat->from($this->table);
+        if ($opd) {
+            $this->db_pusat->where('kd_satker', $opd);
+        }
+        if ($year) {
+            $this->db_pusat->where('tahun_anggaran', $year);
+        }
+
         $i = 0;
         foreach ($this->column_search as $item) // loop kolom 
         {
@@ -89,6 +110,8 @@ class Model_nontender extends CI_Model
             }
             $i++;
         }
+        $this->db_pusat->group_by('kd_nontender');
+
 
         // jika datatable mengirim POST untuk order
         if ($this->input->post('order')) {

@@ -34,6 +34,12 @@ class Model_epurchasing extends CI_Model
         ];
     }
 
+    private function getSatkerID($id)
+    {
+        $get = $this->db_pusat->get_where('master_satker_rups', ['kd_satker_str' => $id])->row();
+        return $get->kd_satker;
+    }
+
     function dataTableEpur()
     {
         $this->_epurchasing_datatables_query();
@@ -52,13 +58,42 @@ class Model_epurchasing extends CI_Model
 
     public function count_all()
     {
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+        $filterID = null;
+        if ($opd) {
+            $getID = $this->getSatkerID($opd);
+            $filterID = $this->db_pusat->where('satker_id', $getID);
+        }
+
+        $this->db_pusat->flush_cache();
         $this->db_pusat->from($this->table);
+        $filterID;
+        if ($year) {
+            $this->db_pusat->where('tahun_anggaran', $year);
+        }
+        $this->db_pusat->group_by('kd_paket');
+
         return $this->db_pusat->count_all_results();
     }
 
     private function _epurchasing_datatables_query()
     {
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+        $filterID = null;
+        if ($opd) {
+            $getID = $this->getSatkerID($opd);
+            $filterID = $this->db_pusat->where('satker_id', $getID);
+        }
+
+        $this->db_pusat->flush_cache();
         $this->db_pusat->from($this->table);
+        $filterID;
+        if ($year) {
+            $this->db_pusat->where('tahun_anggaran', $year);
+        }
+
         $i = 0;
         foreach ($this->column_search as $item) // loop kolom 
         {
@@ -76,6 +111,8 @@ class Model_epurchasing extends CI_Model
             }
             $i++;
         }
+        $this->db_pusat->group_by('kd_paket');
+
 
         // jika datatable mengirim POST untuk order
         if ($this->input->post('order')) {

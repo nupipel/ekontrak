@@ -70,17 +70,36 @@ class Web extends Front
         echo json_encode($data);
     }
 
+    function getAngkaPelelangan()
+    {
+        $nilai_tender       = $this->model_home_front->total_params('v_tender', 'nilai_kontrak');
+        $paket_tender       = $this->model_home_front->paket_params('v_tender', 'kd_paket');
+        $nilai_nontender    = $this->model_home_front->total_params('v_non_tender', 'nilai_kontrak');
+        $paket_nontender    = $this->model_home_front->paket_params('v_non_tender', 'kd_nontender');
+        $nilai_epur         = $this->model_home_front->total_epurc();
+        $paket_epur         = $this->model_home_front->paket_epurc();
+
+        $result = [
+            'nilai' => [
+                'nilai_tender'      => isset($nilai_tender->nilai) ? (int)$nilai_tender->nilai : 0,
+                'nilai_nontender'   => isset($nilai_nontender->nilai) ? (int)$nilai_nontender->nilai : 0,
+                'nilai_epur'        => isset($nilai_epur->nilai) ? (int)$nilai_epur->nilai : 0,
+            ],
+            'paket' => [
+                'paket_tender'      => isset($paket_tender->paket) ? (int)$paket_tender->paket : 0,
+                'paket_nontender'   => isset($paket_nontender->paket) ? (int)$paket_nontender->paket : 0,
+                'paket_epur'        => isset($paket_epur->paket) ? (int)$paket_epur->paket : 0,
+            ]
+
+        ];
+        echo json_encode($result);
+    }
+
     public function pengadaan()
     {
         $data = [
             'container'         => 'pengadaan',
             'get_infoumum'      => $this->model_home_front->get_infoumum(),
-            'nilai_tender'      => $this->model_home_front->total_params('v_tender', 'nilai_kontrak'),
-            'paket_tender'      => $this->model_home_front->paket_params('v_tender', 'kd_paket'),
-            'nilai_nontender'   => $this->model_home_front->total_params('v_non_tender', 'nilai_kontrak'),
-            'paket_nontender'   => $this->model_home_front->paket_params('v_non_tender', 'kd_nontender'),
-            'nilai_epur'        => $this->model_home_front->total_params('paket_e_purchasings', 'total'),
-            'paket_epur'        => $this->model_home_front->paket_params('paket_e_purchasings', 'kd_paket'),
             'list_instansi'     => $this->model_home_front->list_instansi(),
 
             // 'list_e_purchasing' => $this->model_home_front->list_e_purchasing(),

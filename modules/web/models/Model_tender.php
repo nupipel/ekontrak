@@ -43,7 +43,6 @@ class Model_tender extends CI_Model
 
     public function __construct()
     {
-        // $this->db_bappeda = $this->load->database('bappeda', true);
         $this->db_pusat = $this->load->database('pusat', true);
     }
 
@@ -65,13 +64,34 @@ class Model_tender extends CI_Model
 
     public function count_all()
     {
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+
         $this->db_pusat->from($this->table);
+        if ($opd) {
+            $this->db_pusat->where('kd_satker', $opd);
+        }
+        if ($year) {
+            $this->db_pusat->where('tahun_anggaran', $year);
+        }
+        $this->db_pusat->group_by('kd_paket');
+
         return $this->db_pusat->count_all_results();
     }
 
     private function _get_datatables_query()
     {
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+
         $this->db_pusat->from($this->table);
+        if ($opd) {
+            $this->db_pusat->where('kd_satker', $opd);
+        }
+        if ($year) {
+            $this->db_pusat->where('tahun_anggaran', $year);
+        }
+
         $i = 0;
         foreach ($this->column_search as $item) // loop kolom 
         {
@@ -89,6 +109,7 @@ class Model_tender extends CI_Model
             }
             $i++;
         }
+        $this->db_pusat->group_by('kd_paket');
 
         // jika datatable mengirim POST untuk order
         if ($this->input->post('order')) {
@@ -101,19 +122,51 @@ class Model_tender extends CI_Model
 
     function get_status()
     {
-        $paketSelesai   = $this->db_pusat->select('count(kd_paket) as total')->from('v_tender')->where('kd_paket in (select kd_paket from tender_selesai_detail_spses)')->count_all_results();
+        // MULTIPLE QUERY ==============================
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
 
-        $totalPaket     = $this->db_pusat->select('count(kd_paket) as total')->from('v_tender')->count_all_results();
+        // PAKET PROSES ================================
+        $paketSelesai   = $this->db_pusat->select('count(distinct(kd_paket)) as total')->from('v_tender')->where('kd_paket in (select kd_paket from tender_selesai_detail_spses)');
+        if ($opd) {
+            $paketSelesai->where('kd_satker', $opd);
+        }
+        if ($year) {
+            $paketSelesai->where('tahun_anggaran', $year);
+        }
+        $paketSelesai = $paketSelesai->get()->row();
+        $selesai = $paketSelesai->total;
 
-        $paketProses    = $this->db_pusat->select('count(kd_paket) as total')->from('v_tender')->where('kd_paket not in (select kd_paket from tender_selesai_detail_spses)')->count_all_results();
+        //PAKET PROSES ==================================
+        $paketProses    = $this->db_pusat->select('count(distinct(kd_paket)) as total')->from('v_tender')->where('kd_paket not in (select kd_paket from tender_selesai_detail_spses)');
+        if ($opd) {
+            $paketProses->where('kd_satker', $opd);
+        }
+        if ($year) {
+            $paketProses->where('tahun_anggaran', $year);
+        }
+        $paketProses = $paketProses->get()->row();
+        $proses = $paketProses->total;
+
+        // TOTAL PAKET ==================================
+        $totalPaket     = $this->db_pusat->select('count(distinct(kd_paket)) as total')->from('v_tender');
+        if ($opd) {
+            $totalPaket->where('kd_satker', $opd);
+        }
+        if ($year) {
+            $totalPaket->where('tahun_anggaran', $year);
+        }
+        $totalPaket = $totalPaket->get()->row();
+        $total = $totalPaket->total;
+        // ==============================================
 
         $result = [
             // tata letak object dibawah harus urut (ini menentukan tampilan di front end)
-            'proses'    => (int)$paketProses,
-            'selesai'   => (int)$paketSelesai,
-            'total'     => (int)$totalPaket,
-            'persen_proses'     => $paketProses / $totalPaket * 100,
-            'persen_selesai'    => $paketSelesai / $totalPaket * 100,
+            'proses'    => (int)$proses,
+            'selesai'   => (int)$selesai,
+            'total'     => (int)$total,
+            'persen_proses'     => $proses / $total * 100,
+            'persen_selesai'    => $selesai / $total * 100,
 
         ];
         return $result;

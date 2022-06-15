@@ -186,7 +186,7 @@
 			</div>
 		</div>
 		<hr>
-		<div class="table-responsive">
+		<div class="table-responsive datatableSirup">
 			<table class="table table-striped table-bordered" id="table1">
 				<thead class="table-light">
 					<tr>
@@ -550,7 +550,7 @@
 				opd: opd
 			},
 			beforeSend: function() {
-				$('#table1').LoadingOverlay("show");
+				$('.datatableSirup').LoadingOverlay("show");
 				$('#table1').DataTable().destroy();
 				$('#tbody1').empty();
 				$(".table1-title").text("DATA SIRUP TAHUN " + year);
@@ -589,7 +589,7 @@
 				});
 			}
 		}).always(function() {
-			$("#table1").LoadingOverlay("hide", true);
+			$(".datatableSirup").LoadingOverlay("hide", true);
 		});
 	}
 

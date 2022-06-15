@@ -140,14 +140,60 @@ class Model_home_front extends CI_Model
 
     function total_params($table, $col)
     {
-        $this->db_pusat->select("sum($col) as nilai");
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+
+        $this->db_pusat->select("sum($col) as nilai")->where("tahun_anggaran", $year);
+        if ($opd) {
+            $this->db_pusat->where('kd_satker', $opd);
+        }
         return $this->db_pusat->get($table)->row();
     }
 
     function paket_params($table, $col)
     {
-        $this->db_pusat->select("count(distinct ($col)) as paket");
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+
+        $this->db_pusat->select("count(distinct ($col)) as paket")->where("tahun_anggaran", $year);
+        if ($opd) {
+            $this->db_pusat->where('kd_satker', $opd);
+        }
         return $this->db_pusat->get($table)->row();
+    }
+
+    function total_epurc()
+    {
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+        $whereID = null;
+        if ($opd) {
+            $get        = $this->db_pusat->get_where('master_satker_rups', ['kd_satker_str' => $opd])->row();
+            $kd_satker  =  $get->kd_satker;
+            $whereID = $this->db_pusat->where('satker_id', $kd_satker);
+        }
+        $this->db_pusat->flush_cache();
+
+        $this->db_pusat->select('sum(total) as nilai')->where("tahun_anggaran", $year);
+        $whereID;
+        return $this->db_pusat->get('paket_e_purchasings')->row();
+    }
+
+    function paket_epurc()
+    {
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+        $whereID = null;
+        if ($opd) {
+            $get        = $this->db_pusat->get_where('master_satker_rups', ['kd_satker_str' => $opd])->row();
+            $kd_satker  =  $get->kd_satker;
+            $whereID = $this->db_pusat->where('satker_id', $kd_satker);
+        }
+        $this->db_pusat->flush_cache();
+
+        $this->db_pusat->select("count(distinct (kd_paket)) as paket")->where("tahun_anggaran", $year);
+        $whereID;
+        return $this->db_pusat->get('paket_e_purchasings')->row();
     }
 
     function getAPBDbyID($id, $year = null)
