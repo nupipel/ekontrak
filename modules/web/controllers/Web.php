@@ -546,6 +546,26 @@ class Web extends Front
         $list_satker = $this->model_home_front->list_satker($kd_satker_str);
         $data = array();
 
+
+        $_total = [
+            'tender'   => 0,
+            '_tender'   => 0,
+            'seleksi'   => 0,
+            '_seleksi'   => 0,
+            'epur'   => 0,
+            '_epur'   => 0,
+            'pl'   => 0,
+            '_pl'   => 0,
+            'juksung'   => 0,
+            '_juksung'   => 0,
+            'dk'   => 0,
+            '_dk'   => 0,
+            'sw'   => 0,
+            '_sw'   => 0,
+            'total'   => 0,
+            '_total'   => 0,
+        ];
+
         $no = 0;
         foreach ($list_satker as $opd) {
             $no++;
@@ -564,32 +584,45 @@ class Web extends Front
             // $row = [];
             $row['no']  = $no;
             $row['nama']        = $opd->nama_satker;
-            $row['tender']      = isset($tender->jml) ? $tender->jml : "";
-            $row['pagutender']  = isset($tender->total) ? $this->rupiah($tender->total) : "";
-            $row['seleksi']     = isset($seleksi->jml) ? $seleksi->jml : "";
-            $row['paguseleksi'] = isset($seleksi->total) ? $this->rupiah($seleksi->total) : "";
-            $row['epur']        = isset($epurc->jml) ? $epurc->jml : "";
-            $row['paguepur']    = isset($epurc->total) ? $this->rupiah($epurc->total) : "";
-            $row['pl']          = isset($pl->jml) ? $pl->jml : "";
-            $row['pagupl']      = isset($pl->total) ? $this->rupiah($pl->total) : "";
-            $row['juksung']     = isset($juksung->jml) ? $juksung->jml : "";
-            $row['pagujuksung'] = isset($juksung->total) ? $this->rupiah($juksung->total) : "";
-            $row['dk']          = isset($dk->jml) ? $dk->jml : "";
-            $row['pagudk']      = isset($dk->total) ? $this->rupiah($dk->total) : "";
-            $row['sw']          = isset($swakelola->jml) ? $swakelola->jml : "";
-            $row['pagusw']      = isset($swakelola->total) ? $this->rupiah($swakelola->total) : "";
-            $row['total']       = $total > 0 ? $total : "";
-            $row['totalpagu']   = $totalPaguAnggaran > 0 ? $this->rupiah($totalPaguAnggaran) : "";
+            $row['tender']      = isset($tender->jml) ? $tender->jml : 0;
+            $row['pagutender']  = isset($tender->total) ? $tender->total : 0;
+            $row['seleksi']     = isset($seleksi->jml) ? $seleksi->jml : 0;
+            $row['paguseleksi'] = isset($seleksi->total) ? $seleksi->total : 0;
+            $row['epur']        = isset($epurc->jml) ? $epurc->jml : 0;
+            $row['paguepur']    = isset($epurc->total) ? $epurc->total : 0;
+            $row['pl']          = isset($pl->jml) ? $pl->jml : 0;
+            $row['pagupl']      = isset($pl->total) ? $pl->total : 0;
+            $row['juksung']     = isset($juksung->jml) ? $juksung->jml : 0;
+            $row['pagujuksung'] = isset($juksung->total) ? $juksung->total : 0;
+            $row['dk']          = isset($dk->jml) ? $dk->jml : 0;
+            $row['pagudk']      = isset($dk->total) ? $dk->total : 0;
+            $row['sw']          = isset($swakelola->jml) ? $swakelola->jml : 0;
+            $row['pagusw']      = isset($swakelola->total) ? $swakelola->total : 0;
+            $row['total']       = $total > 0 ? $total : 0;
+            $row['totalpagu']   = $totalPaguAnggaran > 0 ? $totalPaguAnggaran : 0;
+            $row['prosentase']  = 0;
+
+            $_total['tender']   += $row['tender'];
+            $_total['_tender']  += $row['pagutender'];
+            $_total['seleksi']  += $row['seleksi'];
+            $_total['_seleksi'] += $row['paguseleksi'];
+            $_total['epur']     += $row['epur'];
+            $_total['_epur']    += $row['paguepur'];
+            $_total['pl']       += $row['pl'];
+            $_total['_pl']      += $row['pagupl'];
+            $_total['juksung']  += $row['juksung'];
+            $_total['_juksung'] += $row['pagujuksung'];
+            $_total['dk']       += $row['dk'];
+            $_total['_dk']      += $row['pagudk'];
+            $_total['sw']       += $row['sw'];
+            $_total['_sw']      += $row['pagusw'];
+            $_total['total']    += $row['total'];
+            $_total['_total']   += $row['totalpagu'];
 
             $data['data'][] = $row;
         }
+        $data['sum'] = $_total;
         echo json_encode($data);
-    }
-
-    function rupiah($angka)
-    {
-        $hasil_rupiah = number_format($angka, 0, ',', '.');
-        return $hasil_rupiah;
     }
 }
 

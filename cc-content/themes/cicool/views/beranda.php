@@ -210,12 +210,13 @@
 						<th>PAGU DARURAT</th> -->
 						<th>TOTAL</th>
 						<th>TOTAL PAGU ANGGARAN</th>
+						<th>PERSENTASE INPUT SIRUP</th>
 					</tr>
 				</thead>
 				<tbody id="tbody1">
 
 				</tbody>
-				<tfoot class="table-light">
+				<tfoot id="tfoot1" class="table-light">
 					<tr>
 						<th>NO</th>
 						<th>OPD</th>
@@ -237,6 +238,7 @@
 						<th>PAGU DARURAT</th> -->
 						<th>TOTAL</th>
 						<th>TOTAL PAGU ANGGARAN</th>
+						<th>PERSENTASE INPUT SIRUP</th>
 					</tr>
 				</tfoot>
 			</table>
@@ -365,6 +367,19 @@
 		$('#tableDetailAPBD').empty();
 		$("#opdDetailModal").modal('hide');
 	};
+
+	function ifNull(val, rupiah) {
+		if (rupiah) {
+			if (val) {
+				return toRupiah(val, {
+					symbol: null,
+					floatingPoint: 0
+				});
+			}
+		}
+		return val ? val : " ";
+
+	}
 
 	function getTotal(opd, year) {
 		$.ajax({
@@ -553,41 +568,68 @@
 				$('.datatableSirup').LoadingOverlay("show");
 				$('#table1').DataTable().destroy();
 				$('#tbody1').empty();
+				$("#table1total").remove();
 				$(".table1-title").text("DATA SIRUP TAHUN " + year);
 			},
 			success: function(res) {
 				let target = $('#tbody1');
 				let html;
 				let no = 1;
-
 				$.each(res.data, function(i, val) {
 					html = "<tr>" +
-						"<th class='text-end'>" + no + "</th>" +
+						"<td class='text-end'>" + no + "</td>" +
 						"<td>" + val.nama + "</td>" +
-						"<td class='text-end'>" + val.tender + "</td>" +
-						"<td class='text-end'>" + val.pagutender + "</td>" +
-						"<td class='text-end'>" + val.seleksi + "</td>" +
-						"<td class='text-end'>" + val.paguseleksi + "</td>" +
-						"<td class='text-end'>" + val.epur + "</td>" +
-						"<td class='text-end'>" + val.paguepur + "</td>" +
-						"<td class='text-end'>" + val.pl + "</td>" +
-						"<td class='text-end'>" + val.pagupl + "</td>" +
-						"<td class='text-end'>" + val.juksung + "</td>" +
-						"<td class='text-end'>" + val.pagujuksung + "</td>" +
-						"<td class='text-end'>" + val.dk + "</td>" +
-						"<td class='text-end'>" + val.pagudk + "</td>" +
-						"<td class='text-end'>" + val.sw + "</td>" +
-						"<td class='text-end'>" + val.pagusw + "</td>" +
-						"<td class='text-end'>" + val.total + "</td>" +
-						"<td class='text-end'>" + val.totalpagu + "</td>" +
+						"<td class='text-end'>" + ifNull(val.tender) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.pagutender, true) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.seleksi) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.paguseleksi, true) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.epur) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.paguepur, true) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.pl) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.pagupl, true) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.juksung) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.pagujuksung, true) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.dk) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.pagudk, true) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.sw) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.pagusw, true) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.total) + "</td>" +
+						"<td class='text-end'>" + ifNull(val.totalpagu, true) + "</td>" +
+						"<td class='text-end'>" + val.prosentase + "%</td>" +
 						"</tr>";
 					target.append(html);
 					no++;
 				});
+				if (!opd) {
+					let rowTotal;
+					rowTotal = "<tr id='table1total'>" +
+						"<th></th>" +
+						"<td class='fw-bold text-center'>Total</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum.tender) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum._tender, true) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum.seleksi) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum._seleksi, true) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum.epur) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum._epur, true) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum.pl) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum._pl, true) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum.juksung) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum._juksung, true) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum.dk) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum._dk, true) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum.sw) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum._sw, true) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum.total) + "</td>" +
+						"<td class='fw-bold text-end'>" + ifNull(res.sum._total, true) + "</td>" +
+						"<td class='fw-bold text-end'></td>" +
+						"</tr>";
+					$("#tfoot1").prepend(rowTotal);
+				}
+
 				$('#table1').DataTable({
 					"pageLength": 100
 				});
-			}
+			},
 		}).always(function() {
 			$(".datatableSirup").LoadingOverlay("hide", true);
 		});

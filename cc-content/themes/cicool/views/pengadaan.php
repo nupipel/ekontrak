@@ -408,6 +408,7 @@
 				$(".angkaTotal").LoadingOverlay('show');
 			},
 			success: function(res) {
+				console.log(res);
 				$.each(res.nilai, function(i, val) {
 					$("." + i).text(toRupiah(val, {
 						useUnit: true,
