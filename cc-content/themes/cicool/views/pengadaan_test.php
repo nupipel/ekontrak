@@ -73,7 +73,7 @@
 					</div>
 				</div>
 				<div class="card-footer bg-white">
-					<canvas id="myChart" width="400" height="400"></canvas>
+					<canvas id="myChart" height="100%"></canvas>
 				</div>
 			</div>
 		</div>
@@ -121,7 +121,7 @@
 					</div>
 				</div>
 				<div class="card-footer bg-white">
-					<canvas id="myChart2" width="400" height="400"></canvas>
+					<canvas id="myChart2" height="100%"></canvas>
 				</div>
 			</div>
 		</div>
@@ -129,11 +129,11 @@
 
 		<!-- non tender -->
 		<div class="col-md-4">
-			<div class="card radius-10 bg-success">
+			<div class="card radius-10 bg-primary">
 				<div class="card-body">
 					<div class="d-flex align-items-center">
 						<div>
-							<h5 style="color:white;">Non Tender</h5>
+							<h5 style="color:white;">E-Purchasing</h5>
 						</div>
 					</div>
 				</div>
@@ -148,10 +148,10 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="(nontender, index) in ekontraks.nontender" :key="index">
-									<td>{{nontender.jenis}}</td>
-									<td>{{nontender.paket}}</td>
-									<td>{{coba(nontender.pagu)}}</td>
+								<tr v-for="(epurchasing, index) in ekontraks.epurchasing" :key="index">
+									<td>{{epurchasing.jenis}}</td>
+									<td>{{epurchasing.paket}}</td>
+									<td>{{coba(epurchasing.pagu)}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -160,20 +160,20 @@
 			</div>
 		</div>
 		<div class="col-md-8">
-			<div class="card radius-10 bg-success">
+			<div class="card radius-10 bg-primary">
 				<div class="card-body">
 					<div class="d-flex align-items-center">
 						<div>
-							<h5 style="color:white;">Non Tender</h5>
+							<h5 style="color:white;">E-Purchasing</h5>
 						</div>
 					</div>
 				</div>
 				<div class="card-footer bg-white">
-					<canvas id="myChart2" width="400" height="400"></canvas>
+					<canvas id="myChart3" width="400" height="100%"></canvas>
 				</div>
 			</div>
 		</div>
-		<!-- end of non tender -->
+		<!-- end of E-Purchasing -->
 
 
 	</div>
