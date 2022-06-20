@@ -138,11 +138,8 @@ class Model_home_front extends CI_Model
         return $result;
     }
 
-    function total_params($table, $col)
+    function total_params($table, $col, $opd = null, $year = null)
     {
-        $opd = $this->input->post('opd');
-        $year = $this->input->post('year');
-
         $this->db_pusat->select("sum($col) as nilai")->where("tahun_anggaran", $year);
         if ($opd) {
             $this->db_pusat->where('kd_satker', $opd);
@@ -150,7 +147,7 @@ class Model_home_front extends CI_Model
         return $this->db_pusat->get($table)->row();
     }
 
-    function paket_params($table, $col)
+    function paket_params($table, $col, $opd = null, $year = null)
     {
         $opd = $this->input->post('opd');
         $year = $this->input->post('year');
@@ -162,10 +159,10 @@ class Model_home_front extends CI_Model
         return $this->db_pusat->get($table)->row();
     }
 
-    function total_epurc()
+    function total_epurc($opd = null, $year = null)
     {
-        $opd = $this->input->post('opd');
-        $year = $this->input->post('year');
+        // $opd = $this->input->post('opd');
+        // $year = $this->input->post('year');
         $whereID = null;
         if ($opd) {
             $get        = $this->db_pusat->get_where('master_satker_rups', ['kd_satker_str' => $opd])->row();
@@ -179,10 +176,10 @@ class Model_home_front extends CI_Model
         return $this->db_pusat->get('paket_e_purchasings')->row();
     }
 
-    function paket_epurc()
+    function paket_epurc($opd = null, $year = null)
     {
-        $opd = $this->input->post('opd');
-        $year = $this->input->post('year');
+        // $opd = $this->input->post('opd');
+        // $year = $this->input->post('year');
         $whereID = null;
         if ($opd) {
             $get        = $this->db_pusat->get_where('master_satker_rups', ['kd_satker_str' => $opd])->row();

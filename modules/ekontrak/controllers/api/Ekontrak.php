@@ -29,6 +29,94 @@ class Ekontrak extends API
             'data'         => $data
         ], API::HTTP_OK);
     }
+    function angkaekontrak_get()
+    {
+        $opd = $this->get('opd');
+        $year = $this->get('year');
+
+        $nilai_tender       = $this->model_home_front->total_params('v_tender', 'nilai_kontrak', $opd, $year);
+        $paket_tender       = $this->model_home_front->paket_params('v_tender', 'kd_paket', $opd, $year);
+        $nilai_nontender    = $this->model_home_front->total_params('v_non_tender', 'nilai_kontrak', $opd, $year);
+        $paket_nontender    = $this->model_home_front->paket_params('v_non_tender', 'kd_nontender', $opd, $year);
+        $nilai_epur         = $this->model_home_front->total_epurc($opd, $year);
+        $paket_epur         = $this->model_home_front->paket_epurc($opd, $year);
+
+        $result = [
+            'tender' => [
+                [
+                    'jenis' => 'Sirup',
+                    'paket' => 200,
+                    'pagu'  => 450000000000,
+                ],
+                [
+                    'jenis' => 'Proses',
+                    'paket' => 140,
+                    'pagu'  => 300000000000,
+                ],
+                [
+                    'jenis' => 'Kontrak',
+                    'paket' => 100,
+                    'pagu'  => 200000000000,
+                ],
+                [
+                    'jenis' => 'Selesai',
+                    'paket' => 10,
+                    'pagu'  => 50000000000,
+                ]
+
+            ],
+            'nontender' => [
+                [
+                    'jenis' => 'Sirup',
+                    'paket' => 200,
+                    'pagu'  => 450000000000,
+                ],
+                [
+                    'jenis' => 'Proses',
+                    'paket' => 140,
+                    'pagu'  => 300000000000,
+                ],
+                [
+                    'jenis' => 'Kontrak',
+                    'paket' => 100,
+                    'pagu'  => 200000000000,
+                ],
+                [
+                    'jenis' => 'Selesai',
+                    'paket' => 10,
+                    'pagu'  => 50000000000,
+                ]
+
+            ],
+            'e-purchasing' => [
+                [
+                    'jenis' => 'Sirup',
+                    'paket' => 200,
+                    'pagu'  => 450000000000,
+                ],
+                [
+                    'jenis' => 'Proses',
+                    'paket' => 140,
+                    'pagu'  => 300000000000,
+                ],
+                [
+                    'jenis' => 'Kontrak',
+                    'paket' => 100,
+                    'pagu'  => 200000000000,
+                ],
+                [
+                    'jenis' => 'Selesai',
+                    'paket' => 10,
+                    'pagu'  => 50000000000,
+                ]
+            ]
+        ];
+        $this->response([
+            'status'     => true,
+            'message'     => 'success',
+            'data'         => $result
+        ], API::HTTP_OK);
+    }
 }
 
 /* End of file Group.php */
