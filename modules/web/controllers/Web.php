@@ -107,6 +107,18 @@ class Web extends Front
         $this->template->build('home', $data);
     }
 
+    public function pengadaan_test()
+    {
+        $data = [
+            'container'         => 'pengadaan_test',
+            'get_infoumum'      => $this->model_home_front->get_infoumum(),
+            'list_instansi'     => $this->model_home_front->list_instansi(),
+
+            // 'list_e_purchasing' => $this->model_home_front->list_e_purchasing(),
+        ];
+        $this->template->build('home', $data);
+    }
+
 
     public function monev()
     {
