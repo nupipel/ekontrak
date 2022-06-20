@@ -1,11 +1,12 @@
-const { createApp } = Vue
+import { createApp } from 'vue'
+
 createApp({
-    data() {
-        return {
-            message: 'Hello Vue!'
-        }
-    },
-    methods: {
-        getAg
-    },
+  data() {
+    return {
+      message: 'Hello Vue!'
+    }
+  },
+  methods: {
+      
+  },
 }).mount('#app')

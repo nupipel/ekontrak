@@ -1,4 +1,13 @@
-<script src="https://unpkg.com/vue@3"></script>
+<script type="importmap">
+	{
+    "imports": {
+      "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
+	  "axios" : "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
+	  "chartjs" : "https://cdn.jsdelivr.net/npm/chart.js"
+	  "Bar" : 'vue-chartjs'
+    }
+  }
+</script>
 
 <div id="app">
 	<div class="card shadow-none bg-transparent border-bottom border-2">
@@ -55,8 +64,8 @@
 							<thead class="table-light">
 								<tr>
 									<th>Jenis</th>
-									<th>Jenis</th>
-									<th>Jenis</th>
+									<th>Paket</th>
+									<th>Pagu</th>
 								</tr>
 							</thead>
 							<tr>
@@ -68,7 +77,7 @@
 			</div>
 		</div>
 		<div class="col-md-8">
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita accusamus atque consequuntur, earum ipsam voluptatem tempora dolores quisquam animi, nisi dolorem deleniti illum ratione laudantium quod deserunt, nobis labore quos.
+			<canvas id="myChart"></canvas>
 		</div>
 	</div>
 </div>
@@ -226,3 +235,28 @@
 		</div>
 	</div>
 </div>
+
+<script type="module">
+	import {
+		createApp
+	} from 'vue'
+
+	createApp({
+		data() {
+			return {
+				message: 'Hello Vue!',
+				label: [
+					'January',
+					'February',
+					'March',
+					'April',
+					'May',
+					'June',
+				],
+			}
+		},
+		methods: {
+
+		},
+	}).mount('#app')
+</script>

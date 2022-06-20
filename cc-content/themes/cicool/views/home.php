@@ -287,14 +287,6 @@ function tgl_indo($tanggal)
 	<script src="<?php echo $web; ?>assets/js/index.js"></script>
 	<script src="<?php echo $web; ?>assets/js/app.js"></script>
 
-	<?php
-	if ($container == 'pengadaan_test') {
-	?>
-		<script src="<?php echo $web; ?>assets/js/pengadaan_test.js"></script>
-	<?php
-	}
-	?>
-
 
 </body>
 
