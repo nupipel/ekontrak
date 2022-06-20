@@ -1,14 +1,3 @@
-<script type="importmap">
-	{
-    "imports": {
-      "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
-	  "axios" : "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
-	  "chartjs" : "https://cdn.jsdelivr.net/npm/chart.js"
-	  "Bar" : 'vue-chartjs'
-    }
-  }
-</script>
-
 <div id="app">
 	<div class="card shadow-none bg-transparent border-bottom border-2">
 		<div class="card-body">
@@ -21,7 +10,6 @@
 						<div class="row row-cols-sm-auto">
 							<label for="fileterInstansi" class="col-form-label">Instansi</label>
 							<div class="col-sm-4">
-								<!--<input type="text" class="form-control" id="inputToDate">-->
 								<select class="form-control" id="fileterInstansi">
 									<option value="">== Pilih Instansi ==</option>
 								</select>
@@ -29,14 +17,7 @@
 
 							<label for="filterTahun" class="col-form-label">Tahun</label>
 							<div class="col-sm-3">
-								<!--<input type="text" class="form-control" id="inputToDate">-->
-								<select class="form-control" id="filterTahun">
-									<option value="">== Pilih Tahun ==</option>
-									<option value="2022" selected>2022</option>
-									<option value="2021">2021</option>
-									<option value="2020">2020</option>
-									<option value="2019">2019</option>
-								</select>
+								<input type="number" placeholder="Masukkan Tahun" class="form-control" v-model="year" >
 							</div>
 							<div class="col-sm-3">
 								<a class="btn btn-info rounded btn-refresh text-white mx-3"><i class='bx bx-refresh'></i>Refresh
@@ -49,7 +30,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-5">
 			<div class="card radius-10 bg-info">
 				<div class="card-body">
 					<div class="d-flex align-items-center">
@@ -76,8 +57,19 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-8">
-			<canvas id="myChart"></canvas>
+		<div class="col-md-7">
+			<div class="card radius-10 bg-info">
+				<div class="card-body">
+					<div class="d-flex align-items-center">
+						<div>
+							<h5 style="color:white;">Tender</h5>
+						</div>
+					</div>
+				</div>
+				<div class="card-footer bg-white">
+					<canvas id="myChart" width="400" height="400"></canvas>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -236,27 +228,45 @@
 	</div>
 </div>
 
-<script type="module">
-	import {
-		createApp
-	} from 'vue'
 
-	createApp({
-		data() {
-			return {
-				message: 'Hello Vue!',
-				label: [
-					'January',
-					'February',
-					'March',
-					'April',
-					'May',
-					'June',
-				],
-			}
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+	var app = new Vue({
+		el: '#app',
+		data: {
+			message: "Hello",
+			test: [0, 10, 5, 2, 20, 30, 45],
+			year: new Date().getFullYear()
+		},
+		mounted() {
+			const labels = this.test;
+
+			const data = {
+				labels: labels,
+				datasets: [{
+					label: 'My First dataset',
+					backgroundColor: 'rgb(255, 99, 132)',
+					borderColor: 'rgb(255, 99, 132)',
+					data: this.test,
+				}]
+			};
+
+			const config = {
+				type: 'line',
+				data: data,
+				options: {}
+			};
+			const myChart = new Chart(
+				document.getElementById('myChart'),
+				config
+			);
 		},
 		methods: {
 
+
 		},
-	}).mount('#app')
+	})
 </script>
