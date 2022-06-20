@@ -88,7 +88,7 @@ class Ekontrak extends API
                 ]
 
             ],
-            'e-purchasing' => [
+            'epurchasing' => [
                 [
                     'jenis' => 'Sirup',
                     'paket' => $paket_epur->paket ?? 0,
