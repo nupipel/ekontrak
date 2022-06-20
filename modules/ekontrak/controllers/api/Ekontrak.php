@@ -45,8 +45,8 @@ class Ekontrak extends API
             'tender' => [
                 [
                     'jenis' => 'Sirup',
-                    'paket' => $paket_tender,
-                    'pagu'  => $nilai_tender,
+                    'paket' => $paket_tender->paket,
+                    'pagu'  => $nilai_tender->nilai,
                 ],
                 [
                     'jenis' => 'Proses',
@@ -68,8 +68,8 @@ class Ekontrak extends API
             'nontender' => [
                 [
                     'jenis' => 'Sirup',
-                    'paket' => $paket_nontender,
-                    'pagu'  => $nilai_nontender,
+                    'paket' => $paket_nontender->paket,
+                    'pagu'  => $nilai_nontender->nilai,
                 ],
                 [
                     'jenis' => 'Proses',
@@ -91,8 +91,8 @@ class Ekontrak extends API
             'e-purchasing' => [
                 [
                     'jenis' => 'Sirup',
-                    'paket' => $paket_epur,
-                    'pagu'  => $nilai_epur,
+                    'paket' => $paket_epur->paket,
+                    'pagu'  => $nilai_epur->nilai,
                 ],
                 [
                     'jenis' => 'Proses',
