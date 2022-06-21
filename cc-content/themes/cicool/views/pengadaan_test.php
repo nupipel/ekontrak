@@ -188,6 +188,7 @@
 	var app = new Vue({
 		el: '#app',
 		data: {
+			url: '<?= base_url(); ?>',
 			year: "",
 			opd: "",
 			message: "Hello",
@@ -205,14 +206,14 @@
 		},
 		methods: {
 			getAgency() {
-				axios.get('http://localhost/ekontrak/api/ekontrak/instansi', {
+				axios.get(this.url + '/api/ekontrak/instansi', {
 					headers: {
 						'x-api-key': 'FD59804809A3DFD300C1E49F6E6FD23D'
 					}
 				}).then((res) => this.agencies = res.data.data);
 			},
 			getEkontrak() {
-				axios.get('http://localhost/ekontrak/api/ekontrak/angkaekontrak', {
+				axios.get(this.url + '/api/ekontrak/angkaekontrak', {
 					headers: {
 						'x-api-key': 'FD59804809A3DFD300C1E49F6E6FD23D'
 					},
