@@ -25,6 +25,7 @@ class Ekontrak extends API
             'data'         => $data
         ], API::HTTP_OK);
     }
+
     function angkaekontrak_get()
     {
         $opd = $this->get('opd');
@@ -139,6 +140,13 @@ class Ekontrak extends API
             'message'     => 'success',
             'data'         => $result
         ], API::HTTP_OK);
+    }
+
+
+    function chartTender_get()
+    {
+        $opd = $this->get('opd');
+        $year = $this->get('year');
     }
 }
 

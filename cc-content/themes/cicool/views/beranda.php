@@ -595,7 +595,7 @@
 						"<td class='text-end'>" + ifNull(val.pagusw, true) + "</td>" +
 						"<td class='text-end'>" + ifNull(val.total) + "</td>" +
 						"<td class='text-end'>" + ifNull(val.totalpagu, true) + "</td>" +
-						"<td class='text-end'>" + val.prosentase + "%</td>" +
+						"<td class='text-end'>" + val.prosentase.toFixed(2) + "%</td>" +
 						"</tr>";
 					target.append(html);
 					no++;

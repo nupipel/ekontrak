@@ -581,8 +581,8 @@ class Web extends Front
         $no = 0;
         foreach ($list_satker as $opd) {
             $no++;
-            $tender     = $this->model_home_front->getByMethod($opd->id, $year, 'tender');
-            $seleksi    = $this->model_home_front->getByMethod($opd->id, $year, 'seleksi');
+            $tender     = $this->model_home_front->getByMethod($opd->id, $year, 'Tender');
+            $seleksi    = $this->model_home_front->getByMethod($opd->id, $year, 'Seleksi');
             $epurc      = $this->model_home_front->getByMethod($opd->id, $year, 'e-Purchasing');
             $pl         = $this->model_home_front->getByMethod($opd->id, $year, 'Pengadaan Langsung');
             $juksung    = $this->model_home_front->getByMethod($opd->id, $year, 'Penunjukan Langsung');
@@ -590,37 +590,41 @@ class Web extends Front
             $swakelola  = $this->model_home_front->getByMethodSwakelola($opd->id, $year);
             // $darurat    = $this->model_home_front->getByMethod($opd->id, $year, 'Darurat');
 
-            // $getapbd = $this->model_home_front->listApbd_OPD(false, $opd->kd_satker_str, $year);
-            // $ang_perubahan  = ;
-            // $ang_pergeseran = $getapbd[0]->anggaran_pergeseran;
-            // $anggaran       = $getapbd[0]->anggaran;
-
-            // if($getapbd[0]->anggaran_perubahan){
-            //     $apbd = $getapbd[0]->anggaran_perubahan;
-            // }else if($getapbd[0]->anggaran_perubahan){}
+            $getapbd = $this->model_home_front->listApbd_OPD(false, $opd->kd_satker_str, $year);
+            if ($getapbd) {
+                if ($getapbd[0]->anggaran_perubahan) {
+                    $apbd = $getapbd[0]->anggaran_perubahan;
+                } else if ($getapbd[0]->anggaran_pergeseran) {
+                    $apbd = $getapbd[0]->anggaran_pergeseran;
+                } else if ($getapbd[0]->anggaran) {
+                    $apbd = $getapbd[0]->anggaran;
+                }
+            } else {
+                $apbd = 0;
+            }
 
             $total              = (isset($tender->jml) ? $tender->jml : 0) + (isset($epurc->jml) ? $epurc->jml : 0) + (isset($pl->jml) ? $pl->jml : 0) + (isset($dk->jml) ? $dk->jml : 0) + (isset($swakelola->jml) ? $swakelola->jml : 0);
             $totalPaguAnggaran  = (isset($tender->total) ? $tender->total : 0) + (isset($epurc->total) ? $epurc->total : 0) + (isset($pl->total) ? $pl->total : 0) + (isset($dk->total) ? $dk->total : 0) + (isset($swakelola->total) ? $swakelola->total : 0);
             // $row = [];
             $row['no']  = $no;
             $row['nama']        = $opd->nama_satker;
-            $row['tender']      = isset($tender->jml) ? $tender->jml : 0;
-            $row['pagutender']  = isset($tender->total) ? $tender->total : 0;
-            $row['seleksi']     = isset($seleksi->jml) ? $seleksi->jml : 0;
-            $row['paguseleksi'] = isset($seleksi->total) ? $seleksi->total : 0;
-            $row['epur']        = isset($epurc->jml) ? $epurc->jml : 0;
-            $row['paguepur']    = isset($epurc->total) ? $epurc->total : 0;
-            $row['pl']          = isset($pl->jml) ? $pl->jml : 0;
-            $row['pagupl']      = isset($pl->total) ? $pl->total : 0;
-            $row['juksung']     = isset($juksung->jml) ? $juksung->jml : 0;
-            $row['pagujuksung'] = isset($juksung->total) ? $juksung->total : 0;
-            $row['dk']          = isset($dk->jml) ? $dk->jml : 0;
-            $row['pagudk']      = isset($dk->total) ? $dk->total : 0;
-            $row['sw']          = isset($swakelola->jml) ? $swakelola->jml : 0;
-            $row['pagusw']      = isset($swakelola->total) ? $swakelola->total : 0;
-            $row['total']       = $total > 0 ? $total : 0;
-            $row['totalpagu']   = $totalPaguAnggaran > 0 ? $totalPaguAnggaran : 0;
-            $row['prosentase']  = 0;
+            $row['tender']      = $tender->jml ?? 0;
+            $row['pagutender']  = $tender->total ?? 0;
+            $row['seleksi']     = $seleksi->jml ?? 0;
+            $row['paguseleksi'] = $seleksi->total ?? 0;
+            $row['epur']        = $epurc->jml ?? 0;
+            $row['paguepur']    = $epurc->total ?? 0;
+            $row['pl']          = $pl->jml ?? 0;
+            $row['pagupl']      = $pl->total ?? 0;
+            $row['juksung']     = $juksung->jml ?? 0;
+            $row['pagujuksung'] = $juksung->total ?? 0;
+            $row['dk']          = $dk->jml ?? 0;
+            $row['pagudk']      = $dk->total ?? 0;
+            $row['sw']          = $swakelola->jml ?? 0;
+            $row['pagusw']      = $swakelola->total ?? 0;
+            $row['total']       = $total ?? 0;
+            $row['totalpagu']   = $totalPaguAnggaran ?? 0;
+            $row['prosentase']  = $apbd ? ($totalPaguAnggaran / $apbd * 100) : 0;
 
             $_total['tender']   += $row['tender'];
             $_total['_tender']  += $row['pagutender'];

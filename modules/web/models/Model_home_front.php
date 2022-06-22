@@ -228,7 +228,7 @@ class Model_home_front extends CI_Model
     {
         $this->db_pusat->select('idsatker as id, count(idsatker) as jml, sum(jumlahpagu) as total')
             ->from('paket_penyedia_opt1618s')
-            ->where("statusdeletepaket='0' and statusaktifpaket = '1'")
+            ->where("statusdeletepaket = '0' and statusaktifpaket = '1'")
             ->where("metodepengadaan", $method)
             ->where("tahunanggaran", $year)
             ->where("idsatker", $id)
@@ -238,8 +238,8 @@ class Model_home_front extends CI_Model
     }
     function getByMethodSwakelola($id, $year)
     {
-        $this->db_pusat->select('idsatker as id, count(idsatker) as jml, sum(jumlahpagu) as total')
-            ->from('paket_penyedia_opt1618s')
+        $this->db_pusat->select('count(idsatker) as jml, sum(jumlahpagu) as total')
+            ->from('paket_swakelola_opt1618s')
             ->where("statusdeletepaket='0' and statusaktifpaket = '1'")
             // ->where("metodepengadaan")
             ->where("tahunanggaran", $year)
