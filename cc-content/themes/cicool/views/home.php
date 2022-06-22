@@ -166,7 +166,7 @@ function tgl_indo($tanggal)
 							<a class="nav-link <?= $container == 'pengadaan' ? 'active' : ''; ?>" href="<?= base_url(); ?>web/pengadaan">
 								<div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
 								</div>
-								<div class="menu-title">Pelelangan</div>
+								<div class="menu-title">Ekontrak</div>
 							</a>
 						</li>
 

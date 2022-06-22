@@ -590,6 +590,14 @@ class Web extends Front
             $swakelola  = $this->model_home_front->getByMethodSwakelola($opd->id, $year);
             // $darurat    = $this->model_home_front->getByMethod($opd->id, $year, 'Darurat');
 
+            // $getapbd = $this->model_home_front->listApbd_OPD(false, $opd->kd_satker_str, $year);
+            // $ang_perubahan  = ;
+            // $ang_pergeseran = $getapbd[0]->anggaran_pergeseran;
+            // $anggaran       = $getapbd[0]->anggaran;
+
+            // if($getapbd[0]->anggaran_perubahan){
+            //     $apbd = $getapbd[0]->anggaran_perubahan;
+            // }else if($getapbd[0]->anggaran_perubahan){}
 
             $total              = (isset($tender->jml) ? $tender->jml : 0) + (isset($epurc->jml) ? $epurc->jml : 0) + (isset($pl->jml) ? $pl->jml : 0) + (isset($dk->jml) ? $dk->jml : 0) + (isset($swakelola->jml) ? $swakelola->jml : 0);
             $totalPaguAnggaran  = (isset($tender->total) ? $tender->total : 0) + (isset($epurc->total) ? $epurc->total : 0) + (isset($pl->total) ? $pl->total : 0) + (isset($dk->total) ? $dk->total : 0) + (isset($swakelola->total) ? $swakelola->total : 0);

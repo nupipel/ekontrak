@@ -216,7 +216,7 @@ class Model_home_front extends CI_Model
     function list_satker($id = null)
     {
 
-        $this->db_pusat->select('kd_satker as id, nama_satker')
+        $this->db_pusat->select('kd_satker as id, nama_satker, kd_satker_str')
             ->from('master_satker_rups');
         if ($id) {
             $this->db_pusat->where('kd_satker_str', $id);
@@ -243,8 +243,8 @@ class Model_home_front extends CI_Model
             ->where("statusdeletepaket='0' and statusaktifpaket = '1'")
             // ->where("metodepengadaan")
             ->where("tahunanggaran", $year)
-            ->where("idsatker", $id)
-            ->group_by("idsatker");
+            ->where("idsatker", $id);
+        // ->group_by("idsatker");
         $query = $this->db_pusat->get();
         return $query->row();
     }
