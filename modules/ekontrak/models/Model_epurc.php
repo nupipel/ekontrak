@@ -30,13 +30,16 @@ class Model_epurc extends CI_Model
 
     function proses($params, $opd, $year)
     {
+        $opd ? $kd_satker = $this->_get_kode_satker_str($opd) : null;
+
         $params == 'paket' ?  $select = "" : $select = 'sum(total_harga) as total';
 
         $q1 = $this->db_pusat->select($select)->from('paket_e_purchasings');
 
         // filters 
         $year ? $q1->where('tahun_anggaran', $year) : null;
-        $opd ? $q1->where('kd_satker', $opd) : null;
+
+        $opd ? $q1->where('satker_id', $kd_satker) : null;
 
         if ($params == 'paket') {
             $result = $q1->get()->num_rows();
@@ -49,13 +52,14 @@ class Model_epurc extends CI_Model
 
     function kontrak($params, $opd, $year)
     {
+        $opd ? $kd_satker = $this->_get_kode_satker_str($opd) : null;
         $params == 'paket' ?  $select = "" : $select = 'sum(total_harga) as total';
 
         $q1 = $this->db_pusat->select($select)->from('paket_e_purchasings');
 
         // filters 
         $year ? $q1->where('tahun_anggaran', $year) : null;
-        $opd ? $q1->where('kd_satker', $opd) : null;
+        $opd ? $q1->where('satker_id', $kd_satker) : null;
         $q1->where('status_paket', 'melakukan_pengiriman_dan_penerimaan');
 
         if ($params == 'paket') {
@@ -69,13 +73,15 @@ class Model_epurc extends CI_Model
 
     function selesai($params, $opd, $year)
     {
+        $opd ? $kd_satker = $this->_get_kode_satker_str($opd) : null;
+
         $params == 'paket' ?  $select = "" : $select = 'sum(total_harga) as total';
 
         $q1 = $this->db_pusat->select($select)->from('paket_e_purchasings');
 
         // filters 
         $year ? $q1->where('tahun_anggaran', $year) : null;
-        $opd ? $q1->where('kd_satker', $opd) : null;
+        $opd ? $q1->where('satker_id', $kd_satker) : null;
         $q1->where('status_paket', 'paket_selesai');
 
 
@@ -86,5 +92,12 @@ class Model_epurc extends CI_Model
             $result = $result->total;
         }
         return $result;
+    }
+
+    private  function _get_kode_satker_str($id)
+    {
+        $q = $this->db_pusat->get_where('master_satker_rups', ['kd_satker_str' => $id])->row();
+
+        return $q->kd_satker;
     }
 }
