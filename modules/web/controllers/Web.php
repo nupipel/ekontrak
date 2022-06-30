@@ -45,6 +45,7 @@ class Web extends Front
         if (defined('IS_DEMO')) {
             $this->template->build('home-demo');
         } else {
+            $this->data['listSatker'] = $this->model_home_front->list_satker_bappeda();
             $this->data['container'] = 'beranda';
             $this->data['get_infoumum'] = $this->model_home_front->get_infoumum();
             $this->data['list_instansi']     = $this->model_home_front->list_instansi();
@@ -347,25 +348,79 @@ class Web extends Front
         echo json_encode($apbp_opd);
     }
 
-    function getDetailAPBD()
+    function tampilDetailAPBD($year, $instansi, $kegiatan)
     {
-        $id         = $this->input->post('id');
-        $year       = $this->input->post('year');
-        $listData   = $this->model_home_front->getAPBDbyID($id, $year);
 
-        // $result = [];
-        foreach ($listData as $datas) {
-            $nm_kegiatan =  $this->model_home_front->getKegiatanByID($datas->id_subkegiatan);
-            $result[] = [
-                'kegiatan'  => $nm_kegiatan,
-                'nama'      => $datas->nama,
-                'anggaran'  => $datas->anggaran,
-                'anggaran_pergeseran'   => $datas->anggaran_pergeseran,
-                'anggaran_perubahan'    => $datas->anggaran_perubahan,
+        $data = [
+            'title' => "Cetak RKA | $year",
+            'tahun' => $year,
+            'instansi' => $instansi,
+            'kegiatan' => $kegiatan,
+        ];
+        $this->load->view('print/detailopd', $data);
+    }
+
+
+
+    function printDetailAPBD()
+    {
+        $this->load->model('model_detailapbd');
+        $idKegiatan = $this->input->post('kegiatan');
+        $opd        = $this->input->post('instansi');
+        $year       = $this->input->post('tahun');
+
+        $unit           = $this->model_home_front->getUnit($opd, 'id');
+        $namaKegiatan   = $this->model_home_front->getKegiatan($idKegiatan);
+
+        $get_subkegiatan = $this->model_home_front->GET_list_subkegiatan_by_kegiatan($idKegiatan, $opd, $year);
+        $subKegiatan = [];
+        foreach ($get_subkegiatan as $_subkegiatan) {
+            $get_akun = $this->model_detailapbd->listKodeAkun($_subkegiatan->id, $opd, $year);
+            $akun = [];
+            foreach ($get_akun as $_akun) {
+                $get_subs = $this->model_detailapbd->detailAkun($_akun->kode_akun, $_subkegiatan->id, $opd, $year);
+                $subs = [];
+                foreach ($get_subs as $_subs) {
+                    $get_komponen =  $this->model_detailapbd->getAlldataRka($idKegiatan, $_subs->subs, $_subs->ket, $opd, $year);
+                    $komponen = [];
+                    foreach ($get_komponen as $_komponen) {
+                        $komponen[] = [
+                            'nama_komponen' => $_komponen->nama_komponen,
+                            'harga_total'   => (int)$_komponen->total
+                        ];
+                    }
+                    $subs[] = [
+                        'subs_bl'   => $_subs->subs,
+                        'ket_bl'    => $_subs->ket,
+                        'komponen'  => $komponen,
+                    ];
+                }
+                $akun[] = [
+                    'kode_akun' => $_akun->kode_akun,
+                    'nama_akun' => $_akun->nama_akun,
+                    'subs'      => $subs,
+                ];
+            }
+            $subKegiatan[] = [
+                'kode_subkegiatan'  => $_subkegiatan->kode,
+                'nama_subkegiatan'  => $_subkegiatan->uraian,
+                'akun'              => $akun,
             ];
         }
+        $data = [
+            'unit'          => $unit->nama_skpd,
+            'kegiatan'      => $namaKegiatan->uraian,
+            'subkegiatan'   => $subKegiatan,
+        ];
+        echo json_encode($data);
+    }
 
-        echo json_encode($result);
+    function getListKegiatan()
+    {
+        $year   = $this->input->post('tahun');
+        $opd    = $this->input->post('id_skpd');
+        $res =  $this->model_home_front->GET_list_kegiatan_by_opd($opd, $year);
+        echo json_encode($res);
     }
 
     public function pendapatan()

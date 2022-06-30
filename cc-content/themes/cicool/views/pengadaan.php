@@ -179,6 +179,117 @@
 	</div>
 </div>
 
+
+<div class="card radius-10 bg-info">
+	<div class="card-body">
+		<div class="d-flex align-items-center">
+			<div>
+				<h5 style="color:white;">Table Kontrak Tender</h5>
+			</div>
+		</div>
+	</div>
+	<div class="card-footer bg-white">
+		<div class="spinner-grow text-primary spinnerDataTableTender" role="status"> <span class="visually-hidden">Loading...</span>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-striped align-middle mb-0" id="dataTableTender">
+				<thead class="table-light">
+					<tr>
+						<th>No</th>
+						<th>nama_satker</th>
+						<th>nama_paket</th>
+						<th>kd_rup_paket</th>
+						<th>kd_tender</th>
+						<th>no_kontrak</th>
+						<th>tgl_kontrak</th>
+						<th>pagu</th>
+						<th>nilai_kontrak</th>
+						<th>nama_penyedia</th>
+						<th>tgl_mulai_kerja_spmk</th>
+						<th>tgl_selesai_kerja_spmk</th>
+						<th>no_bast</th>
+						<th>tgl_bast</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="card radius-10 bg-success">
+	<div class="card-body">
+		<div class="d-flex align-items-center">
+			<div>
+				<h5 style="color:white;">Table Kontrak Non Tender</h5>
+			</div>
+		</div>
+	</div>
+	<div class="card-footer bg-white">
+		<div class="spinner-grow text-primary spinnerDataTableNonTender" role="status"> <span class="visually-hidden">Loading...</span>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-striped align-middle mb-0" id="dataTableNonTender">
+				<thead class="table-light">
+					<tr>
+						<th>No</th>
+						<th>nama_satker</th>
+						<th>nama_paket</th>
+						<th>kd_rup_paket</th>
+						<th>kd_nontender</th>
+						<th>no_kontrak</th>
+						<th>tgl_kontrak</th>
+						<th>pagu</th>
+						<th>nilai_kontrak</th>
+						<th>nama_penyedia</th>
+						<th>tgl_mulai_kerja_spmk</th>
+						<th>tgl_selesai_kerja_spmk</th>
+						<th>no_bast</th>
+						<th>tgl_bast</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="card radius-10 bg-warning">
+	<div class="card-body">
+		<div class="d-flex align-items-center">
+			<div>
+				<h5 style="color:white;">Table E-Purchasing</h5>
+			</div>
+		</div>
+	</div>
+	<div class="card-footer bg-white">
+		<div class="spinner-grow text-primary spinnerEpurchasing" role="status"> <span class="visually-hidden">Loading...</span>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-striped align-middle mb-0" id="dataTableEpur">
+				<thead class="table-light">
+					<tr>
+						<th>No</th>
+						<th>tahun_anggaran</th>
+						<th>nama_satker</th>
+						<th>kd_rup</th>
+						<th>nama_paket</th>
+						<th>kd_paket</th>
+						<th>no_paket</th>
+						<th>tanggal_buat_paket</th>
+						<th>total</th>
+						<th>kuantitas</th>
+						<th>harga_satuan</th>
+						<th>paket_status_str</th>
+						<th>kd_penyedia</th>
+						<th>kd_penyedia_distributor</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -302,4 +413,103 @@
 
 		},
 	})
+</script>
+
+
+<script>
+	//READY FUNCTION
+	$(function() {
+
+		refresh();
+
+		$(".btn-refresh").click(function() {
+			refresh();
+		})
+	});
+
+
+
+	// CSRF TOKEN {GLOBAL VARIABLES}
+	const csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
+		csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
+
+	function refresh() {
+		const opd = $("#fileterInstansi").val();
+		const year = $("#filterTahun").val();
+		getDataTable(opd, year);
+	}
+
+	function getDataTable(opd, year) {
+		$('#dataTableTender').DataTable().destroy();
+		$('#dataTableNonTender').DataTable().destroy();
+		$('#dataTableEpur').DataTable().destroy();
+
+
+		$('#dataTableTender').DataTable({
+			processing: true,
+			serverSide: true,
+			// searchable: true,
+			ajax: {
+				url: 'web/dataTableTender',
+				type: 'POST',
+				data: {
+					[csrfName]: csrfHash,
+					opd: opd,
+					year: year
+				},
+				"dataSrc": function(json) {
+					$('.spinnerDataTableTender').hide();
+					return json.data;
+				},
+				beforeSend: function() {
+					$('.spinnerDataTableTender').show();
+				},
+
+			},
+		});
+
+		$('#dataTableNonTender').DataTable({
+			processing: true,
+			serverSide: true,
+			// searchable: true,
+			ajax: {
+				url: 'web/dataTableNonTender',
+				type: 'POST',
+				data: {
+					[csrfName]: csrfHash,
+					opd: opd,
+					year: year
+				},
+				"dataSrc": function(json) {
+					$('.spinnerDataTableNonTender').hide();
+					return json.data;
+				},
+				beforeSend: function() {
+					$('.spinnerDataTableNonTender').show();
+				},
+			},
+		});
+
+		$('#dataTableEpur').DataTable({
+			processing: true,
+			serverSide: true,
+			// searchable: true,
+			ajax: {
+				url: 'web/dataTableEpur',
+				type: 'POST',
+				data: {
+					[csrfName]: csrfHash,
+					opd: opd,
+					year: year
+				},
+				"dataSrc": function(json) {
+					$('.spinnerEpurchasing').hide();
+					return json.data;
+				},
+				beforeSend: function() {
+					$('.spinnerEpurchasing').show();
+				},
+			},
+		});
+	}
 </script>

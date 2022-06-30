@@ -25,18 +25,23 @@ class Model_home_front extends CI_Model
         return $this->db_pusat->order_by('nama_satker')->get('master_satker_rups')->result();
     }
 
-    private function getIdUnit($id)
+    function getUnit($id, $col = null)
     {
-        $get = $this->db_bappeda->get_where('data_unit', ['kode_skpd' => $id])->row();
-        return $get->id_skpd;
+        if ($col == 'kode') {
+            $arr = ['kode_skpd' => $id];
+        } else {
+            $arr = ['id_skpd' => $id];
+        }
+        $get = $this->db_bappeda->get_where('data_unit', $arr)->row();
+        return $get;
     }
 
     public function total_anggaran($opd, $year)
     {
         $where = null;
         if ($opd) {
-            $getID = $this->getIdUnit($opd);
-            $where = $this->db_bappeda->where('id_skpd', $getID);
+            $getID = $this->getUnit($opd, 'kode');
+            $where = $this->db_bappeda->where('id_skpd', $getID->id_skpd);
         }
 
 
@@ -55,8 +60,8 @@ class Model_home_front extends CI_Model
     {
         $where = null;
         if ($opd) {
-            $getID = $this->getIdUnit($opd);
-            $where = $this->db_bappeda->where('id_skpd', $getID);
+            $getID = $this->getUnit($opd, 'kode');
+            $where = $this->db_bappeda->where('id_skpd', $getID->id_skpd);
         }
 
 
@@ -83,8 +88,8 @@ class Model_home_front extends CI_Model
     {
         $where = null;
         if ($opd) {
-            $getID = $this->getIdUnit($opd);
-            $where = $this->db_bappeda->where('aa.id_skpd', $getID);
+            $getID = $this->getUnit($opd, 'kode');
+            $where = $this->db_bappeda->where('aa.id_skpd', $getID->id_skpd);
         }
         $this->db_bappeda->flush_cache();
         $this->db_bappeda->select('du.nama_skpd as nama, sum(aa.anggaran) as anggaran, sum(aa.anggaran_pergeseran) as anggaran_pergeseran, sum(aa.anggaran_perubahan) as anggaran_perubahan')
@@ -113,8 +118,8 @@ class Model_home_front extends CI_Model
     {
         $where = null;
         if ($opd) {
-            $getID = $this->getIdUnit($opd);
-            $where = $this->db_bappeda->where('aa.id_skpd', $getID);
+            $getID = $this->getUnit($opd, 'kode');
+            $where = $this->db_bappeda->where('aa.id_skpd', $getID->id_skpd);
         }
         $this->db_bappeda->flush_cache();
         $this->db_bappeda->select('aa.id_skpd as id, du.nama_skpd as nama, sum(aa.anggaran) as anggaran, sum(aa.anggaran_pergeseran) as anggaran_pergeseran, sum(aa.anggaran_perubahan) as anggaran_perubahan')
@@ -208,9 +213,13 @@ class Model_home_front extends CI_Model
         return $q;
     }
 
-    function getKegiatanByID($id)
+    function getSubKegiatanByID($id)
     {
         return $this->db_bappeda->get_where('tampung_exel_subkegiatan', ['id_kegiatan' => $id])->result();
+    }
+    function getKegiatan($id)
+    {
+        return $this->db_bappeda->get_where('tampung_exel_kegiatan', ['id' => $id])->row();
     }
 
     function list_satker($id = null)
@@ -222,6 +231,13 @@ class Model_home_front extends CI_Model
             $this->db_pusat->where('kd_satker_str', $id);
         }
         return $this->db_pusat->order_by('nama_satker')->get()->result();
+    }
+    function list_satker_bappeda()
+    {
+
+        $this->db_bappeda->select('id_unit, kode_skpd, nama_skpd')
+            ->from('data_unit');
+        return $this->db_bappeda->order_by('nama_skpd')->get()->result();
     }
 
     function getByMethod($id, $year, $method)
@@ -247,5 +263,52 @@ class Model_home_front extends CI_Model
         // ->group_by("idsatker");
         $query = $this->db_pusat->get();
         return $query->row();
+    }
+
+
+    function GET_list_kegiatan_by_opd($opd, $year)
+    {
+        $q1 = $this->db_bappeda->query("select
+            *
+        from
+            tampung_exel_kegiatan
+        where
+            id in (
+            select
+                id_kegiatan
+            from
+                tampung_exel_subkegiatan
+            where
+                id in (
+                select
+                    id_subkegiatan
+                from
+                    apbd_anggaran
+                where
+                    tahun = $year
+                    and id_skpd = $opd))")->result();
+        return $q1;
+    }
+
+
+    function GET_list_subkegiatan_by_kegiatan($idKegiatan, $opd, $year)
+    {
+
+        $q1 = $this->db_bappeda->query("select
+            id,kode,uraian
+        from
+            tampung_exel_subkegiatan
+        where
+            id_kegiatan = $idKegiatan 
+        AND
+            id in (
+            select
+                id_subkegiatan
+            from
+                apbd_anggaran
+            where
+                tahun = $year
+                and id_skpd = $opd)")->result();
+        return $q1;
     }
 }

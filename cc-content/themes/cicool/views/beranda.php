@@ -311,34 +311,56 @@
 	<div class="modal-dialog modal-xl" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="titleDetailOPD"></h5>
+				<h5 class="modal-title">RENCANA KERJA SKPD</h5>
 				<button type="button" class="btn-close" onclick="closeModal()">
 				</button>
 			</div>
 			<div class="modal-body">
-				<table class="table table-striped table-bordered" id="datatabledetailapbd">
-					<thead>
-						<tr>
-							<th scope="col">No</th>
-							<th scope="col">Instansi</th>
-							<th scope="col">Kegiatan</th>
-							<th scope="col">Anggaran</th>
-							<th scope="col">Anggaran Pergeseran</th>
-							<th scope="col">Anggaran Perubahan</th>
-						</tr>
-					</thead>
-					<tbody id="tableDetailAPBD">
-
-					</tbody>
-				</table>
-				<div class="spinner-grow text-primary spinningDetail" role="status"> <span class="visually-hidden">Loading...</span>
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<div class="input-group mb-3">
+								<label class="col-sm-3 col-form-label" for="modal_tahun">Tahun</label>
+								<select class="col-sm-9 form-select" id="modal_tahun">
+									<option selected value="2022">2022</option>
+									<option value="2021">2021</option>
+									<option value="2020">2020</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="input-group mb-3">
+								<label class="col-sm-3 col-form-label" for="modal_instansi">Instansi</label>
+								<select class="col-sm-9 form-select" id="modal_instansi">
+									<?php foreach ($listSatker as $satker) : ?>
+										<option value="<?= $satker->id_unit; ?>"><?= $satker->nama_skpd; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="input-group mb-3 modal_kegiatan">
+								<label class="col-sm-3 col-form-label" for="modal_kegiatan">Kegiatan</label>
+								<select class="col-sm-9 form-select" id="modal_kegiatan">
+								</select>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+				<div class="toolbar hidden-print">
+					<div class="text-end">
+						<button type="button" class="btn btn-primary" onclick="printDetail()">Tampilkan</button>
+						<button type="button" class="btn btn-secondary" onclick="closeModal()">Tutup</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 
 <script>
@@ -363,8 +385,7 @@
 	}
 
 	function closeModal() {
-		$('#datatabledetailapbd').DataTable().destroy();
-		$('#tableDetailAPBD').empty();
+		$("#formDetailAPBD").empty();
 		$("#opdDetailModal").modal('hide');
 	};
 
@@ -555,6 +576,7 @@
 	}
 
 	function getDataTable1(opd, year) {
+		// return;
 		$.ajax({
 			url: "<?= base_url('web/get_paket_penyedia_opt1618s') ?>",
 			type: "POST",
@@ -737,67 +759,83 @@
 
 	}
 
-	function opdDetail(id) {
-		const opd = id.split("_");
-		const id_opd = opd[1];
+	function testKlik(id) {
 		const dataJson = {
 			[csrfName]: csrfHash,
-			"id": id_opd,
-			"year": 2022
+			"id": 55,
+			"year": 2022,
+			"id_kegiatan": id
 		};
-
 		$.ajax({
-			url: "<?= base_url(); ?>web/getDetailAPBD",
+			url: "<?= base_url(); ?>web/getDetailAPBD2",
 			dataType: "JSON",
 			type: "POST",
 			data: dataJson,
-			beforeSend: function() {
-				$('.spinningDetail').show();
-			},
+			// beforeSend: function() {
+			// 	$('.spinningDetail').show();
+			// },
 			success: function(res) {
-				$('.spinningDetail').hide();
-				let target = $('#tableDetailAPBD');
-				let html;
-				let no = 1;
-				$.each(res, function(i, val) {
-					let list = "<ol class='list-group list-group-numbered'>";
-					$.each(val.kegiatan, function(i, val) {
-						list += "<li class='list-group-item'>" + val.uraian + "</li>"
-					});
-					list += "</ol>";
-
-					html = "<tr>" +
-						"<th>" + no + "</th>" +
-						"<td>" + val.nama + "</td>" +
-						"<td>" + list + "</td>" +
-						"<td>" + toRupiah(val.anggaran, {
-							floatingPoint: 0
-						}) + "</td>" +
-						"<td>" + toRupiah(val.anggaran_pergeseran, {
-							floatingPoint: 0
-						}) + "</td>" +
-						"<td>" + toRupiah(val.anggaran_perubahan, {
-							floatingPoint: 0
-						}) + "</td>" +
-						"</tr>";
-					target.append(html);
-					no++;
-				});
-				$('#datatabledetailapbd').DataTable();
-				$("#titleDetailOPD").text("Detail APBD " + res[0].nama);
+				console.log('res :>> ', res);
 			}
 		});
-
-		$("#opdDetailModal").modal('show');
 	}
 
+	function opdDetail(id) {
+		const opd = id.split("_");
+		const id_opd = opd[1];
+
+		$("#opdDetailModal").modal('show');
+		$('#modal_instansi').val(id_opd).change();
+	}
+
+
+	function printDetail() {
+		const tahun = $("#modal_tahun").val();
+		const instansi = $('#modal_instansi').val();
+		const kegiatan = $('#modal_kegiatan').val();
+
+		window.open("<?= base_url() ?>web/tampilDetailAPBD/" + tahun + "/" + instansi + "/" + kegiatan, "_blank");
+		return;
+	}
 
 	// READY FUNCTION HERE !!!
 	$(function() {
 		const csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
 			csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
 
+		$("#modal_tahun").change(function() {
+			$('#modal_instansi').val("").change();
+			$('#modal_kegiatan').val("").change();
+			$('#modal_kegiatan').empty();
+		});
 
+		$('#modal_instansi').change(function() {
+			const target = $('#modal_kegiatan');
+			target.empty();
+
+			$.ajax({
+				url: "<?= base_url(); ?>web/getListKegiatan",
+				dataType: "JSON",
+				type: "POST",
+				data: {
+					[csrfName]: csrfHash,
+					id_skpd: $("#modal_instansi").val(),
+					tahun: $("#modal_tahun").val()
+				},
+				beforeSend: function() {
+					$('.modal_kegiatan').LoadingOverlay('show');
+				},
+				success: function(res) {
+					$.each(res, function(i, val) {
+						const html = "<option value='" + val.id + "'>" + val.uraian + "</option>"
+						target.append(html);
+					})
+				}
+			}).always(function() {
+				$(".modal_kegiatan").LoadingOverlay("hide", true);
+			});
+
+		})
 
 		refresh();
 

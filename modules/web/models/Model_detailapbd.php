@@ -1,7 +1,7 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Model_monev extends CI_Model
+class Model_detailapbd extends CI_Model
 {
     //set nama tabel yang akan kita tampilkan datanya
     var $table = 'apbd_anggaran';
@@ -74,5 +74,70 @@ class Model_monev extends CI_Model
             $order = $this->order;
             $this->db_bappeda->order_by(key($order), $order[key($order)]);
         }
+    }
+
+
+
+
+    function listSubKegiatan($id = null, $year = null)
+    {
+        // LIST SUBKEGIATAN
+        $q1 = $this->db_bappeda->select('a.id_subkegiatan, b.kode, b.uraian as nama_kegiatan')->from('data_rka a')
+            ->join('tampung_exel_subkegiatan b', 'b.id = a.id_subkegiatan')
+            ->where('a.id_skpd', $id)
+            ->where('tahun', $year)
+            ->group_by('a.id_subkegiatan')->get();
+
+        return $q1->result();
+    }
+
+    function listKodeAkun($id, $idskpd = null, $year = null)
+    {
+
+        // select id_subkegiatan, kode_akun  from data_rka dr where id_skpd = 55 && tahun = 2022 && id_subkegiatan = 1257 group by kode_akun 
+
+        $q1 = $this->db_bappeda->select('a.kode_akun, b.nama_akun')
+            ->from('data_rka a')
+            ->join('akun_baru b', 'a.kode_akun = b.kode_akun', 'left')
+            ->where('a.id_subkegiatan', $id)
+            ->where('a.id_skpd', $idskpd)
+            ->where('a.tahun', $year)
+            ->group_by('a.kode_akun')->get()->result();
+
+        return $q1;
+    }
+
+    function detailAkun($kodeakun, $idsubkegiatan, $idskpd, $year)
+    {
+        $q1 = $this->db_bappeda->select('subs_bl_teks as subs, ket_bl_teks as ket')
+            ->from('data_rka')
+            ->where('id_skpd', $idskpd)
+            ->where('tahun', $year)
+            ->where('id_subkegiatan', $idsubkegiatan)
+            ->where('kode_akun', $kodeakun)->get()->result();
+
+        return $q1;
+    }
+    function getAlldataRka($idkegiatan, $p1, $p2, $idskpd, $year)
+    {
+        $q1 = $this->db_bappeda->query("select
+            a.nama_komponen,
+            (a.harga_satuan * a.vol_1 *(if(a.vol_2>0,a.vol_2,1))*(if(a.vol_3>0,a.vol_3,1))*(if(a.vol_4>0,a.vol_4,1))) as total
+            
+        from
+            `data_rka` a
+        left join akun_baru b on
+            b.kode_akun = a.kode_akun
+        left join tampung_exel_subkegiatan c on
+            c.id = a.id_subkegiatan
+        left join tampung_exel_kegiatan d on c.id_kegiatan = d.id 
+        where
+            d.id = $idkegiatan and
+            a.`id_skpd` = $idskpd and 
+            a.tahun = $year and 
+            a.subs_bl_teks = '$p1' and 
+            a.ket_bl_teks = '$p2'")->result();
+
+        return $q1;
     }
 }
