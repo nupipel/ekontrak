@@ -36,12 +36,12 @@ $base_assets = base_url() . 'cc-content/themes/cicool/rukada/assets/';
                     <div class="text-gray-light col" id="text_tahun"></div>
                 </div>
             </div>
-            <div class="col-4">
+            <!-- <div class="col-4">
                 <div class="text-end">
                     <button type="button" class="btn btn-dark"><i class="fa fa-print"></i> Print</button>
                     <button type="button" class="btn btn-danger"><i class="fa fa-file-pdf-o"></i> Export as PDF</button>
                 </div>
-            </div>
+            </div> -->
         </div>
         <hr style="border-top: 5px dashed black;">
         <br>
@@ -54,7 +54,8 @@ $base_assets = base_url() . 'cc-content/themes/cicool/rukada/assets/';
     <script src="<?= $base_assets ?>js/jquery.min.js"></script>
     <!-- loadingOverlay  -->
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
-
+    <!-- converter to rupiah  -->
+    <script src="https://unpkg.com/@develoka/angka-rupiah-js/index.min.js"></script>
 
 
     <script>
@@ -80,6 +81,8 @@ $base_assets = base_url() . 'cc-content/themes/cicool/rukada/assets/';
                     $("body").LoadingOverlay("show");
                 },
                 success: function(res) {
+                    // console.log('res :>> ', res);
+                    // return;
                     $('#text_unit').text(":  " + res.unit);
                     $('#text_kegiatan').text(":  " + res.kegiatan);
                     $('#text_tahun').text(":  <?= $tahun ?>");
@@ -87,7 +90,8 @@ $base_assets = base_url() . 'cc-content/themes/cicool/rukada/assets/';
                     const data = res.subkegiatan;
 
                     $.each(data, function(a, subkegiatan) {
-                        let kodeAkun = "";
+                        // console.log('res :>> ', subkegiatan);
+                        // return;
                         let html =
                             '<table class="table table-bordered">' +
                             '<thead>' +
@@ -104,32 +108,35 @@ $base_assets = base_url() . 'cc-content/themes/cicool/rukada/assets/';
                             '</thead>' +
                             '<tbody>';
 
-                        $.each(subkegiatan.akun, function(b, akun) {
+                        $.each(subkegiatan.parent_akun, function(b, parent) {
                             html += '<tr>' +
-                                '<td><STRONG>' + akun.kode_akun + '</STRONG></td>' +
+                                '<td><STRONG>' + parent.kode_parent + '</STRONG></td>' +
                                 '<td class="text-left">' +
-                                '<STRONG>' + akun.nama_akun + '</STRONG>' +
+                                '<STRONG>' + parent.nama_parent + '</STRONG>' +
                                 '</td>' +
-                                '<td class="unit"></td>' +
-                                '</tr>';
-                            $.each(akun.subs, function(c, subs) {
+                                '<td class="text-left"><STRONG>' + toRupiah(parent.total, {
+                                    symbol: null,
+                                    floatingPoint: 0
+                                }); +
+                            '</STRONG></td>' +
+                            '</tr>';
+                            $.each(parent.akun, function(c, akun) {
                                 html += '<tr>' +
-                                    '<td></td>' +
-                                    '<td>' + subs.subs_bl + '</td>' +
-                                    '<td></td>' +
-                                    '</tr>' +
-                                    '<tr>' +
-                                    '<td></td>' +
-                                    '<td>' + subs.ket_bl + '</td>' +
-                                    '<td></td>' +
-                                    '</tr>';
-                                $.each(subs.komponen, function(d, komponen) {
-                                    html += '<tr>' +
-                                        '<td></td>' +
-                                        '<td>' + komponen.nama_komponen + '</td>' +
-                                        '<td><b>' + komponen.harga_total + '</b></td>' +
-                                        '</tr>';
-                                })
+                                    '<td>' + akun.kode_akun + '</td>' +
+                                    '<td>' + akun.nama_akun + '</td>' +
+                                    '<td class="text-left">' + toRupiah(akun.total, {
+                                        symbol: null,
+                                        floatingPoint: 0
+                                    }); +
+                                '</td>' +
+                                '</tr>';
+                                // $.each(subs.komponen, function(d, komponen) {
+                                //     html += '<tr>' +
+                                //         '<td></td>' +
+                                //         '<td>' + komponen.nama_komponen + '</td>' +
+                                //         '<td><b>' + komponen.harga_total + '</b></td>' +
+                                //         '</tr>';
+                                // })
                             })
                         });
 

@@ -375,36 +375,29 @@ class Web extends Front
         $get_subkegiatan = $this->model_home_front->GET_list_subkegiatan_by_kegiatan($idKegiatan, $opd, $year);
         $subKegiatan = [];
         foreach ($get_subkegiatan as $_subkegiatan) {
-            $get_akun = $this->model_detailapbd->listKodeAkun($_subkegiatan->id, $opd, $year);
-            $akun = [];
-            foreach ($get_akun as $_akun) {
-                $get_subs = $this->model_detailapbd->detailAkun($_akun->kode_akun, $_subkegiatan->id, $opd, $year);
-                $subs = [];
-                foreach ($get_subs as $_subs) {
-                    $get_komponen =  $this->model_detailapbd->getAlldataRka($idKegiatan, $_subs->subs, $_subs->ket, $opd, $year);
-                    $komponen = [];
-                    foreach ($get_komponen as $_komponen) {
-                        $komponen[] = [
-                            'nama_komponen' => $_komponen->nama_komponen,
-                            'harga_total'   => (int)$_komponen->total
-                        ];
-                    }
-                    $subs[] = [
-                        'subs_bl'   => $_subs->subs,
-                        'ket_bl'    => $_subs->ket,
-                        'komponen'  => $komponen,
+            $get_parent = $this->model_detailapbd->list_parentAkun($_subkegiatan->id, $opd, $year);
+            $parentakun = [];
+            foreach ($get_parent as $_parent) {
+                $get_akun = $this->model_detailapbd->listKodeAkun($_parent->kode_parent_akun, $_subkegiatan->id, $opd, $year);
+                $akun = [];
+                foreach ($get_akun as $_akun) {
+                    $akun[] = [
+                        'kode_akun' => $_akun->kode_akun,
+                        'nama_akun' => $_akun->nama_akun,
+                        'total'     => (int)$_akun->total,
                     ];
                 }
-                $akun[] = [
-                    'kode_akun' => $_akun->kode_akun,
-                    'nama_akun' => $_akun->nama_akun,
-                    'subs'      => $subs,
+                $parentakun[] = [
+                    'kode_parent'   => $_parent->kode_parent_akun,
+                    'nama_parent'   => $_parent->nama_parent_akun,
+                    'total'         => (int)$_parent->total,
+                    'akun'          => $akun,
                 ];
             }
             $subKegiatan[] = [
                 'kode_subkegiatan'  => $_subkegiatan->kode,
                 'nama_subkegiatan'  => $_subkegiatan->uraian,
-                'akun'              => $akun,
+                'parent_akun'       => $parentakun,
             ];
         }
         $data = [

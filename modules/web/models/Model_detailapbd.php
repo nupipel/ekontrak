@@ -91,33 +91,63 @@ class Model_detailapbd extends CI_Model
         return $q1->result();
     }
 
-    function listKodeAkun($id, $idskpd = null, $year = null)
+    function list_parentAkun($id, $idskpd = null, $year = null)
     {
-
         // select id_subkegiatan, kode_akun  from data_rka dr where id_skpd = 55 && tahun = 2022 && id_subkegiatan = 1257 group by kode_akun 
 
-        $q1 = $this->db_bappeda->select('a.kode_akun, b.nama_akun')
-            ->from('data_rka a')
-            ->join('akun_baru b', 'a.kode_akun = b.kode_akun', 'left')
-            ->where('a.id_subkegiatan', $id)
-            ->where('a.id_skpd', $idskpd)
-            ->where('a.tahun', $year)
-            ->group_by('a.kode_akun')->get()->result();
+        $q1 = $this->db_bappeda->query("select subs.*, sum(subs.subtotal) as total from (select
+            a.kode_akun,
+            b.nama_akun,
+            left(a.kode_akun ,length(a.kode_akun)-5) as kode_parent_akun,
+            (select nama_akun from akun_baru ab where ab.kode_akun = left(a.kode_akun ,length(a.kode_akun)-5)) as nama_parent_akun,
+            (a.harga_satuan *a.vol_1*(if(a.vol_2>0,a.vol_2,1))*(if(a.vol_3>0,a.vol_3,1))*(if(a.vol_4>0,a.vol_4,1))) as subtotal
+        from
+            `data_rka` a
+        left join akun_baru b on
+            b.kode_akun = a.kode_akun
+        left join tampung_exel_subkegiatan c on
+            c.id = a.id_subkegiatan
+        where
+            a.id_subkegiatan  = $id and
+            a.`id_skpd` = $idskpd and 
+            a.tahun = $year) as subs group by subs.kode_parent_akun")->result();
 
         return $q1;
     }
 
-    function detailAkun($kodeakun, $idsubkegiatan, $idskpd, $year)
+    function listKodeAkun($kodeParent, $id, $idskpd = null, $year = null)
     {
-        $q1 = $this->db_bappeda->select('subs_bl_teks as subs, ket_bl_teks as ket')
-            ->from('data_rka')
-            ->where('id_skpd', $idskpd)
-            ->where('tahun', $year)
-            ->where('id_subkegiatan', $idsubkegiatan)
-            ->where('kode_akun', $kodeakun)->get()->result();
+        $q1 = $this->db_bappeda->query("select subs.*, sum(subs.subtotal) as total from (select
+            a.kode_akun,
+            b.nama_akun,
+            left(a.kode_akun ,length(a.kode_akun)-5) as kode_parent_akun,
+            (select nama_akun from akun_baru ab where ab.kode_akun = left(a.kode_akun ,length(a.kode_akun)-5)) as nama_parent_akun,
+            (a.harga_satuan *a.vol_1*(if(a.vol_2>0,a.vol_2,1))*(if(a.vol_3>0,a.vol_3,1))*(if(a.vol_4>0,a.vol_4,1))) as subtotal
+        from
+            `data_rka` a
+        left join akun_baru b on
+            b.kode_akun = a.kode_akun
+        left join tampung_exel_subkegiatan c on
+            c.id = a.id_subkegiatan
+        where
+            a.id_subkegiatan  = $id and
+            a.`id_skpd` = $idskpd and 
+            a.tahun = $year) as subs group by subs.kode_akun having kode_parent_akun = '$kodeParent'")->result();
 
         return $q1;
     }
+
+    // function detailAkun($kodeakun, $idsubkegiatan, $idskpd, $year)
+    // {
+    //     $q1 = $this->db_bappeda->select('subs_bl_teks as subs, ket_bl_teks as ket')
+    //         ->from('data_rka')
+    //         ->where('id_skpd', $idskpd)
+    //         ->where('tahun', $year)
+    //         ->where('id_subkegiatan', $idsubkegiatan)
+    //         ->where('kode_akun', $kodeakun)->get()->result();
+
+    //     return $q1;
+    // }
     function getAlldataRka($idkegiatan, $p1, $p2, $idskpd, $year)
     {
         $q1 = $this->db_bappeda->query("select
