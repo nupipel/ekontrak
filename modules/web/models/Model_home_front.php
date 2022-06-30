@@ -305,7 +305,7 @@ class Model_home_front extends CI_Model
             select
                 id_subkegiatan
             from
-                apbd_anggaran
+                data_rka
             where
                 tahun = $year
                 and id_skpd = $opd)")->result();
