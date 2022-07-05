@@ -696,6 +696,16 @@ class Web extends Front
         $data['sum'] = $_total;
         echo json_encode($data);
     }
+
+    function chart_tender()
+    {
+        $data = [
+            'proses'    => [0, 12, 20, 40, 50, 90, 140],
+            'kontrak'   => [0, 0, 17, 18, 19, 20, 35],
+            'selesai'   => [0, 0, 0, 0, 1, 1, 1],
+        ];
+        echo json_encode($data);
+    }
 }
 
 

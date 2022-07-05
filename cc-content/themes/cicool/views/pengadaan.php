@@ -55,7 +55,7 @@
 								<tr v-for="(tender, index) in ekontraks.tender" :key="index">
 									<td>{{tender.jenis}}</td>
 									<td>{{tender.paket}}</td>
-									<td>{{coba(tender.pagu)}}</td>
+									<td>{{format_angka(tender.pagu)}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -103,7 +103,7 @@
 								<tr v-for="(nontender, index) in ekontraks.nontender" :key="index">
 									<td>{{nontender.jenis}}</td>
 									<td>{{nontender.paket}}</td>
-									<td>{{coba(nontender.pagu)}}</td>
+									<td>{{format_angka(nontender.pagu)}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -151,7 +151,7 @@
 								<tr v-for="(epurchasing, index) in ekontraks.epurchasing" :key="index">
 									<td>{{epurchasing.jenis}}</td>
 									<td>{{epurchasing.paket}}</td>
-									<td>{{coba(epurchasing.pagu)}}</td>
+									<td>{{format_angka(epurchasing.pagu)}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -305,7 +305,7 @@
 			message: "Hello",
 			agencies: [],
 			ekontraks: [],
-			test: [0, 10, 5, 2, 20, 30, 45],
+			labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
 			year: new Date().getFullYear()
 		},
 		mounted() {
@@ -334,7 +334,7 @@
 					}
 				}).then((res) => this.ekontraks = res.data.data);
 			},
-			coba(value) {
+			format_angka(value) {
 				return toRupiah(value, {
 					useUnit: true,
 					symbol: null,
@@ -342,38 +342,64 @@
 				});
 			},
 			tender() {
-				const labels = this.test;
 
-				const data = {
-					labels: labels,
-					datasets: [{
-						label: 'My First dataset',
-						backgroundColor: 'rgb(255, 99, 132)',
-						borderColor: 'rgb(255, 99, 132)',
-						data: this.test,
-					}]
-				};
+				axios.get(this.url + 'web/chart_tender', {
+					// params: {
+					// 	'opd': this.opd,
+					// 	'year': this.year
+					// }
+				}).then((res) => {
+					// console.log(res.data)
+					// const data = {
+					// 	labels: this.labels,
+					// 	datasets: [{
+					// 			label: 'Proses',
+					// 			backgroundColor: 'rgb(231, 76, 60)',
+					// 			borderColor: 'rgb(231, 76, 60)',
+					// 			data: [0, 12, 20, 40, 50, 90, 140],
+					// 		},
+					// 		{
+					// 			label: 'Kontrak',
+					// 			backgroundColor: 'rgb(241, 196, 15)',
+					// 			borderColor: 'rgb(241, 196, 15)',
+					// 			data: [0, 0, 17, 18, 19, 20, 35],
+					// 		},
+					// 		{
+					// 			label: 'Selesai',
+					// 			backgroundColor: 'rgb(46, 204, 113)',
+					// 			borderColor: 'rgb(46, 204, 113)',
+					// 			data: [0, 0, 0, 0, 1, 1, 1],
+					// 		}
+					// 	]
+					// };
 
-				const config = {
-					type: 'line',
-					data: data,
-					options: {}
-				};
-				const myChart = new Chart(
-					document.getElementById('myChart'),
-					config
-				);
+					// const config = {
+					// 	type: 'line',
+					// 	data: data,
+					// 	options: {
+					// 		scales: {
+					// 			y: {
+					// 				min: 0,
+					// 				max: 831,
+					// 			}
+					// 		}
+					// 	}
+					// };
+					// const myChart = new Chart(
+					// 	document.getElementById('myChart'),
+					// 	config
+					// );
+				});
 			},
 			nontender() {
-				const labels = this.test;
 
 				const data = {
-					labels: labels,
+					labels: this.labels,
 					datasets: [{
 						label: 'My First dataset',
 						backgroundColor: 'rgb(255, 99, 132)',
 						borderColor: 'rgb(255, 99, 132)',
-						data: this.test,
+						data: [],
 					}]
 				};
 
@@ -388,15 +414,13 @@
 				);
 			},
 			epurchasing() {
-				const labels = this.test;
-
 				const data = {
-					labels: labels,
+					labels: this.labels,
 					datasets: [{
-						label: 'My First dataset',
+						label: 'Proses',
 						backgroundColor: 'rgb(255, 99, 132)',
 						borderColor: 'rgb(255, 99, 132)',
-						data: this.test,
+						data: [],
 					}]
 				};
 
