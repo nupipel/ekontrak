@@ -52,7 +52,7 @@ class Model_tender extends CI_Model
 
     function proses_paket($opd = null, $year = null)
     {
-        $query = $this->db_pusat->select('count(distinct kd_paket) as total');
+        $query = $this->db_pusat->select('count(distinct kd_rup_paket) as total');
         if ($opd) {
             $query->where('kd_satker', $opd);
         }

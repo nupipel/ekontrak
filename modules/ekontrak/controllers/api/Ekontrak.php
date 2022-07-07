@@ -12,6 +12,7 @@ class Ekontrak extends API
         $this->load->model('model_tender');
         $this->load->model('model_nontender');
         $this->load->model('model_epurc');
+        $this->load->model('model_chartopd');
         $this->load->model('web/model_home_front', 'model_home_front');
     }
 
@@ -142,11 +143,70 @@ class Ekontrak extends API
         ], API::HTTP_OK);
     }
 
-
-    function chartTender_get()
+    function chartValues_get()
     {
         $opd = $this->get('opd');
         $year = $this->get('year');
+        $method = $this->get('method');
+
+        $getData  = $this->model_chartopd->chart($opd, $year, $method);
+
+        $month = $this->model_chartopd->rangeMonth($opd, $year, $method);
+        $max = (int)$month->maxBulan;
+
+        $sirup      = array_fill(0, $max, null);
+        $proses     = array_fill(0, $max, null);
+        $kontrak    = array_fill(0, $max, null);
+        $selesai    = array_fill(0, $max, null);
+
+        foreach ($getData as $data) {
+            $i = $data->bulan - 1;
+            $sirup[$i] += $data->sirup;
+            $proses[$i] += $data->proses;
+            $kontrak[$i] += $data->kontrak;
+            $selesai[$i] += $data->selesai;
+        }
+
+        $data = [
+            'sirup'     => $sirup,
+            'proses'    => $proses,
+            'kontrak'   => $kontrak,
+            'selesai'   => $selesai,
+        ];
+
+        $this->response([
+            'status'     => true,
+            'message'     => 'success',
+            'data'         => $data
+        ], API::HTTP_OK);
+    }
+
+    function chartOpd_post()
+    {
+        $data = [
+            'kode_opd'          => $this->post('kode_opd'),
+            'tahun'             => $this->post('tahun'),
+            'bulan'             => $this->post('bulan'),
+            'sirup'             => $this->post('sirup'),
+            'proses'            => $this->post('proses'),
+            'kontrak'           => $this->post('kontrak'),
+            'selesai'           => $this->post('selesai'),
+            'metode_pengadaan'  => $this->post('metode_pengadaan'), //Tender
+            'tgl_input'         => date('Y-m-d H:i:s'),
+        ];
+
+        $postData = $this->model_chartopd->post_chart_opd($data);
+        if ($postData['success']) {
+            $this->response([
+                'success'   => true,
+                'message'   => 'Berhasil menyimpan data chart Tender',
+            ], API::HTTP_OK);
+        } else {
+            $this->response([
+                'success'   => false,
+                'message'   => $postData['msgErr'],
+            ], API::HTTP_NOT_ACCEPTABLE);
+        }
     }
 }
 

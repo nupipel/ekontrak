@@ -378,20 +378,20 @@ class Web extends Front
             $get_parent = $this->model_detailapbd->list_parentAkun($_subkegiatan->id, $opd, $year);
             $parentakun = [];
             foreach ($get_parent as $_parent) {
-                $get_akun = $this->model_detailapbd->listKodeAkun($_parent->kode_parent_akun, $_subkegiatan->id, $opd, $year);
-                $akun = [];
-                foreach ($get_akun as $_akun) {
-                    $akun[] = [
-                        'kode_akun' => $_akun->kode_akun,
-                        'nama_akun' => $_akun->nama_akun,
-                        'total'     => (int)$_akun->total,
-                    ];
-                }
+                // $get_akun = $this->model_detailapbd->listKodeAkun($_parent->kode_parent_akun, $_subkegiatan->id, $opd, $year);
+                // $akun = [];
+                // foreach ($get_akun as $_akun) {
+                //     $akun[] = [
+                //         'kode_akun' => $_akun->kode_akun,
+                //         'nama_akun' => $_akun->nama_akun,
+                //         'total'     => (int)$_akun->total,
+                //     ];
+                // }
                 $parentakun[] = [
                     'kode_parent'   => $_parent->kode_parent_akun,
                     'nama_parent'   => $_parent->nama_parent_akun,
                     'total'         => (int)$_parent->total,
-                    'akun'          => $akun,
+                    // 'akun'          => $akun,
                 ];
             }
             $subKegiatan[] = [
@@ -694,16 +694,6 @@ class Web extends Front
             $data['data'][] = $row;
         }
         $data['sum'] = $_total;
-        echo json_encode($data);
-    }
-
-    function chart_tender()
-    {
-        $data = [
-            'proses'    => [0, 12, 20, 40, 50, 90, 140],
-            'kontrak'   => [0, 0, 17, 18, 19, 20, 35],
-            'selesai'   => [0, 0, 0, 0, 1, 1, 1],
-        ];
         echo json_encode($data);
     }
 }

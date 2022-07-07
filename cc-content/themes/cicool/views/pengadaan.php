@@ -17,7 +17,7 @@
 
 						<label for="filterTahun" class="col-form-label">Tahun</label>
 						<div class="col-sm-3">
-							<input type="number" placeholder="Masukkan Tahun" class="form-control" v-model="year">
+							<input type="number" placeholder="Masukkan Tahun" class="form-control" id="filterTahun" v-model="year">
 						</div>
 						<div class="col-sm-3">
 							<div @click="getEkontrak" class="btn btn-info rounded btn-refresh text-white mx-3">
@@ -299,6 +299,7 @@
 	var app = new Vue({
 		el: '#app',
 		data: {
+			apikey: 'FD59804809A3DFD300C1E49F6E6FD23D',
 			url: '<?= base_url(); ?>',
 			year: "",
 			opd: "",
@@ -306,27 +307,33 @@
 			agencies: [],
 			ekontraks: [],
 			labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-			year: new Date().getFullYear()
+			year: new Date().getFullYear(),
+
+
+			//LINE CHARTS : 
+			tender_chart: [],
+			nontender_chart: [],
+			epurc_chart: [],
 		},
 		mounted() {
 			this.getAgency();
 			this.getEkontrak();
-			this.tender();
-			this.nontender();
-			this.epurchasing();
 		},
 		methods: {
 			getAgency() {
 				axios.get(this.url + 'api/ekontrak/instansi', {
 					headers: {
-						'x-api-key': 'FD59804809A3DFD300C1E49F6E6FD23D'
+						'x-api-key': this.apikey
 					}
 				}).then((res) => this.agencies = res.data.data);
 			},
 			getEkontrak() {
+				this.tender();
+				this.nontender();
+				this.epurchasing();
 				axios.get(this.url + 'api/ekontrak/angkaekontrak', {
 					headers: {
-						'x-api-key': 'FD59804809A3DFD300C1E49F6E6FD23D'
+						'x-api-key': this.apikey
 					},
 					params: {
 						'opd': this.opd,
@@ -341,98 +348,190 @@
 					floatingPoint: 0,
 				});
 			},
+
 			tender() {
-
-				axios.get(this.url + 'web/chart_tender', {
-					// params: {
-					// 	'opd': this.opd,
-					// 	'year': this.year
-					// }
+				// clean canvas first 
+				if (window.tenderLineChart) {
+					window.tenderLineChart.destroy();
+				}
+				axios.get(this.url + 'api/ekontrak/chartValues', {
+					headers: {
+						'x-api-key': this.apikey
+					},
+					params: {
+						'opd': this.opd,
+						'year': this.year,
+						'method': 1
+					}
 				}).then((res) => {
-					// console.log(res.data)
-					// const data = {
-					// 	labels: this.labels,
-					// 	datasets: [{
-					// 			label: 'Proses',
-					// 			backgroundColor: 'rgb(231, 76, 60)',
-					// 			borderColor: 'rgb(231, 76, 60)',
-					// 			data: [0, 12, 20, 40, 50, 90, 140],
-					// 		},
-					// 		{
-					// 			label: 'Kontrak',
-					// 			backgroundColor: 'rgb(241, 196, 15)',
-					// 			borderColor: 'rgb(241, 196, 15)',
-					// 			data: [0, 0, 17, 18, 19, 20, 35],
-					// 		},
-					// 		{
-					// 			label: 'Selesai',
-					// 			backgroundColor: 'rgb(46, 204, 113)',
-					// 			borderColor: 'rgb(46, 204, 113)',
-					// 			data: [0, 0, 0, 0, 1, 1, 1],
-					// 		}
-					// 	]
-					// };
+					this.tender_chart = res.data.data;
 
-					// const config = {
-					// 	type: 'line',
-					// 	data: data,
-					// 	options: {
-					// 		scales: {
-					// 			y: {
-					// 				min: 0,
-					// 				max: 831,
-					// 			}
-					// 		}
-					// 	}
-					// };
-					// const myChart = new Chart(
-					// 	document.getElementById('myChart'),
-					// 	config
-					// );
+					const data = {
+						labels: this.labels,
+						datasets: [{
+								label: 'Sirup',
+								fill: false,
+								backgroundColor: 'rgb(52, 152, 219)',
+								borderColor: 'rgb(52, 152, 219)',
+								data: this.tender_chart.sirup,
+							},
+							{
+								label: 'Proses',
+								fill: false,
+								backgroundColor: 'rgb(231, 76, 60)',
+								borderColor: 'rgb(231, 76, 60)',
+								data: this.tender_chart.proses,
+							},
+							{
+								label: 'Kontrak',
+								fill: false,
+								backgroundColor: 'rgb(241, 196, 15)',
+								borderColor: 'rgb(241, 196, 15)',
+								data: this.tender_chart.kontrak,
+							},
+							{
+								label: 'Selesai',
+								fill: false,
+								backgroundColor: 'rgb(46, 204, 113)',
+								borderColor: 'rgb(46, 204, 113)',
+								data: this.tender_chart.selesai,
+							}
+						]
+					};
+
+					const config = {
+						type: 'line',
+						data: data,
+						options: {}
+					};
+					window.tenderLineChart = new Chart(
+						document.getElementById('myChart'),
+						config
+					);
 				});
 			},
+
 			nontender() {
+				// clean canvas first 
+				if (window.nontenderLineChart) {
+					window.nontenderLineChart.destroy();
+				}
+				axios.get(this.url + 'api/ekontrak/chartValues', {
+					headers: {
+						'x-api-key': this.apikey
+					},
+					params: {
+						'opd': this.opd,
+						'year': this.year,
+						'method': 2
+					}
+				}).then((res) => {
+					this.nontender_chart = res.data.data;
 
-				const data = {
-					labels: this.labels,
-					datasets: [{
-						label: 'My First dataset',
-						backgroundColor: 'rgb(255, 99, 132)',
-						borderColor: 'rgb(255, 99, 132)',
-						data: [],
-					}]
-				};
+					const data = {
+						labels: this.labels,
+						datasets: [{
+								label: 'Sirup',
+								fill: false,
+								backgroundColor: 'rgb(52, 152, 219)',
+								borderColor: 'rgb(52, 152, 219)',
+								data: this.nontender_chart.sirup,
+							},
+							{
+								label: 'Proses',
+								fill: false,
+								backgroundColor: 'rgb(231, 76, 60)',
+								borderColor: 'rgb(231, 76, 60)',
+								data: this.nontender_chart.proses,
+							},
+							{
+								label: 'Kontrak',
+								fill: false,
+								backgroundColor: 'rgb(241, 196, 15)',
+								borderColor: 'rgb(241, 196, 15)',
+								data: this.nontender_chart.kontrak,
+							},
+							{
+								label: 'Selesai',
+								fill: false,
+								backgroundColor: 'rgb(46, 204, 113)',
+								borderColor: 'rgb(46, 204, 113)',
+								data: this.nontender_chart.selesai,
+							}
+						]
+					};
 
-				const config = {
-					type: 'line',
-					data: data,
-					options: {}
-				};
-				const myChart = new Chart(
-					document.getElementById('myChart2'),
-					config
-				);
+					const config = {
+						type: 'line',
+						data: data,
+						options: {}
+					};
+					window.nontenderLineChart = new Chart(
+						document.getElementById('myChart2'),
+						config
+					);
+				});
 			},
 			epurchasing() {
-				const data = {
-					labels: this.labels,
-					datasets: [{
-						label: 'Proses',
-						backgroundColor: 'rgb(255, 99, 132)',
-						borderColor: 'rgb(255, 99, 132)',
-						data: [],
-					}]
-				};
+				// clean canvas first 
+				if (window.epurcLineChart) {
+					window.epurcLineChart.destroy();
+				}
+				axios.get(this.url + 'api/ekontrak/chartValues', {
+					headers: {
+						'x-api-key': this.apikey
+					},
+					params: {
+						'opd': this.opd,
+						'year': this.year,
+						'method': 3
+					}
+				}).then((res) => {
+					this.epurc_chart = res.data.data;
 
-				const config = {
-					type: 'line',
-					data: data,
-					options: {}
-				};
-				const myChart = new Chart(
-					document.getElementById('myChart3'),
-					config
-				);
+					const data = {
+						labels: this.labels,
+						datasets: [{
+								label: 'Sirup',
+								fill: false,
+								backgroundColor: 'rgb(52, 152, 219)',
+								borderColor: 'rgb(52, 152, 219)',
+								data: this.epurc_chart.sirup,
+							},
+							{
+								label: 'Proses',
+								fill: false,
+								backgroundColor: 'rgb(231, 76, 60)',
+								borderColor: 'rgb(231, 76, 60)',
+								data: this.epurc_chart.proses,
+							},
+							{
+								label: 'Kontrak',
+								fill: false,
+								backgroundColor: 'rgb(241, 196, 15)',
+								borderColor: 'rgb(241, 196, 15)',
+								data: this.epurc_chart.kontrak,
+							},
+							{
+								label: 'Selesai',
+								fill: false,
+								backgroundColor: 'rgb(46, 204, 113)',
+								borderColor: 'rgb(46, 204, 113)',
+								data: this.epurc_chart.selesai,
+							}
+						]
+					};
+
+					const config = {
+						type: 'line',
+						data: data,
+						options: {}
+					};
+					window.epurcLineChart = new Chart(
+						document.getElementById('myChart3'),
+						config
+					);
+				});
 			}
 
 		},
@@ -461,6 +560,9 @@
 		const opd = $("#fileterInstansi").val();
 		const year = $("#filterTahun").val();
 		getDataTable(opd, year);
+
+		console.log('opd :>> ', opd);
+		console.log('year :>> ', year);
 	}
 
 	function getDataTable(opd, year) {

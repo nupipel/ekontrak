@@ -120,24 +120,24 @@ $base_assets = base_url() . 'cc-content/themes/cicool/rukada/assets/';
                                 }); +
                             '</STRONG></td>' +
                             '</tr>';
-                            $.each(parent.akun, function(c, akun) {
-                                html += '<tr>' +
-                                    '<td>' + akun.kode_akun + '</td>' +
-                                    '<td>' + akun.nama_akun + '</td>' +
-                                    '<td class="text-left">' + toRupiah(akun.total, {
-                                        symbol: null,
-                                        floatingPoint: 0
-                                    }); +
-                                '</td>' +
-                                '</tr>';
-                                // $.each(subs.komponen, function(d, komponen) {
-                                //     html += '<tr>' +
-                                //         '<td></td>' +
-                                //         '<td>' + komponen.nama_komponen + '</td>' +
-                                //         '<td><b>' + komponen.harga_total + '</b></td>' +
-                                //         '</tr>';
-                                // })
-                            })
+                            // $.each(parent.akun, function(c, akun) {
+                            // html += '<tr>' +
+                            //     '<td>' + akun.kode_akun + '</td>' +
+                            //     '<td>' + akun.nama_akun + '</td>' +
+                            //     '<td class="text-left">' + toRupiah(akun.total, {
+                            //         symbol: null,
+                            //         floatingPoint: 0
+                            //     }); +
+                            // '</td>' +
+                            // '</tr>';
+                            // $.each(subs.komponen, function(d, komponen) {
+                            //     html += '<tr>' +
+                            //         '<td></td>' +
+                            //         '<td>' + komponen.nama_komponen + '</td>' +
+                            //         '<td><b>' + komponen.harga_total + '</b></td>' +
+                            //         '</tr>';
+                            // })
+                            // })
                         });
 
                         html += '</tbody>' +
@@ -147,6 +147,10 @@ $base_assets = base_url() . 'cc-content/themes/cicool/rukada/assets/';
                 }
             }).always(function() {
                 $("body").LoadingOverlay("hide", true);
+
+                setTimeout(function() {
+                    window.print();
+                }, 1000);
             })
         };
 
