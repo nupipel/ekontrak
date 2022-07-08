@@ -232,11 +232,14 @@ class Model_home_front extends CI_Model
         }
         return $this->db_pusat->order_by('nama_satker')->get()->result();
     }
-    function list_satker_bappeda()
+    function list_satker_bappeda($kode_skpd = null)
     {
 
         $this->db_bappeda->select('id_unit, kode_skpd, nama_skpd')
             ->from('data_unit');
+        if ($kode_skpd) {
+            $this->db_bappeda->where('kode_skpd', $kode_skpd);
+        }
         return $this->db_bappeda->order_by('nama_skpd')->get()->result();
     }
 
@@ -265,6 +268,14 @@ class Model_home_front extends CI_Model
         return $query->row();
     }
 
+    function barjasmodal($kode_skpd, $year)
+    {
+        $query = $this->db_bappeda->select('SUM(if(substring(a.kode_akun, 1, 6)= "5.1.02", a.rincian, 0)) as barjas, SUM(if(substring(a.kode_akun, 1, 3)= "5.2", a.rincian, 0)) as modal')
+            ->from('data_rka a')
+            ->join('data_unit b', 'a.id_sub_skpd = b.id_skpd', 'left')
+            ->where(['a.tahun' => $year, 'b.kode_skpd' => $kode_skpd]);
+        return $query->get()->row();
+    }
 
     function GET_list_kegiatan_by_opd($opd, $year)
     {

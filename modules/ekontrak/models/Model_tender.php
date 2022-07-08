@@ -10,7 +10,7 @@ class Model_tender extends CI_Model
 
     function nilai_paket($opd = null, $year = null)
     {
-        $query = $this->db_pusat->select('sum(jumlahpagu) as total')->where_in('metodepengadaan', ['Tender', 'Tender Cepat', 'Seleksi', 'Penunjukan Langsung', 'Lelang Umum', 'Dikecualikan']);
+        $query = $this->db_pusat->select('sum(jumlahpagu) as total')->where_in('metodepengadaan', ['Tender', 'Tender Cepat', 'Seleksi', 'Lelang Umum']);
         if ($opd) {
             $query->where('kodesatker', $opd);
         }
@@ -24,7 +24,7 @@ class Model_tender extends CI_Model
 
     function total_paket($opd = null, $year = null)
     {
-        $query = $this->db_pusat->select('count(idrup) as total')->where_in('metodepengadaan', ['Tender', 'Tender Cepat', 'Seleksi', 'Penunjukan Langsung', 'Lelang Umum', 'Dikecualikan']);
+        $query = $this->db_pusat->select('count(idrup) as total')->where_in('metodepengadaan', ['Tender', 'Tender Cepat', 'Seleksi', 'Lelang Umum']);
         if ($opd) {
             $query->where('kodesatker', $opd);
         }

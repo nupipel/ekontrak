@@ -638,15 +638,10 @@ class Web extends Front
             $swakelola  = $this->model_home_front->getByMethodSwakelola($opd->id, $year);
             // $darurat    = $this->model_home_front->getByMethod($opd->id, $year, 'Darurat');
 
-            $getapbd = $this->model_home_front->listApbd_OPD(false, $opd->kd_satker_str, $year);
-            if ($getapbd) {
-                if ($getapbd[0]->anggaran_perubahan) {
-                    $apbd = $getapbd[0]->anggaran_perubahan;
-                } else if ($getapbd[0]->anggaran_pergeseran) {
-                    $apbd = $getapbd[0]->anggaran_pergeseran;
-                } else if ($getapbd[0]->anggaran) {
-                    $apbd = $getapbd[0]->anggaran;
-                }
+            $getAPBD = $this->model_home_front->barjasmodal($opd->kd_satker_str, $year);
+
+            if ($getAPBD) {
+                $apbd = $getAPBD->barjas + $getAPBD->modal;
             } else {
                 $apbd = 0;
             }
@@ -672,7 +667,7 @@ class Web extends Front
             $row['pagusw']      = $swakelola->total ?? 0;
             $row['total']       = $total ?? 0;
             $row['totalpagu']   = $totalPaguAnggaran ?? 0;
-            $row['prosentase']  = $apbd ? ($totalPaguAnggaran / $apbd * 100) : 0;
+            $row['prosentase']  = $apbd ? ($apbd / $totalPaguAnggaran * 100) : 0;
 
             $_total['tender']   += $row['tender'];
             $_total['_tender']  += $row['pagutender'];

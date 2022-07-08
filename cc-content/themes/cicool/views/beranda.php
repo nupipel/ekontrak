@@ -129,7 +129,7 @@
 			<div class="card-body">
 				<div class="d-flex align-items-center">
 					<div>
-						<h6 class="mb-0">APBD Tertinggi per OPD</h6>
+						<h6 class="mb-0">APBD TERTINGGI PER-OPD</h6>
 					</div>
 					<div class="font-22 ms-auto text-white"><i class="bx bx-dots-horizontal-rounded"></i>
 					</div>
@@ -153,7 +153,7 @@
 			<div class="card-body">
 				<div class="d-flex align-items-center">
 					<div>
-						<h6 class="mb-0">Pendapatan Tertinggi per OPD</h6>
+						<h6 class="mb-0">PENDAPATAN TERTINGGI PER OPD</h6>
 					</div>
 					<div class="font-22 ms-auto text-white"><i class="bx bx-dots-horizontal-rounded"></i>
 					</div>
@@ -251,7 +251,7 @@
 	<div class="card-body">
 		<div class="d-flex align-items-center">
 			<div>
-				<h5 class="mb-0">APBD per OPD</h5>
+				<h5 class="mb-0">APBD PER-OPD</h5>
 			</div>
 			<div class="font-22 ms-auto"><i class="bx bx-dots-horizontal-rounded"></i>
 			</div>
@@ -280,7 +280,7 @@
 	<div class="card-body">
 		<div class="d-flex align-items-center">
 			<div>
-				<h5 class="mb-0">Pendapatan per OPD</h5>
+				<h5 class="mb-0">PENDAPATAN PER-OPD</h5>
 			</div>
 			<div class="font-22 ms-auto"><i class="bx bx-dots-horizontal-rounded"></i>
 			</div>
