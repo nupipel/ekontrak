@@ -402,7 +402,16 @@
 					const config = {
 						type: 'line',
 						data: data,
-						options: {}
+						options: {
+							scales: {
+								yAxes: [{
+									ticks: {
+										// max: maxVal,
+										min: 0
+									}
+								}]
+							}
+						}
 					};
 					window.tenderLineChart = new Chart(
 						document.getElementById('myChart'),
@@ -464,7 +473,16 @@
 					const config = {
 						type: 'line',
 						data: data,
-						options: {}
+						options: {
+							scales: {
+								yAxes: [{
+									ticks: {
+										// max: maxVal,
+										min: 0
+									}
+								}]
+							}
+						}
 					};
 					window.nontenderLineChart = new Chart(
 						document.getElementById('myChart2'),
@@ -525,7 +543,16 @@
 					const config = {
 						type: 'line',
 						data: data,
-						options: {}
+						options: {
+							scales: {
+								yAxes: [{
+									ticks: {
+										// max: maxVal,
+										min: 0
+									}
+								}]
+							}
+						}
 					};
 					window.epurcLineChart = new Chart(
 						document.getElementById('myChart3'),
