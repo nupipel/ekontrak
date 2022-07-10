@@ -36,18 +36,21 @@ class Model_monev extends CI_Model
 
     public function count_all()
     {
-        $this->db_bappeda->select('aa.*, du.nama_skpd');
+        $this->db_bappeda->select('aa.*, du.nama_skpd, c.uraian');
         $this->db_bappeda->from($this->table);
         $this->db_bappeda->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT');
+          $this->db_bappeda->join('tampung_exel_subkegiatan c', 'c.id = aa.id_subkegiatan', 'LEFT');
+         
         $this->db_bappeda->where('aa.tahun', $this->input->post('year'));
         return $this->db_bappeda->count_all_results();
     }
 
     private function _get_datatables_query($year = null)
     {
-        $this->db_bappeda->select('aa.*, du.nama_skpd');
+        $this->db_bappeda->select('aa.*, du.nama_skpd, c.uraian');
         $this->db_bappeda->from($this->table);
         $this->db_bappeda->join('data_unit du', 'du.id_skpd = aa.id_skpd', 'LEFT');
+          $this->db_bappeda->join('tampung_exel_subkegiatan c', 'c.id = aa.id_subkegiatan', 'LEFT');
         $this->db_bappeda->where('aa.tahun', $year);
         $i = 0;
         foreach ($this->column_search as $item) // loop kolom 

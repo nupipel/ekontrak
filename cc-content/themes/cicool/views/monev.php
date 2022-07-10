@@ -51,6 +51,7 @@
 							<th>No.</th>
 							<th>Tahun</th>
 							<th>Nama OPD</th>
+								<th>Nama Sub Kegiatan</th>
 							<th>Anggaran</th>
 							<th>Anggaran Perubahan</th>
 							<th>Jml. Realisasi</th>
