@@ -41,11 +41,13 @@ class Model_epurc extends CI_Model
 
         $opd ? $q1->where('satker_id', $kd_satker) : null;
 
+        $q1->group_by('kd_rup');
+
         if ($params == 'paket') {
             $result = $q1->get()->num_rows();
         } else {
             $result = $q1->get()->row();
-            $result = $result->total;
+            $result = $result->total ?? 0;
         }
         return $result;
     }
@@ -61,12 +63,14 @@ class Model_epurc extends CI_Model
         $year ? $q1->where('tahun_anggaran', $year) : null;
         $opd ? $q1->where('satker_id', $kd_satker) : null;
         $q1->where('status_paket', 'melakukan_pengiriman_dan_penerimaan');
+        $q1->group_by('kd_rup');
+
 
         if ($params == 'paket') {
             $result = $q1->get()->num_rows();
         } else {
             $result = $q1->get()->row();
-            $result = $result->total;
+            $result = $result->total ?? 0;
         }
         return $result;
     }
@@ -83,13 +87,13 @@ class Model_epurc extends CI_Model
         $year ? $q1->where('tahun_anggaran', $year) : null;
         $opd ? $q1->where('satker_id', $kd_satker) : null;
         $q1->where('status_paket', 'paket_selesai');
-
+        $q1->group_by('kd_rup');
 
         if ($params == 'paket') {
             $result = $q1->get()->num_rows();
         } else {
             $result = $q1->get()->row();
-            $result = $result->total;
+            $result = $result->total ?? 0;
         }
         return $result;
     }

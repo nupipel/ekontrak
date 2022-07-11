@@ -43,7 +43,7 @@
 				</div>
 				<div class="card-footer bg-white">
 					<div class="table-responsive">
-						<table class="table table-striped align-middle mb-0">
+						<table class="table align-middle mb-0">
 							<thead class="table-light">
 								<tr>
 									<th>Jenis</th>
@@ -91,7 +91,7 @@
 				</div>
 				<div class="card-footer bg-white">
 					<div class="table-responsive">
-						<table class="table table-striped align-middle mb-0">
+						<table class="table align-middle mb-0">
 							<thead class="table-light">
 								<tr>
 									<th>Jenis</th>
@@ -139,7 +139,7 @@
 				</div>
 				<div class="card-footer bg-white">
 					<div class="table-responsive">
-						<table class="table table-striped align-middle mb-0">
+						<table class="table align-middle mb-0">
 							<thead class="table-light">
 								<tr>
 									<th>Jenis</th>
