@@ -19,6 +19,16 @@ class Model_home_front extends CI_Model
             ->get();
         return $query->result_array();
     }
+    
+      public function master_satker_rups()
+    {
+        $query = $this->db->select("*")
+            ->from('master_satker_rups')
+           
+
+            ->get();
+        return $query->result_array();
+    }
 
     function list_instansi()
     {

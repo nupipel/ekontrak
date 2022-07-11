@@ -95,6 +95,21 @@ class Web extends Front
         ];
         echo json_encode($result);
     }
+    
+    
+     public function robot()
+    {
+          $kode = $this->input->get('kode',true);
+        
+        $data = [
+            'container'         => 'robot',
+          
+            'list_instansi'     => $this->model_home_front->list_instansi(),
+
+           
+        ];
+        $this->template->build('robot', $data);
+    }
 
     public function pengadaan()
     {
@@ -569,6 +584,7 @@ class Web extends Front
             $row[] =  '<strong>' . $no . '</strong>';
             $row[] = $datas->tahun;
             $row[] = $datas->nama_skpd;
+             $row[] = $datas->uraian;
             $row[] = $datas->anggaran;
             $row[] = $datas->perubahan;
             $row[] = $datas->jml_realisasi;
