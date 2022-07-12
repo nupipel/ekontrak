@@ -96,6 +96,19 @@ class Web extends Front
         echo json_encode($result);
     }
     
+      public function strukturapbdskpd()
+    {
+         
+        
+        $data = [
+            'container'         => 'strukturapbdskpd',
+          
+            'list_instansi'     => $this->model_home_front->list_instansi(),
+
+           
+        ];
+        $this->template->build('home', $data);
+    }
     
      public function robot()
     {

@@ -1,3 +1,5 @@
+
+
 <?php
 $namaweb = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "https") . "://$_SERVER[HTTP_HOST]" . "/";
 // $web=$namaweb.'cc-content/themes/cicool/rukada/';  
@@ -105,15 +107,27 @@ function tgl_indo($tanggal)
 			color: white !important;
 		}
 	</style>
+	
+	
+	<style>
+    @media print {
+  .hidden-print {
+    display: none !important;
+  }
+}
+</style>
 </head>
 
 <body>
 	<!--wrapper-->
 	<div class="wrapper">
+	    
+	    
+	    
 		<!--start header wrapper-->
-		<div class="header-wrapper">
+		<div class="header-wrapper" class="hidden-print">
 			<!--start header -->
-			<header>
+			<header class="hidden-print">
 				<div class="topbar d-flex align-items-center">
 					<nav class="navbar navbar-expand">
 						<div class="topbar-logo-header">
@@ -140,8 +154,10 @@ function tgl_indo($tanggal)
 			</header>
 			<!--end header -->
 			<!--navigation-->
-			<div class="nav-container primary-menu">
-				<div class="mobile-topbar-header">
+			
+			
+			<div class="nav-container primary-menu hidden-print" >
+				<div class="mobile-topbar-header hidden-print" >
 					<div>
 						<img src="<?php echo $web; ?>assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
 					</div>
@@ -151,7 +167,7 @@ function tgl_indo($tanggal)
 					<div class="toggle-icon ms-auto"><i class='bx bx-arrow-to-left'></i>
 					</div>
 				</div>
-				<nav class="navbar navbar-expand-xl w-100">
+				<nav class="navbar navbar-expand-xl w-100" class="hidden-print">
 					<ul class="navbar-nav justify-content-start flex-grow-1 gap-1">
 
 
@@ -207,8 +223,8 @@ function tgl_indo($tanggal)
 	<!--end wrapper-->
 	<!--start switcher-->
 	<div class="switcher-wrapper">
-		<div class="switcher-btn"> <i class='bx bx-cog bx-spin'></i>
-		</div>
+		<!--<div class="switcher-btn"> <i class='bx bx-cog bx-spin'></i>-->
+		<!--</div>-->
 		<div class="switcher-body">
 			<div class="d-flex align-items-center">
 				<h5 class="mb-0 text-uppercase">Theme Customizer</h5>
