@@ -333,7 +333,7 @@
 						<div class="col">
 							<div class="input-group mb-3">
 								<label class="col-sm-3 col-form-label" for="modal_instansi">Instansi</label>
-								<select class="col-sm-9 form-select" id="modal_instansi">
+								<select class="col-sm-9 form-select"  id="modal_instansi">
 									<?php foreach ($listSatker as $satker) : ?>
 										<option value="<?= $satker->id_unit; ?>"><?= $satker->nama_skpd; ?></option>
 									<?php endforeach; ?>
@@ -346,6 +346,8 @@
 							<div class="input-group mb-3 modal_kegiatan">
 								<label class="col-sm-3 col-form-label" for="modal_kegiatan">Kegiatan</label>
 								<select class="col-sm-9 form-select" id="modal_kegiatan">
+								    <option value="0">Induk</option>
+								     <option value="1">Perubahan</option>
 								</select>
 							</div>
 						</div>
@@ -794,7 +796,7 @@
 		const instansi = $('#modal_instansi').val();
 		const kegiatan = $('#modal_kegiatan').val();
 
-		window.open("<?= base_url() ?>web/tampilDetailAPBD/" + tahun + "/" + instansi + "/" + kegiatan, "_blank");
+		window.open("<?= base_url() ?>web/strukturapbdskpd/?tahun=" + tahun + "&skpd=" + instansi + "&tahap=" + kegiatan, "_blank");
 		return;
 	}
 
@@ -803,39 +805,42 @@
 		const csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
 			csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>';
 
-		$("#modal_tahun").change(function() {
-			$('#modal_instansi').val("").change();
-			$('#modal_kegiatan').val("").change();
-			$('#modal_kegiatan').empty();
-		});
+// 		$("#modal_tahun").change(function() {
+// 			$('#modal_instansi').val("").change();
+// 			$('#modal_kegiatan').val("").change();
+// 			//$('#modal_kegiatan').empty();
+// 		});
 
-		$('#modal_instansi').change(function() {
-			const target = $('#modal_kegiatan');
-			target.empty();
+// 		$('#modal_instansi').change(function() {
+// 			const target = $('#modal_kegiatan');
+// 			target.empty();
 
-			$.ajax({
-				url: "<?= base_url(); ?>web/getListKegiatan",
-				dataType: "JSON",
-				type: "POST",
-				data: {
-					[csrfName]: csrfHash,
-					id_skpd: $("#modal_instansi").val(),
-					tahun: $("#modal_tahun").val()
-				},
-				beforeSend: function() {
-					$('.modal_kegiatan').LoadingOverlay('show');
-				},
-				success: function(res) {
-					$.each(res, function(i, val) {
-						const html = "<option value='" + val.id + "'>" + val.uraian + "</option>"
-						target.append(html);
-					})
-				}
-			}).always(function() {
-				$(".modal_kegiatan").LoadingOverlay("hide", true);
-			});
+// 			$.ajax({
+// 				url: "<?php // base_url(); ?>web/getListKegiatan",
+// 				dataType: "JSON",
+// 				type: "POST",
+// 				data: {
+// 					[csrfName]: csrfHash,
+// 					id_skpd: $("#modal_instansi").val(),
+// 					tahun: $("#modal_tahun").val()
+// 				},
+// 				beforeSend: function() {
+// 					$('.modal_kegiatan').LoadingOverlay('show');
+// 				},
+// 				success: function(res) {
+// 				// 	$.each(res, function(i, val) {
+// 				// 		const html = "<option value='" + val.id + "'>" + val.uraian + "</option>"
+// 				// 		target.append(html);
+// 				// 	}
+					
+					
+// 				//	)
+// 				}
+// 			}).always(function() {
+// 				$(".modal_kegiatan").LoadingOverlay("hide", true);
+// 			});
 
-		})
+// 		})
 
 		refresh();
 
