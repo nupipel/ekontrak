@@ -17,6 +17,7 @@ class Model_tender extends CI_Model
         if ($year) {
             $query->where('tahunanggaran', $year);
         }
+        $query->where("statusdeletepaket = '0' and statusaktifpaket = '1'");
 
         $result = $query->get('paket_penyedia_opt1618s')->row();
         return $result;

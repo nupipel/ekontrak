@@ -30,29 +30,27 @@
 			</div>
 		</div>
 	</div>
+	<!-- tender -->
 	<div class="row">
-		<!-- tender -->
-		<div class="col-md-4">
-			<div class="card radius-10 bg-info">
-				<div class="card-body">
+		<div class="col-12 col-lg-4 col-xl-4">
+			<div class="card radius-10 w-100">
+				<div class="card-header bg-primary py-3">
 					<div class="d-flex align-items-center">
-						<div>
-							<h5 style="color:white;">Tender</h5>
-						</div>
+						<h5 class="mb-0 text-white">TENDER</h5>
 					</div>
 				</div>
-				<div class="card-footer bg-white">
-					<div class="table-responsive">
-						<table class="table align-middle mb-0">
-							<thead class="table-light">
+				<div class="card-body">
+					<div class="table-responsive mt-3">
+						<table class="table align-middle">
+							<tbody>
 								<tr>
+									<th></th>
 									<th>Jenis</th>
 									<th>Paket</th>
 									<th>Pagu</th>
 								</tr>
-							</thead>
-							<tbody>
 								<tr v-for="(tender, index) in ekontraks.tender" :key="index">
+									<td></td>
 									<td>{{tender.jenis}}</td>
 									<td>{{tender.paket}}</td>
 									<td>{{format_angka(tender.pagu)}}</td>
@@ -63,44 +61,54 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-8">
-			<div class="card radius-10 bg-info">
-				<div class="card-body">
+
+		<div class="col-12 col-lg-8 col-xl-8">
+			<div class="card radius-10 w-100">
+				<div class="card-header radius-10 bg-primary py-3">
 					<div class="d-flex align-items-center">
 						<div>
-							<h5 style="color:white;">Tender</h5>
+							<h5 class="mb-0 text-white">TENDER</h5>
 						</div>
 					</div>
 				</div>
-				<div class="card-footer bg-white">
-					<canvas id="myChart" height="100%"></canvas>
+				<div class="card-body">
+					<div class="d-flex align-items-center ms-auto font-13 gap-2 my-3">
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_sirup}"></i>SIRUP</span>
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_proses}"></i>PROSES</span>
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_kontrak}"></i>KONTRAK</span>
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_selesai}"></i>SELESAI</span>
+					</div>
+					<div style="height: 300px">
+						<canvas id="myChart"></canvas>
+					</div>
 				</div>
 			</div>
 		</div>
-		<!-- end of tender -->
+	</div>
+	<!--End Row-->
+	<!-- end of tender -->
 
-		<!-- non tender -->
-		<div class="col-md-4">
-			<div class="card radius-10 bg-success">
-				<div class="card-body">
+	<!-- non tender -->
+	<div class="row">
+		<div class="col-12 col-lg-4 col-xl-4">
+			<div class="card radius-10 w-100">
+				<div class="card-header bg-success py-3">
 					<div class="d-flex align-items-center">
-						<div>
-							<h5 style="color:white;">Non Tender</h5>
-						</div>
+						<h5 class="mb-0 text-white">NON-TENDER</h5>
 					</div>
 				</div>
-				<div class="card-footer bg-white">
-					<div class="table-responsive">
-						<table class="table align-middle mb-0">
-							<thead class="table-light">
+				<div class="card-body">
+					<div class="table-responsive mt-3">
+						<table class="table align-middle">
+							<tbody>
 								<tr>
+									<th></th>
 									<th>Jenis</th>
 									<th>Paket</th>
 									<th>Pagu</th>
 								</tr>
-							</thead>
-							<tbody>
 								<tr v-for="(nontender, index) in ekontraks.nontender" :key="index">
+									<td></td>
 									<td>{{nontender.jenis}}</td>
 									<td>{{nontender.paket}}</td>
 									<td>{{format_angka(nontender.pagu)}}</td>
@@ -111,44 +119,53 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-8">
-			<div class="card radius-10 bg-success">
-				<div class="card-body">
+
+		<div class="col-12 col-lg-8 col-xl-8">
+			<div class="card radius-10 w-100">
+				<div class="card-header radius-10 bg-success py-3">
 					<div class="d-flex align-items-center">
 						<div>
-							<h5 style="color:white;">Non Tender</h5>
+							<h5 class="mb-0 text-white">NON-TENDER</h5>
 						</div>
 					</div>
 				</div>
-				<div class="card-footer bg-white">
-					<canvas id="myChart2" height="100%"></canvas>
+				<div class="card-body">
+					<div class="d-flex align-items-center ms-auto font-13 gap-2 my-3">
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_sirup}"></i>SIRUP</span>
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_proses}"></i>PROSES</span>
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_kontrak}"></i>KONTRAK</span>
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_selesai}"></i>SELESAI</span>
+					</div>
+					<div style="height: 300px">
+						<canvas id="myChart2"></canvas>
+					</div>
 				</div>
 			</div>
 		</div>
-		<!-- end of non tender -->
+	</div>
+	<!-- end of non tender -->
 
-		<!-- non tender -->
-		<div class="col-md-4">
-			<div class="card radius-10 bg-primary">
-				<div class="card-body">
+	<!-- E-Purchasing -->
+	<div class="row">
+		<div class="col-12 col-lg-4 col-xl-4">
+			<div class="card radius-10 w-100">
+				<div class="card-header bg-danger py-3">
 					<div class="d-flex align-items-center">
-						<div>
-							<h5 style="color:white;">E-Purchasing</h5>
-						</div>
+						<h5 class="mb-0 text-white">E-PURCHASING</h5>
 					</div>
 				</div>
-				<div class="card-footer bg-white">
-					<div class="table-responsive">
-						<table class="table align-middle mb-0">
-							<thead class="table-light">
+				<div class="card-body">
+					<div class="table-responsive mt-3">
+						<table class="table align-middle">
+							<tbody>
 								<tr>
+									<th></th>
 									<th>Jenis</th>
 									<th>Paket</th>
 									<th>Pagu</th>
 								</tr>
-							</thead>
-							<tbody>
 								<tr v-for="(epurchasing, index) in ekontraks.epurchasing" :key="index">
+									<td></td>
 									<td>{{epurchasing.jenis}}</td>
 									<td>{{epurchasing.paket}}</td>
 									<td>{{format_angka(epurchasing.pagu)}}</td>
@@ -159,32 +176,40 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-8">
-			<div class="card radius-10 bg-primary">
-				<div class="card-body">
+
+		<div class="col-12 col-lg-8 col-xl-8">
+			<div class="card radius-10 w-100">
+				<div class="card-header radius-10 bg-danger py-3">
 					<div class="d-flex align-items-center">
 						<div>
-							<h5 style="color:white;">E-Purchasing</h5>
+							<h5 class="mb-0 text-white">E-PURCHASING</h5>
 						</div>
 					</div>
 				</div>
-				<div class="card-footer bg-white">
-					<canvas id="myChart3" width="400" height="100%"></canvas>
+				<div class="card-body">
+					<div class="d-flex align-items-center ms-auto font-13 gap-2 my-3">
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_sirup}"></i>SIRUP</span>
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_proses}"></i>PROSES</span>
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_kontrak}"></i>KONTRAK</span>
+						<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" :style="{ color: clr_selesai}"></i>SELESAI</span>
+					</div>
+					<div style="height: 300px">
+						<canvas id="myChart3"></canvas>
+					</div>
 				</div>
 			</div>
 		</div>
-		<!-- end of E-Purchasing -->
-
-
 	</div>
+	<!-- end of E-Purchasing -->
 </div>
+<!-- end of APP  -->
 
 
-<div class="card radius-10 bg-info">
+<div class="card radius-10 bg-primary">
 	<div class="card-body">
 		<div class="d-flex align-items-center">
 			<div>
-				<h5 style="color:white;">Table Kontrak Tender</h5>
+				<h5 style="color:white;">KONTRAK TENDER</h5>
 			</div>
 		</div>
 	</div>
@@ -220,7 +245,7 @@
 	<div class="card-body">
 		<div class="d-flex align-items-center">
 			<div>
-				<h5 style="color:white;">Table Kontrak Non Tender</h5>
+				<h5 style="color:white;">KONTRAK NON-TENDER</h5>
 			</div>
 		</div>
 	</div>
@@ -254,11 +279,11 @@
 
 
 
-<div class="card radius-10 bg-warning">
+<div class="card radius-10 bg-danger">
 	<div class="card-body">
 		<div class="d-flex align-items-center">
 			<div>
-				<h5 style="color:white;">Table E-Purchasing</h5>
+				<h5 style="color:white;">E-PURCHASINGS</h5>
 			</div>
 		</div>
 	</div>
@@ -301,19 +326,25 @@
 		data: {
 			apikey: 'FD59804809A3DFD300C1E49F6E6FD23D',
 			url: '<?= base_url(); ?>',
-			year: "",
+
 			opd: "",
-			message: "Hello",
-			agencies: [],
-			ekontraks: [],
-			labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
 			year: new Date().getFullYear(),
 
+			agencies: [],
+			ekontraks: [],
 
 			//LINE CHARTS : 
+			labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
 			tender_chart: [],
 			nontender_chart: [],
 			epurc_chart: [],
+
+			// legends 
+			clr_sirup: 'rgb(52, 152, 219)',
+			clr_proses: 'rgb(231, 76, 60)',
+			clr_kontrak: 'rgb(241, 196, 15)',
+			clr_selesai: 'rgb(46, 204, 113)',
+
 		},
 		mounted() {
 			this.getAgency();
@@ -369,31 +400,31 @@
 					const data = {
 						labels: this.labels,
 						datasets: [{
-								label: 'Sirup',
+								// label: 'Sirup',
 								fill: false,
-								backgroundColor: 'rgb(52, 152, 219)',
-								borderColor: 'rgb(52, 152, 219)',
+								backgroundColor: this.clr_sirup,
+								borderColor: this.clr_sirup,
 								data: this.tender_chart.sirup,
 							},
 							{
-								label: 'Proses',
+								// label: 'Proses',
 								fill: false,
-								backgroundColor: 'rgb(231, 76, 60)',
-								borderColor: 'rgb(231, 76, 60)',
+								backgroundColor: this.clr_proses,
+								borderColor: this.clr_proses,
 								data: this.tender_chart.proses,
 							},
 							{
-								label: 'Kontrak',
+								// label: 'Kontrak',
 								fill: false,
-								backgroundColor: 'rgb(241, 196, 15)',
-								borderColor: 'rgb(241, 196, 15)',
+								backgroundColor: this.clr_kontrak,
+								borderColor: this.clr_kontrak,
 								data: this.tender_chart.kontrak,
 							},
 							{
-								label: 'Selesai',
+								// label: 'Selesai',
 								fill: false,
-								backgroundColor: 'rgb(46, 204, 113)',
-								borderColor: 'rgb(46, 204, 113)',
+								backgroundColor: this.clr_selesai,
+								borderColor: this.clr_selesai,
 								data: this.tender_chart.selesai,
 							}
 						]
@@ -403,6 +434,11 @@
 						type: 'line',
 						data: data,
 						options: {
+							responsive: true,
+							maintainAspectRatio: false,
+							legend: {
+								display: false
+							},
 							scales: {
 								yAxes: [{
 									ticks: {
@@ -440,31 +476,31 @@
 					const data = {
 						labels: this.labels,
 						datasets: [{
-								label: 'Sirup',
+								// label: 'Sirup',
 								fill: false,
-								backgroundColor: 'rgb(52, 152, 219)',
-								borderColor: 'rgb(52, 152, 219)',
+								backgroundColor: this.clr_sirup,
+								borderColor: this.clr_sirup,
 								data: this.nontender_chart.sirup,
 							},
 							{
-								label: 'Proses',
+								// label: 'Proses',
 								fill: false,
-								backgroundColor: 'rgb(231, 76, 60)',
-								borderColor: 'rgb(231, 76, 60)',
+								backgroundColor: this.clr_proses,
+								borderColor: this.clr_proses,
 								data: this.nontender_chart.proses,
 							},
 							{
-								label: 'Kontrak',
+								// label: 'Kontrak',
 								fill: false,
-								backgroundColor: 'rgb(241, 196, 15)',
-								borderColor: 'rgb(241, 196, 15)',
+								backgroundColor: this.clr_kontrak,
+								borderColor: this.clr_kontrak,
 								data: this.nontender_chart.kontrak,
 							},
 							{
-								label: 'Selesai',
+								// label: 'Selesai',
 								fill: false,
-								backgroundColor: 'rgb(46, 204, 113)',
-								borderColor: 'rgb(46, 204, 113)',
+								backgroundColor: this.clr_selesai,
+								borderColor: this.clr_selesai,
 								data: this.nontender_chart.selesai,
 							}
 						]
@@ -474,6 +510,11 @@
 						type: 'line',
 						data: data,
 						options: {
+							responsive: true,
+							maintainAspectRatio: false,
+							legend: {
+								display: false
+							},
 							scales: {
 								yAxes: [{
 									ticks: {
@@ -510,31 +551,31 @@
 					const data = {
 						labels: this.labels,
 						datasets: [{
-								label: 'Sirup',
+								// label: 'Sirup',
 								fill: false,
-								backgroundColor: 'rgb(52, 152, 219)',
-								borderColor: 'rgb(52, 152, 219)',
+								backgroundColor: this.clr_sirup,
+								borderColor: this.clr_sirup,
 								data: this.epurc_chart.sirup,
 							},
 							{
-								label: 'Proses',
+								// label: 'Proses',
 								fill: false,
-								backgroundColor: 'rgb(231, 76, 60)',
-								borderColor: 'rgb(231, 76, 60)',
+								backgroundColor: this.clr_proses,
+								borderColor: this.clr_proses,
 								data: this.epurc_chart.proses,
 							},
 							{
-								label: 'Kontrak',
+								// label: 'Kontrak',
 								fill: false,
-								backgroundColor: 'rgb(241, 196, 15)',
-								borderColor: 'rgb(241, 196, 15)',
+								backgroundColor: this.clr_kontrak,
+								borderColor: this.clr_kontrak,
 								data: this.epurc_chart.kontrak,
 							},
 							{
-								label: 'Selesai',
+								// label: 'Selesai',
 								fill: false,
-								backgroundColor: 'rgb(46, 204, 113)',
-								borderColor: 'rgb(46, 204, 113)',
+								backgroundColor: this.clr_selesai,
+								borderColor: this.clr_selesai,
 								data: this.epurc_chart.selesai,
 							}
 						]
@@ -544,6 +585,11 @@
 						type: 'line',
 						data: data,
 						options: {
+							responsive: true,
+							maintainAspectRatio: false,
+							legend: {
+								display: false
+							},
 							scales: {
 								yAxes: [{
 									ticks: {
