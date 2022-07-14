@@ -1,4 +1,7 @@
 <?php
+
+use Symfony\Component\VarDumper\VarDumper;
+
 ob_start();
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -95,31 +98,31 @@ class Web extends Front
         ];
         echo json_encode($result);
     }
-    
-      public function strukturapbdskpd()
+
+    public function strukturapbdskpd()
     {
-         
-        
+
+
         $data = [
             'container'         => 'strukturapbdskpd',
-          
+
             'list_instansi'     => $this->model_home_front->list_instansi(),
 
-           
+
         ];
         $this->template->build('home', $data);
     }
-    
-     public function robot()
+
+    public function robot()
     {
-          $kode = $this->input->get('kode',true);
-        
+        $kode = $this->input->get('kode', true);
+
         $data = [
             'container'         => 'robot',
-          
+
             'list_instansi'     => $this->model_home_front->list_instansi(),
 
-           
+
         ];
         $this->template->build('robot', $data);
     }
@@ -521,19 +524,15 @@ class Web extends Front
             $row = array();
 
             $row[] =  '<strong>' . $no . '</strong>';
+            $row[] = $datas->tahun_anggaran;
             $row[] = $datas->nama_satker;
             $row[] = $datas->nama_paket;
-            $row[] = $datas->kd_rup_paket;
-            $row[] = $datas->kd_nontender;
-            $row[] = $datas->no_kontrak;
-            $row[] = $datas->tgl_kontrak;
             $row[] = $datas->pagu;
-            $row[] = $datas->nilai_kontrak;
-            $row[] = $datas->nama_penyedia;
-            $row[] = $datas->tgl_mulai_kerja_spmk;
-            $row[] = $datas->tgl_selesai_kerja_spmk;
-            $row[] = $datas->no_bast;
-            $row[] = $datas->tgl_bast;
+            $row[] = $datas->anggaran;
+            $row[] = $datas->kategori_pengadaan;
+            $row[] = $datas->metode_pengadaan;
+            $row[] = $datas->tanggal_buat_paket;
+            $row[] = $datas->nama_status_nontender;
             $data[] = $row;
         }
         $output = array(
@@ -558,19 +557,51 @@ class Web extends Front
             $row = array();
 
             $row[] =  '<strong>' . $no . '</strong>';
+            $row[] = $datas->tahun_anggaran;
+            // $row[] = $datas->kd_klpd;
+            // $row[] = $datas->nama_klpd;
+            // $row[] = $datas->jenis_klpd;
+            // $row[] = $datas->kd_lpse;
+            // $row[] = $datas->nama_lpse;
+            // $row[] = $datas->kd_satker;
             $row[] = $datas->nama_satker;
-            $row[] = $datas->nama_paket;
-            $row[] = $datas->kd_rup_paket;
             $row[] = $datas->kd_tender;
-            $row[] = $datas->no_kontrak;
-            $row[] = $datas->tgl_kontrak;
+            $row[] = $datas->kd_paket;
+            $row[] = $datas->kd_rup_paket;
+            $row[] = $datas->nama_paket;
             $row[] = $datas->pagu;
-            $row[] = $datas->nilai_kontrak;
-            $row[] = $datas->nama_penyedia;
-            $row[] = $datas->tgl_mulai_kerja_spmk;
-            $row[] = $datas->tgl_selesai_kerja_spmk;
-            $row[] = $datas->no_bast;
-            $row[] = $datas->tgl_bast;
+            $row[] = $datas->hps;
+            $row[] = $datas->ang;
+            $row[] = $datas->jenis_pengadaan;
+            $row[] = $datas->mtd_pemilihan;
+            $row[] = $datas->mtd_evaluasi;
+            $row[] = $datas->mtd_kualifikasi;
+            $row[] = $datas->kontrak_pembayaran;
+            $row[] = $datas->kontrak_tahun;
+            $row[] = $datas->jenis_kontrak;
+            $row[] = $datas->nama_status_tender;
+            $row[] = $datas->versi_tender;
+            $row[] = $datas->ket_diulang;
+            $row[] = $datas->ket_ditutup;
+            $row[] = $datas->tgl_buat_paket;
+            $row[] = $datas->tgl_kolektif_kolegial;
+            $row[] = $datas->tgl_pengumuman_tender;
+            $row[] = $datas->url_lpse;
+            $row[] = $datas->kualifikasi_paket;
+            $row[] = $datas->lokasi_pekerjaan;
+            // $row[] = $datas->nama_satker;
+            // $row[] = $datas->nama_paket;
+            // $row[] = $datas->kd_rup_paket;
+            // $row[] = $datas->kd_tender;
+            // $row[] = $datas->no_kontrak;
+            // $row[] = $datas->tgl_kontrak;
+            // $row[] = $datas->pagu;
+            // $row[] = $datas->nilai_kontrak;
+            // $row[] = $datas->nama_penyedia;
+            // $row[] = $datas->tgl_mulai_kerja_spmk;
+            // $row[] = $datas->tgl_selesai_kerja_spmk;
+            // $row[] = $datas->no_bast;
+            // $row[] = $datas->tgl_bast;
             $data[] = $row;
         }
         $output = array(
@@ -597,7 +628,7 @@ class Web extends Front
             $row[] =  '<strong>' . $no . '</strong>';
             $row[] = $datas->tahun;
             $row[] = $datas->nama_skpd;
-             $row[] = $datas->uraian;
+            $row[] = $datas->uraian;
             $row[] = $datas->anggaran;
             $row[] = $datas->perubahan;
             $row[] = $datas->jml_realisasi;
@@ -667,12 +698,13 @@ class Web extends Front
             $swakelola  = $this->model_home_front->getByMethodSwakelola($opd->id, $year);
             // $darurat    = $this->model_home_front->getByMethod($opd->id, $year, 'Darurat');
 
-            $getAPBD = $this->model_home_front->barjasmodal($opd->kd_satker_str, $year);
-
-            if ($getAPBD) {
-                $apbd = $getAPBD->barjas + $getAPBD->modal;
+            $getAPBD_perubahan  = $this->model_home_front->barjasmodal($opd->kd_satker_str, $year, 'data_rka_perubahan a');
+            $apbd = 0;
+            if ($getAPBD_perubahan) {
+                $apbd = $getAPBD_perubahan->barjas + $getAPBD_perubahan->modal;
             } else {
-                $apbd = 0;
+                $getAPBD_murni      = $this->model_home_front->barjasmodal($opd->kd_satker_str, $year, 'data_rka a');
+                $apbd = $getAPBD_murni->barjas + $getAPBD_murni->modal;
             }
 
             $total              = (isset($tender->jml) ? $tender->jml : 0) + (isset($epurc->jml) ? $epurc->jml : 0) + (isset($pl->jml) ? $pl->jml : 0) + (isset($dk->jml) ? $dk->jml : 0) + (isset($swakelola->jml) ? $swakelola->jml : 0);

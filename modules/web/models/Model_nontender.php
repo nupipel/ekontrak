@@ -3,43 +3,50 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Model_nontender extends CI_Model
 {
-    //set nama tabel yang akan kita tampilkan datanya
-    var $table = 'v_non_tender';
-    //set kolom order, kolom pertama saya null untuk kolom NOMORs
+    var $table = 'non_tender_pengumuman_detail_spses';
+
+    var $select_column = 'tahun_anggaran,
+            nama_satker,
+            nama_paket,
+            pagu,
+            anggaran,
+            kategori_pengadaan,
+            metode_pengadaan,
+            tanggal_buat_paket,
+            nama_status_nontender';
+
+    //UNION
+    var $pencatatan_column = 'tahun_anggaran,
+            nama_satker,
+            nama_paket,
+            pagu,
+            ang as anggaran,
+            kategori_pengadaan,
+            mtd_pemilihan_v1 as metode_pengadaan,
+            tgl_buat_paket as tanggal_buat_paket,
+            status_nontender_pct as nama_status_nontender';
+
+
     var $column_order = array(
         null,
+        'tahun_anggaran',
         'nama_satker',
         'nama_paket',
-        'kd_rup_paket',
-        'kd_nontender',
-        'no_kontrak',
-        'tgl_kontrak',
         'pagu',
-        'nilai_kontrak',
-        'nama_penyedia',
-        'tgl_mulai_kerja_spmk',
-        'tgl_selesai_kerja_spmk',
-        'no_bast',
-        'tgl_bast',
+        'anggaran',
+        'kategori_pengadaan',
+        'metode_pengadaan',
+        'tanggal_buat_paket',
+        'nama_status_nontender',
+        'lokasi_pekerjaan'
     );
 
     var $column_search = array(
         'nama_satker',
-        'nama_paket',
-        'kd_rup_paket',
-        'kd_nontender',
-        'no_kontrak',
-        'tgl_kontrak',
-        'pagu',
-        'nilai_kontrak',
-        'nama_penyedia',
-        'tgl_mulai_kerja_spmk',
-        'tgl_selesai_kerja_spmk',
-        'no_bast',
-        'tgl_bast',
+        'nama_paket'
     );
     // default order 
-    var $order = array('created_at' => 'desc');
+    var $order = array('nama_satker' => 'asc');
 
     public function __construct()
     {
@@ -50,17 +57,18 @@ class Model_nontender extends CI_Model
     function dataTableNonTender()
     {
         $this->_get_datatables_query();
-        if ($this->input->post('length') != -1)
+
+        if ($this->input->post('length') != -1) {
             $this->db_pusat->limit($this->input->post('length'), $this->input->post('start'));
-        $query = $this->db_pusat->get();
-        return $query->result();
+        }
+        return $this->db_pusat->get()->result();
     }
 
     function count_filtered()
     {
-        $this->_get_datatables_query();
-        $query = $this->db_pusat->get();
-        return $query->num_rows();
+        $Q = $this->_get_datatables_query();
+        $Q = $this->db_pusat->get();
+        return $Q->num_rows();
     }
 
     public function count_all()
@@ -68,16 +76,28 @@ class Model_nontender extends CI_Model
         $opd = $this->input->post('opd');
         $year = $this->input->post('year');
 
-        $this->db_pusat->from($this->table);
-        if ($opd) {
-            $this->db_pusat->where('kd_satker', $opd);
-        }
-        if ($year) {
-            $this->db_pusat->where('tahun_anggaran', $year);
-        }
-        $this->db_pusat->group_by('kd_nontender');
+        // QUERY TABLE non_tender_pengumuman_detail_spses
+        $this->db_pusat->select($this->select_column)
+            ->from($this->table)
+            ->where(['nama_status_nontender' => "Aktif", 'metode_pengadaan' => "Pengadaan Langsung"]);
+        $opd ? $this->db_pusat->where('kd_satker', $opd) : null;
+        $year ? $this->db_pusat->where('tahun_anggaran', $year) : null;
+        // $this->db_pusat->group_by('kd_rup_paket');
+        $Q1 = $this->db_pusat->get_compiled_select();
+        //END
 
-        return $this->db_pusat->count_all_results();
+        // QUERY TABLE pencatatan_non_tender_spses
+        $Q2 = $this->_get_pencatatan();
+        $Q2 = $this->db_pusat->get_compiled_select();
+
+        // UNION 
+        $union =  ($Q1) . " UNION ALL " . ($Q2);
+
+        $this->db_pusat->flush_cache();
+
+        $query = $this->db_pusat->from("(" . $union . ") as nontender");
+
+        return $query->get()->num_rows();
     }
 
     private function _get_datatables_query()
@@ -85,33 +105,41 @@ class Model_nontender extends CI_Model
         $opd = $this->input->post('opd');
         $year = $this->input->post('year');
 
-        $this->db_pusat->from($this->table);
-        if ($opd) {
-            $this->db_pusat->where('kd_satker', $opd);
-        }
-        if ($year) {
-            $this->db_pusat->where('tahun_anggaran', $year);
-        }
+        // QUERY TABLE non_tender_pengumuman_detail_spses
+        $this->db_pusat->select($this->select_column)
+            ->from($this->table)
+            ->where(['nama_status_nontender' => "Aktif", 'metode_pengadaan' => "Pengadaan Langsung"]);
+        $opd ? $this->db_pusat->where('kd_satker', $opd) : null;
+        $year ? $this->db_pusat->where('tahun_anggaran', $year) : null;
+        // $this->db_pusat->group_by('kd_rup_paket');
+        $Q1 = $this->db_pusat->get_compiled_select();
+        //END
+
+        // QUERY TABLE pencatatan_non_tender_spses
+        $Q2 = $this->_get_pencatatan();
+        $Q2 = $this->db_pusat->get_compiled_select();
+        // UNION 
+        $union =  ($Q1) . " UNION ALL " . ($Q2);
+
+        $this->db_pusat->flush_cache();
+
+        $this->db_pusat->from("(" . $union . ") as nontender");
 
         $i = 0;
-        foreach ($this->column_search as $item) // loop kolom 
-        {
-            if ($this->input->post('search')['value']) // jika datatable mengirim POST untuk search
-            {
-                if ($i === 0) // looping pertama
-                {
+        foreach ($this->column_search as $item) {
+            if ($this->input->post('search')['value']) {
+                if ($i === 0) {
                     $this->db_pusat->group_start();
                     $this->db_pusat->like($item, $this->input->post('search')['value']);
                 } else {
                     $this->db_pusat->or_like($item, $this->input->post('search')['value']);
                 }
-                if (count($this->column_search) - 1 == $i) //looping terakhir
+                if (count($this->column_search) - 1 == $i) {
                     $this->db_pusat->group_end();
+                }
             }
             $i++;
         }
-        $this->db_pusat->group_by('kd_nontender');
-
 
         // jika datatable mengirim POST untuk order
         if ($this->input->post('order')) {
@@ -120,6 +148,17 @@ class Model_nontender extends CI_Model
             $order = $this->order;
             $this->db_pusat->order_by(key($order), $order[key($order)]);
         }
+    }
+
+    private function _get_pencatatan()
+    {
+        $opd = $this->input->post('opd');
+        $year = $this->input->post('year');
+
+        $this->db_pusat->flush_cache();
+        $q2 = $this->db_pusat->select($this->pencatatan_column)->from('pencatatan_non_tender_spses')->where(['mtd_pemilihan_v1' => 'Pengadaan Langsung']);
+        $year ? $q2->where('tahun_anggaran', $year) : null;
+        $opd ? $q2->where('kd_satker_str', $opd) : null;
     }
 
     function get_status()

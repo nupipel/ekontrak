@@ -221,7 +221,39 @@
 				<thead class="table-light">
 					<tr>
 						<th>No</th>
+						<th>tahun_anggaran</th>
+						<!-- <th>kd_klpd</th>
+						<th>nama_klpd</th>
+						<th>jenis_klpd</th>
+						<th>kd_lpse</th>
+						<th>nama_lpse</th>
+						<th>kd_satker</th> -->
 						<th>nama_satker</th>
+						<th>kd_tender</th>
+						<th>kd_paket</th>
+						<th>kd_rup_paket</th>
+						<th>nama_paket</th>
+						<th>pagu</th>
+						<th>hps</th>
+						<th>ang</th>
+						<th>jenis_pengadaan</th>
+						<th>mtd_pemilihan</th>
+						<th>mtd_evaluasi</th>
+						<th>mtd_kualifikasi</th>
+						<th>kontrak_pembayaran</th>
+						<th>kontrak_tahun</th>
+						<th>jenis_kontrak</th>
+						<th>nama_status_tender</th>
+						<th>versi_tender</th>
+						<th>ket_diulang</th>
+						<th>ket_ditutup</th>
+						<th>tgl_buat_paket</th>
+						<th>tgl_kolektif_kolegial</th>
+						<th>tgl_pengumuman_tender</th>
+						<th>url_lpse</th>
+						<th>kualifikasi_paket</th>
+						<th>lokasi_pekerjaan</th>
+						<!-- <th>nama_satker</th>
 						<th>nama_paket</th>
 						<th>kd_rup_paket</th>
 						<th>kd_tender</th>
@@ -233,7 +265,7 @@
 						<th>tgl_mulai_kerja_spmk</th>
 						<th>tgl_selesai_kerja_spmk</th>
 						<th>no_bast</th>
-						<th>tgl_bast</th>
+						<th>tgl_bast</th> -->
 					</tr>
 				</thead>
 			</table>
@@ -257,19 +289,15 @@
 				<thead class="table-light">
 					<tr>
 						<th>No</th>
+						<th>tahun_anggaran</th>
 						<th>nama_satker</th>
 						<th>nama_paket</th>
-						<th>kd_rup_paket</th>
-						<th>kd_nontender</th>
-						<th>no_kontrak</th>
-						<th>tgl_kontrak</th>
 						<th>pagu</th>
-						<th>nilai_kontrak</th>
-						<th>nama_penyedia</th>
-						<th>tgl_mulai_kerja_spmk</th>
-						<th>tgl_selesai_kerja_spmk</th>
-						<th>no_bast</th>
-						<th>tgl_bast</th>
+						<th>anggaran</th>
+						<th>kategori_pengadaan</th>
+						<th>metode_pengadaan</th>
+						<th>tanggal_buat_paket</th>
+						<th>nama_status_nontender</th>
 					</tr>
 				</thead>
 			</table>
@@ -400,28 +428,28 @@
 					const data = {
 						labels: this.labels,
 						datasets: [{
-								// label: 'Sirup',
+								label: 'Sirup',
 								fill: false,
 								backgroundColor: this.clr_sirup,
 								borderColor: this.clr_sirup,
 								data: this.tender_chart.sirup,
 							},
 							{
-								// label: 'Proses',
+								label: 'Proses',
 								fill: false,
 								backgroundColor: this.clr_proses,
 								borderColor: this.clr_proses,
 								data: this.tender_chart.proses,
 							},
 							{
-								// label: 'Kontrak',
+								label: 'Kontrak',
 								fill: false,
 								backgroundColor: this.clr_kontrak,
 								borderColor: this.clr_kontrak,
 								data: this.tender_chart.kontrak,
 							},
 							{
-								// label: 'Selesai',
+								label: 'Selesai',
 								fill: false,
 								backgroundColor: this.clr_selesai,
 								borderColor: this.clr_selesai,
@@ -476,28 +504,28 @@
 					const data = {
 						labels: this.labels,
 						datasets: [{
-								// label: 'Sirup',
+								label: 'Sirup',
 								fill: false,
 								backgroundColor: this.clr_sirup,
 								borderColor: this.clr_sirup,
 								data: this.nontender_chart.sirup,
 							},
 							{
-								// label: 'Proses',
+								label: 'Proses',
 								fill: false,
 								backgroundColor: this.clr_proses,
 								borderColor: this.clr_proses,
 								data: this.nontender_chart.proses,
 							},
 							{
-								// label: 'Kontrak',
+								label: 'Kontrak',
 								fill: false,
 								backgroundColor: this.clr_kontrak,
 								borderColor: this.clr_kontrak,
 								data: this.nontender_chart.kontrak,
 							},
 							{
-								// label: 'Selesai',
+								label: 'Selesai',
 								fill: false,
 								backgroundColor: this.clr_selesai,
 								borderColor: this.clr_selesai,
@@ -551,28 +579,28 @@
 					const data = {
 						labels: this.labels,
 						datasets: [{
-								// label: 'Sirup',
+								label: 'Sirup',
 								fill: false,
 								backgroundColor: this.clr_sirup,
 								borderColor: this.clr_sirup,
 								data: this.epurc_chart.sirup,
 							},
 							{
-								// label: 'Proses',
+								label: 'Proses',
 								fill: false,
 								backgroundColor: this.clr_proses,
 								borderColor: this.clr_proses,
 								data: this.epurc_chart.proses,
 							},
 							{
-								// label: 'Kontrak',
+								label: 'Kontrak',
 								fill: false,
 								backgroundColor: this.clr_kontrak,
 								borderColor: this.clr_kontrak,
 								data: this.epurc_chart.kontrak,
 							},
 							{
-								// label: 'Selesai',
+								label: 'Selesai',
 								fill: false,
 								backgroundColor: this.clr_selesai,
 								borderColor: this.clr_selesai,
@@ -647,7 +675,6 @@
 		$('#dataTableTender').DataTable({
 			processing: true,
 			serverSide: true,
-			// searchable: true,
 			ajax: {
 				url: 'web/dataTableTender',
 				type: 'POST',

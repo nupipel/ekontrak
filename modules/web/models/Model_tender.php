@@ -4,42 +4,74 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Model_tender extends CI_Model
 {
     //set nama tabel yang akan kita tampilkan datanya
-    var $table = 'v_tender';
+    var $table = 'tender_pengumuman_detail_spses';
     //set kolom order, kolom pertama saya null untuk kolom NOMOR
     var $column_order = array(
         null,
+        'tahun_anggaran',
+        // 'kd_klpd',
+        // 'nama_klpd',
+        // 'jenis_klpd',
+        // 'kd_lpse',
+        // 'nama_lpse',
+        // 'kd_satker',
         'nama_satker',
-        'nama_paket',
+        'kd_tender',
+        'kd_paket',
         'kd_rup_paket',
-        'kd_nontender',
-        'no_kontrak',
-        'tgl_kontrak',
+        'nama_paket',
         'pagu',
-        'nilai_kontrak',
-        'nama_penyedia',
-        'tgl_mulai_kerja_spmk',
-        'tgl_selesai_kerja_spmk',
-        'no_bast',
-        'tgl_bast',
+        'hps',
+        'ang',
+        'jenis_pengadaan',
+        'mtd_pemilihan',
+        'mtd_evaluasi',
+        'mtd_kualifikasi',
+        'kontrak_pembayaran',
+        'kontrak_tahun',
+        'jenis_kontrak',
+        'nama_status_tender',
+        'versi_tender',
+        'ket_diulang',
+        'ket_ditutup',
+        'tgl_buat_paket',
+        'tgl_kolektif_kolegial',
+        'tgl_pengumuman_tender',
+        'url_lpse',
+        'kualifikasi_paket',
+        'lokasi_pekerjaan',
     );
 
     var $column_search = array(
+        // 'tahun_anggaran',
         'nama_satker',
-        'nama_paket',
-        'kd_rup_paket',
-        'kd_nontender',
-        'no_kontrak',
-        'tgl_kontrak',
-        'pagu',
-        'nilai_kontrak',
-        'nama_penyedia',
-        'tgl_mulai_kerja_spmk',
-        'tgl_selesai_kerja_spmk',
-        'no_bast',
-        'tgl_bast',
+        // 'kd_tender',
+        // 'kd_paket',
+        // 'kd_rup_paket',
+        // 'nama_paket',
+        // 'pagu',
+        // 'hps',
+        // 'ang',
+        // 'jenis_pengadaan',
+        // 'mtd_pemilihan',
+        // 'mtd_evaluasi',
+        // 'mtd_kualifikasi',
+        // 'kontrak_pembayaran',
+        // 'kontrak_tahun',
+        // 'jenis_kontrak',
+        // 'nama_status_tender',
+        // 'versi_tender',
+        // 'ket_diulang',
+        // 'ket_ditutup',
+        // 'tgl_buat_paket',
+        // 'tgl_kolektif_kolegial',
+        // 'tgl_pengumuman_tender',
+        // 'url_lpse',
+        // 'kualifikasi_paket',
+        // 'lokasi_pekerjaan',
     );
     // default order 
-    var $order = array('created_at' => 'desc');
+    var $order = array('nama_satker' => 'desc');
 
     public function __construct()
     {
@@ -68,13 +100,15 @@ class Model_tender extends CI_Model
         $year = $this->input->post('year');
 
         $this->db_pusat->from($this->table);
+        $this->db_pusat->where('nama_status_tender', "Aktif");
+
         if ($opd) {
             $this->db_pusat->where('kd_satker', $opd);
         }
         if ($year) {
             $this->db_pusat->where('tahun_anggaran', $year);
         }
-        $this->db_pusat->group_by('kd_paket');
+        $this->db_pusat->group_by('kd_rup_paket');
 
         return $this->db_pusat->count_all_results();
     }
@@ -85,6 +119,8 @@ class Model_tender extends CI_Model
         $year = $this->input->post('year');
 
         $this->db_pusat->from($this->table);
+        $this->db_pusat->where('nama_status_tender', "Aktif");
+
         if ($opd) {
             $this->db_pusat->where('kd_satker', $opd);
         }
@@ -109,7 +145,7 @@ class Model_tender extends CI_Model
             }
             $i++;
         }
-        $this->db_pusat->group_by('kd_paket');
+        $this->db_pusat->group_by('kd_rup_paket');
 
         // jika datatable mengirim POST untuk order
         if ($this->input->post('order')) {

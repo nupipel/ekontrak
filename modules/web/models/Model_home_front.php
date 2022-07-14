@@ -19,12 +19,12 @@ class Model_home_front extends CI_Model
             ->get();
         return $query->result_array();
     }
-    
-      public function master_satker_rups()
+
+    public function master_satker_rups()
     {
         $query = $this->db->select("*")
             ->from('master_satker_rups')
-           
+
 
             ->get();
         return $query->result_array();
@@ -278,10 +278,10 @@ class Model_home_front extends CI_Model
         return $query->row();
     }
 
-    function barjasmodal($kode_skpd, $year)
+    function barjasmodal($kode_skpd, $year, $tahap)
     {
         $query = $this->db_bappeda->select('SUM(if(substring(a.kode_akun, 1, 6)= "5.1.02", a.rincian, 0)) as barjas, SUM(if(substring(a.kode_akun, 1, 3)= "5.2", a.rincian, 0)) as modal')
-            ->from('data_rka a')
+            ->from($tahap)
             ->join('data_unit b', 'a.id_sub_skpd = b.id_skpd', 'left')
             ->where(['a.tahun' => $year, 'b.kode_skpd' => $kode_skpd]);
         return $query->get()->row();

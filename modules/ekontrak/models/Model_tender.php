@@ -47,6 +47,7 @@ class Model_tender extends CI_Model
         if ($year) {
             $query->where('tahun_anggaran', $year);
         }
+        $query->where('nama_status_tender', "Aktif");
         $result = $query->get('tender_pengumuman_detail_spses')->row();
         return $result;
     }
@@ -60,6 +61,7 @@ class Model_tender extends CI_Model
         if ($year) {
             $query->where('tahun_anggaran', $year);
         }
+        $query->where('nama_status_tender', "Aktif");
 
         $result = $query->get('tender_pengumuman_detail_spses')->row();
         return $result;
