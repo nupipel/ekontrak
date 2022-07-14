@@ -11,21 +11,14 @@ class Model_epurc extends CI_Model
     function sirup($params, $opd = null, $year = null)
     {
         $params == 'paket' ? $select = 'count(idrup)' : $select = 'sum(jumlahpagu)';
-        $query = $this->db_pusat->select($select . ' as total')->where_in('metodepengadaan', ['e-Purchasing']);
-        $this->filter_query($opd, $year);
+        $query = $this->db_pusat->select($select . ' as total')->where_in('metodepengadaan', ['e-Purchasing'])
+            ->where("statusdeletepaket = '0' and statusaktifpaket = '1'");
+
+        $opd ? $this->db_pusat->where('kodesatker', $opd) : null;
+        $year ? $this->db_pusat->where('tahunanggaran', $year) : null;
 
         $result = $query->get('paket_penyedia_opt1618s')->row();
         return $result->total;
-    }
-
-    function filter_query($opd = null, $year = null)
-    {
-        if ($opd) {
-            $this->db_pusat->where('kodesatker', $opd);
-        }
-        if ($year) {
-            $this->db_pusat->where('tahunanggaran', $year);
-        }
     }
 
     function proses($params, $opd, $year)

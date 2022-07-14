@@ -144,7 +144,7 @@ class Model_epurchasing extends CI_Model
             }
             $i++;
         }
-        $this->db_pusat->group_by('kd_paket');
+        $this->db_pusat->group_by('kd_rup');
 
 
         // jika datatable mengirim POST untuk order
